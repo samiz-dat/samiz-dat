@@ -14,32 +14,40 @@ Dat(testDir, opts, (err, dat) => {
   }
   const archive = dat.archive;
 
-  function done() {
-    console.log('done!');
-  }
+  // archive.list({}, (error, results) => {
+  //   if (error) {
+  //     console.log(error);
+  //     return;
+  //   }
+  //   console.log('archive contents:');
+  //   console.log(results);
+  // });
 
-  archive.open(() => {
-    // Network needs to connect for archive.open to callback
-    archive.content.once('download-finished', () => {
-      // issue w/ download-finished firing before stats updated
-      setTimeout(done, 500);
-    });
+  archive.on('download', (data) => {
+    console.log('downloading', data);
+  });
+
+  archive.content.once('download-finished', () => {
+    // issue w/ download-finished firing before stats updated
+    console.log('finished downloading!');
   });
 
   // Join the network
   const network = dat.joinNetwork();
   network.once('connection', () => {
     console.log('connects via network');
+    console.log('peers:', network.connected);
   });
 
   // Track stats
   const stats = dat.trackStats();
   stats.once('update', () => {
-    console.log('stats updated');
+    console.log('stats updated', stats.get());
   });
 
   const exitHandler = options => (error) => {
     if (options.cleanup) {
+      console.log('cleaning up!');
       dat.leave();
     }
     if (error) console.log(error.stack);
