@@ -14,35 +14,33 @@ Dat(testDir, opts, (err, dat) => {
   }
   const archive = dat.archive;
 
-  // archive.list({}, (error, results) => {
-  //   if (error) {
-  //     console.log(error);
-  //     return;
-  //   }
-  //   console.log('archive contents:');
-  //   console.log(results);
-  // });
-
-  archive.on('download', (data) => {
-    console.log('downloading', data);
-  });
-
-  archive.content.once('download-finished', () => {
-    // issue w/ download-finished firing before stats updated
-    console.log('finished downloading!');
-  });
-
-  // Join the network
-  const network = dat.joinNetwork();
-  network.once('connection', () => {
-    console.log('connects via network');
-    console.log('peers:', network.connected);
+  archive.list({}, (error, results) => {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    console.log('archive contents:');
+    console.log(results);
   });
 
   // Track stats
   const stats = dat.trackStats();
   stats.once('update', () => {
     console.log('stats updated', stats.get());
+  });
+
+  // Join the network
+  const network = dat.joinNetwork();
+
+  network.once('connection', () => {
+    console.log('connects via network');
+    console.log('peers:', network.connected);
+    console.log(stats.network);
+  });
+
+  archive.on('download', (data) => {
+    console.log('downloading:', data);
+    console.log(stats.network);
   });
 
   const exitHandler = options => (error) => {
@@ -55,6 +53,6 @@ Dat(testDir, opts, (err, dat) => {
   };
 
   process.on('exit', exitHandler({ cleanup: true }));
-  process.on('SIGINT', exitHandler({ cleanup: true, exit: true }));
-  process.on('uncaughtException', exitHandler({ cleanup: true, exit: true }));
+  process.on('SIGINT', exitHandler({ exit: true }));
+  process.on('uncaughtException', exitHandler({ exit: true }));
 });
