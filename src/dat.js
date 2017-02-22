@@ -1,8 +1,8 @@
+import fs from 'fs';
 import Dat from 'dat-node';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import chalk from 'chalk';
-
 
 module.exports = DatWrapper
 
@@ -12,6 +12,10 @@ module.exports = DatWrapper
  */
 function DatWrapper(opts, listener) {
 	this.directory = opts.directory;
+	// create if it doesn't exist
+	if (!fs.existsSync(opts.directory)){
+    fs.mkdirSync(opts.directory);
+	}
 	this.key = opts.key;
 	this.name = opts.name;
 	this.listener = listener;

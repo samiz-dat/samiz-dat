@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import Datastore  from 'nedb-core';
 import DatWrapper from './dat';
 
@@ -10,14 +11,27 @@ const initDat = function(opts, cb) {
 	return new DatWrapper(opts, cb);
 }
 
-function Catalog() {
+function Catalog(baseDir) {
+	this.baseDir = baseDir;
 	this.dats = [];
 	// Catalog is kept in the datastore
-	console.log("Creating database at catalog.db");
-	this.db = new Datastore({ filename: 'catalog.db', autoload: true });
+	//console.log("Creating database at catalog.db");
+	this.db = new Datastore({ 
+		filename: path.format({ 
+			dir: this.baseDir, 
+			base: 'catalog.db'
+		}), 
+		autoload: true 
+	});
 }
 
 Catalog.prototype.importDat = function(opts) {
+	if (!opts.directory) {
+		opts.directory = path.format({
+			dir: this.baseDir, 
+			base: (opts.name) ? opts.name : opts.key
+		});
+	}
 	this.addDat(initDat(opts, this));
 }
 
@@ -48,12 +62,11 @@ Catalog.prototype.addDatEntry = function(dat, entry, self) {
 		}, function (err, newDoc) {
 			//
 		});
-		self.printAuthorCount();
 	}
 }
 
 // Gets a count of authors in the catalog
-Catalog.prototype.printAuthorCount = function() {
+Catalog.prototype.getAuthors = function(cb) {
 	this.db.find({}).group({
 			key: {
 			    'author': 1,
@@ -65,7 +78,7 @@ Catalog.prototype.printAuthorCount = function() {
 			    count: 0,
 			},
 		}).exec(function (err, docs) {
-			console.log(`There are ${docs.length} authors in the catalogue`);
+			cb(err, docs);
 		});
 }
 
