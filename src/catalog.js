@@ -1,10 +1,11 @@
 import path from 'path';
 import fs from 'fs';
-import Datastore  from 'nedb-core';
+import sqlite3 from 'sqlite3';
 import DatWrapper from './dat';
 
 module.exports = Catalog
 
+// @todo: this.db.close(); should be called on shutdown
 
 // create a test Dat
 const initDat = function(opts, cb) {
@@ -15,14 +16,19 @@ function Catalog(baseDir) {
 	this.baseDir = baseDir;
 	this.dats = [];
 	// Catalog is kept in the datastore
-	//console.log("Creating database at catalog.db");
-	this.db = new Datastore({ 
-		filename: path.format({ 
-			dir: this.baseDir, 
-			base: 'catalog.db'
-		}), 
-		autoload: true 
+	this.initDb();
+}
+
+Catalog.prototype.initDb = function() {
+	sqlite3.verbose();
+	const db = new sqlite3.Database(path.format({ 
+		dir: this.baseDir, 
+		base: 'catalog.db'
+	}));
+	db.serialize(function() {
+		db.run("CREATE TABLE IF NOT EXISTS texts (dat TEXT, title_hash TEXT, file_hash TEXT, author TEXT, title TEXT, file TEXT)");
 	});
+	this.db = db;
 }
 
 Catalog.prototype.importDat = function(opts) {
@@ -43,8 +49,8 @@ Catalog.prototype.addDat = function(dat) {
 
 // Remove all entries for a dat
 Catalog.prototype.clearDatEntries = function(dat) {
-	this.db.remove({ dat: dat.key }, { multi: true }, function (err, numRemoved) {
-		console.log(numRemoved + " entries cleared from db with dat key: " + dat.key);
+	this.db.run("DELETE FROM texts WHERE dat=?", dat.key, function (err) {
+		console.log(this.changes + " entries cleared from db with dat key: " + dat.key);
 	});
 }
 
@@ -54,12 +60,9 @@ Catalog.prototype.addDatEntry = function(dat, entry, self) {
 	let arr = entry.name.split(path.sep);
 	arr.shift();
 	if (arr.length>2) {
-		self.db.insert({
-			dat: dat.key,
-			author: arr[0],
-			title: arr[1],
-			file: arr[2]
-		}, function (err, newDoc) {
+		self.db.run("INSERT INTO texts VALUES (?, ?, ?, ?, ?, ?)",
+			dat.key, '', '', arr[0], arr[1], arr[2], 
+			function (err, obj) {
 			//
 		});
 	}
@@ -67,19 +70,9 @@ Catalog.prototype.addDatEntry = function(dat, entry, self) {
 
 // Gets a count of authors in the catalog
 Catalog.prototype.getAuthors = function(cb) {
-	this.db.find({}).group({
-			key: {
-			    'author': 1,
-			},
-			reduce: function (curr, result) {
-			    result.count++;
-			},
-			initial: {
-			    count: 0,
-			},
-		}).exec(function (err, docs) {
-			cb(err, docs);
-		});
+	this.db.all("SELECT author, COUNT(title) as count FROM texts GROUP BY author", function(err, rows) {
+		cb(err, rows);
+	});
 }
 
 /*
