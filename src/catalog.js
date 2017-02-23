@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import sqlite3 from 'sqlite3';
+import parser from 'another-name-parser';
 import DatWrapper from './dat';
 
 module.exports = Catalog
@@ -26,7 +27,7 @@ Catalog.prototype.initDb = function() {
 		base: 'catalog.db'
 	}));
 	db.serialize(function() {
-		db.run("CREATE TABLE IF NOT EXISTS texts (dat TEXT, title_hash TEXT, file_hash TEXT, author TEXT, title TEXT, file TEXT)");
+		db.run("CREATE TABLE IF NOT EXISTS texts (dat TEXT, title_hash TEXT, file_hash TEXT, author TEXT, author_sort TEXT, title TEXT, file TEXT)");
 	});
 	this.db = db;
 }
@@ -60,8 +61,9 @@ Catalog.prototype.addDatEntry = function(dat, entry, self) {
 	let arr = entry.name.split(path.sep);
 	arr.shift();
 	if (arr.length>2) {
-		self.db.run("INSERT INTO texts VALUES (?, ?, ?, ?, ?, ?)",
-			dat.key, '', '', arr[0], arr[1], arr[2], 
+		var name = parser(arr[0]);
+		self.db.run("INSERT INTO texts VALUES (?, ?, ?, ?, ?, ?, ?)",
+			dat.key, '', '', arr[0], name.last, arr[1], arr[2], 
 			function (err, obj) {
 			//
 		});
@@ -69,8 +71,16 @@ Catalog.prototype.addDatEntry = function(dat, entry, self) {
 }
 
 // Gets a count of authors in the catalog
+Catalog.prototype.search = function(query, cb) {
+	const s = `%${query}%`;
+	this.db.all("SELECT * FROM texts WHERE title LIKE ? OR author LIKE ? ORDER BY author_sort", s, s,function(err, rows) {
+		cb(err, rows);
+	});
+}
+
+// Gets a count of authors in the catalog
 Catalog.prototype.getAuthors = function(cb) {
-	this.db.all("SELECT author, COUNT(title) as count FROM texts GROUP BY author", function(err, rows) {
+	this.db.all("SELECT author, author_sort, COUNT(title) as count FROM texts GROUP BY author ORDER BY author_sort", function(err, rows) {
 		cb(err, rows);
 	});
 }
