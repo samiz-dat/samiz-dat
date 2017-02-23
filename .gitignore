@@ -1,3 +1,5 @@
 _data/
 node_modules/
+test-dir/
+dist/
 *.log
