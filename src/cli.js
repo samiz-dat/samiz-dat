@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import Catalog from './catalog';
+import { opf2js } from './opf';
 
 // Directory to store all the data in (should be a config option)
 const dataDir = path.join(process.cwd(), '_data');
@@ -38,6 +39,11 @@ if (process.env.npm_config_numAuthors) {
       console.log(`${doc.author} : ${doc.title}`);
     }
   });
+// npm run cli --opf=/dir/to/file.opf
+} else if (process.env.npm_config_opf) {
+  opf2js(process.env.npm_config_opf).then(data =>
+    console.log(data.authors),
+   );
 } else { // by default print help
   console.log('--numAuthors\tPrint the number of authors in the catalog');
   console.log('--listAuthors\tLists the authors in the catalog');
