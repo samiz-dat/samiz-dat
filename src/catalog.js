@@ -6,6 +6,13 @@ import { listDatContents, DatWrapper } from './dat';
 
 // @todo: this.db.close(); should be called on shutdown
 
+// @todo: Move this to some utilities place, it is not specific to catalog
+function getDirectories(srcpath) {
+  return fs.readdirSync(srcpath)
+    .filter(file => fs.statSync(path.join(srcpath, file)).isDirectory());
+}
+
+// Class definition
 export default class Catalog {
   constructor(baseDir) {
     this.baseDir = baseDir;
@@ -28,14 +35,9 @@ export default class Catalog {
     this.db = db;
   }
 
-  getDirectories(srcpath) {
-    return fs.readdirSync(srcpath)
-      .filter(file => fs.statSync(path.join(srcpath, file)).isDirectory());
-  }
-
   // Look inside the base directory for any directories that seem to be dats
   discoverDats() {
-    const dirs = this.getDirectories(this.baseDir);
+    const dirs = getDirectories(this.baseDir);
     for (const d of dirs) {
       console.log(`Attempting to load ${d} as a dat`);
       const opts = {
@@ -59,7 +61,8 @@ export default class Catalog {
     newDat.run()
       .then(dw => this.registerDat(dw.dat))
       .then(dat => listDatContents(dat))
-      .each(entry => this.importDatEntry(newDat, entry));
+      .each(entry => this.importDatEntry(newDat, entry))
+      .catch(err => console.log(`* Something went wrong when importing ${opts.directory}`));
   }
 
   // Registers dat in catalog array and in database (@todo)
