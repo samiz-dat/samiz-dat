@@ -10,8 +10,10 @@ if (!fs.existsSync(dataDir)) {
 }
 
 const catalog = new Catalog(dataDir);
-
+catalog.discoverDats();
+/*
 catalog.importDat({
   key: '96171cc0845174e7e3c73592479cd9ca8d4caf1d039e6f38a0c06f48dff88bd1',
   name: 'Grr',
 });
+*/
