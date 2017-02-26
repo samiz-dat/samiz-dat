@@ -59,19 +59,35 @@ export default class Catalog {
     }
     const newDat = new DatWrapper(opts, this);
     newDat.run()
-      .then(dw => this.registerDat(dw.dat))
-      .then(dat => listDatContents(dat))
+      .then(dw => this.registerDat(dw))
+      .then(dw => listDatContents(dw.dat))
       .each(entry => this.importDatEntry(newDat, entry))
       .catch(err => console.log(`* Something went wrong when importing ${opts.directory}`));
   }
 
   // Registers dat in catalog array and in database (@todo)
-  registerDat(dat) {
-    const datkey = dat.key.toString('hex');
+  registerDat(dw) {
+    const datkey = dw.dat.key.toString('hex');
     console.log(`Adding dat (${datkey}) to the catalog.`);
+    this.removeDatFromDb(datkey);
+    this.addDatToDb(datkey, dw.name, dw.directory);
     this.clearDatEntries(datkey);
-    this.dats[datkey] = dat;
-    return dat;
+    this.dats[datkey] = dw;
+    return dw;
+  }
+
+  addDatToDb(key, name, dir) {
+    this.db.run('INSERT INTO dats VALUES (?, ?, ?)',
+      key, name, dir,
+      (err) => {
+        if (err) console.error(err);
+      });
+  }
+
+  removeDatFromDb(datKey) {
+    this.db.run('DELETE FROM dats WHERE dat=?', datKey, (err) => {
+      if (err) console.error(err);
+    });
   }
 
   // Remove all entries for a dat
@@ -95,6 +111,15 @@ export default class Catalog {
     }
   }
 
+  // Returns the path to a dat
+  // This is broken until i can understand making sqlite async
+  pathToDat(datKey) {
+    let p = false;
+    const sql = 'SELECT * FROM dats WHERE dat=?';
+    this.db.get(sql, datKey, (err, row) => { if (row) p = row.dir; console.log(row);});
+    return p; // @todo: throw?
+  }
+
   // Gets a count of authors in the catalog
   search(query, cb) {
     const s = `%${query}%`;
@@ -108,23 +133,14 @@ export default class Catalog {
     this.db.all(sql, (err, rows) => cb(err, rows));
   }
 
-  /*
-  // Get a list of authors. Optionally filter by library
+  getTitlesForAuthor(author, cb) {
+    const sql = 'SELECT DISTINCT title, dat FROM texts WHERE author LIKE ? ORDER BY title';
+    this.db.all(sql, author, (err, rows) => cb(err, rows));
+  }
 
-  // Get a list of titles per author. Optionally filter by library.
+  getFiles(author, title, cb) {
+    const sql = 'SELECT * FROM texts WHERE author=? AND title=? ORDER BY dat, file';
+    this.db.all(sql, author, title, (err, rows) => cb(err, rows));
+  }
 
-  // Clear out all entries. Optionally clear out only one library.
-
-  // Various file fetching... right now files are fetched by default, but soon
-  // we'll need to be able to selectively request certain files
-  //
-
-  // Fetches OPF metadata file
-
-  // Fetches cover image
-
-  // Fetches all files for a particular title
-
-  // Fetch a single file for a particular title
-  */
 }
