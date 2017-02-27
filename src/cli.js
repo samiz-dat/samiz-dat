@@ -22,6 +22,14 @@ if (process.env.npm_config_numAuthors) {
     console.log(`${rows.length} authors`);
   })
   .catch(e => console.log(e));
+// npm run cli --dat=datkey --name="A Nice Name"
+} else if (process.env.npm_config_dat) {
+  const c = initCatalog();
+  c.discoverDats().then(() =>
+    c.importDat({
+      key: process.env.npm_config_dat,
+      name: process.env.npm_config_name }))
+  .catch(e => console.log(e));
 // npm run cli --listAuthors
 } else if (process.env.npm_config_listAuthors) {
   const c = initCatalog();
@@ -88,6 +96,7 @@ if (process.env.npm_config_numAuthors) {
     })
     .catch(e => console.log(e));
 } else { // by default print help
+  console.log('--dat=datkey --name="A Nice Name"\tImport a new dat to your catalog');
   console.log('--numAuthors\tPrint the number of authors in the catalog');
   console.log('--listAuthors\tLists the authors in the catalog');
   console.log('--search\tQueries the catalog');

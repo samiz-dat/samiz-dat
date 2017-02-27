@@ -34,7 +34,16 @@ export default class DatWrapper {
     return this.create()
       .then((dat) => {
         this.key = dat.key.toString('hex');
+        const network = dat.joinNetwork();
+        const stats = dat.trackStats();
         this.dat = dat;
+        stats.once('update', () => {
+          console.log('stats updated', stats.get());
+        });
+        network.once('connection', () => {
+          console.log('connects via network');
+          console.log(chalk.gray(chalk.bold('peers:'), network.connected));
+        });
         // this.start(dat);
       })
       .then(() => this);

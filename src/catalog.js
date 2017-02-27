@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import Promise from 'bluebird';
 import db from 'knex';
 import parser from 'another-name-parser';
 import DatWrapper, { listDatContents } from './dat';
@@ -9,7 +10,8 @@ import { opf2js } from './opf';
 
 // @todo: Move this to some utilities place, it is not specific to catalog
 function getDirectories(srcpath) {
-  return fs.readdirSync(srcpath)
+  const readdirAsync = Promise.promisify(fs.readdir);
+  return readdirAsync(srcpath)
     .filter(file => fs.statSync(path.join(srcpath, file)).isDirectory());
 }
 
@@ -58,20 +60,28 @@ export default class Catalog {
 
   // Look inside the base directory for any directories that seem to be dats
   discoverDats() {
-    const dirs = getDirectories(this.baseDir);
-    for (const d of dirs) {
-      console.log(`Attempting to load ${d} as a dat`);
-      const opts = {
-        createIfMissing: false,
-        name: d,
-        sparse: true,
-      };
-      this.importDat(opts);
-    }
+    return getDirectories(this.baseDir).then((dirs) => {
+      const promises = [];
+      for (const d of dirs) {
+        console.log(`Attempting to load ${d} as a dat`);
+        const opts = {
+          createIfMissing: false,
+          name: d,
+          sparse: true,
+        };
+        promises.push(this.importDat(opts));
+      }
+      return promises;
+    });
   }
 
   // Does the work of importing a functional dat into the catalog
   importDat(opts) {
+    if ('key' in opts && opts.key in this.dats) {
+      // The dat is already loaded, we shouldn't reimport it
+      console.log(`You are trying to import a dat that is already loaded: ${opts.key}`);
+      return Promise.resolve(false);
+    }
     if (!opts.directory) {
       opts.directory = path.format({
         dir: this.baseDir,
@@ -79,7 +89,7 @@ export default class Catalog {
       });
     }
     const newDat = new DatWrapper(opts, this);
-    newDat.run()
+    return newDat.run()
       .then(dw => this.registerDat(dw))
       .then(dw => listDatContents(dw.dat))
       .each(entry => this.importDatEntry(newDat, entry))
