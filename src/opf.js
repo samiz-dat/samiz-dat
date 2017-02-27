@@ -17,7 +17,7 @@ class OPF {
   }
 
   get title() {
-    return this.obj['dc:title'][0];
+    return this.getField('dc:title');
   }
 
   set title(s) {
@@ -25,7 +25,51 @@ class OPF {
   }
 
   get authors() {
-    return this.obj['dc:creator'].map(c => c._);
+    return this.getList('dc:creator');
+  }
+
+  get description() {
+    return this.getField('dc:description');
+  }
+
+  // This is just for testing
+  get undefined() {
+    return this.getField('dc:undefined_field');
+  }
+
+  getList(name, id = '_') {
+    if (name in this.obj) {
+      if (Array.isArray(this.obj[name])) {
+        return this.obj[name].map(c => c[id]);
+      }
+    }
+    return undefined;
+  }
+
+  getField(name, idx = 0) {
+    if (name in this.obj) {
+      if (Array.isArray(this.obj[name]) && this.obj[name].length > idx) {
+        return this.obj[name][idx];
+      }
+    }
+    return undefined;
+  }
+
+  get identifiers() {
+    const ids = {};
+    const obj = this.obj;
+    ids[Symbol.iterator] = function* () {
+      if (Array.isArray(obj['dc:identifier'])) {
+        for (const i of obj['dc:identifier']) {
+          if ('$' in i && '_' in i && 'opf:scheme' in i.$) {
+            const id = {};
+            id[i.$['opf:scheme']] = i._;
+            yield id;
+          }
+        }
+      }
+    };
+    return ids;
   }
 }
 

@@ -1,8 +1,9 @@
 import path from 'path';
 import fs from 'fs';
-import sqlite3 from 'sqlite3';
+import db from 'knex';
 import parser from 'another-name-parser';
-import { listDatContents, DatWrapper } from './dat';
+import DatWrapper, { listDatContents } from './dat';
+import { opf2js } from './opf';
 
 // @todo: this.db.close(); should be called on shutdown
 
@@ -22,17 +23,37 @@ export default class Catalog {
   }
 
   initDb() {
-    sqlite3.verbose();
-    const db = new sqlite3.Database(path.format({
-      dir: this.baseDir,
-      base: 'catalog.db',
-    }));
-    db.serialize(() => {
-      db.run('CREATE TABLE IF NOT EXISTS dats (dat TEXT, name TEXT, dir TEXT)');
-      db.run('CREATE TABLE IF NOT EXISTS texts (dat TEXT, title_hash TEXT, file_hash TEXT, author TEXT, author_sort TEXT, title TEXT, file TEXT)');
-      db.run('CREATE TABLE IF NOT EXISTS more_authors (title_hash TEXT, author TEXT)');
+    this.db = db({
+      client: 'sqlite3',
+      connection: {
+        filename: path.format({
+          dir: this.baseDir,
+          base: 'catalog.db',
+        }),
+      },
+      useNullAsDefault: true,
     });
-    this.db = db;
+    this.db.schema.createTableIfNotExists('dats', (table) => {
+      table.string('dat');
+      table.string('name');
+      table.string('dir');
+      // table.unique('dat');
+    })
+    .createTableIfNotExists('texts', (table) => {
+      table.string('dat');
+      table.string('title_hash');
+      table.string('file_hash');
+      table.string('author');
+      table.string('author_sort');
+      table.string('title');
+      table.string('file');
+    })
+    .createTableIfNotExists('more_authors', (table) => {
+      table.string('title_hash');
+      table.string('author');
+      // table.unique('title_hash');
+    })
+    .catch(e => console.error(e));
   }
 
   // Look inside the base directory for any directories that seem to be dats
@@ -69,32 +90,25 @@ export default class Catalog {
   registerDat(dw) {
     const datkey = dw.dat.key.toString('hex');
     console.log(`Adding dat (${datkey}) to the catalog.`);
-    this.removeDatFromDb(datkey);
-    this.addDatToDb(datkey, dw.name, dw.directory);
-    this.clearDatEntries(datkey);
-    this.dats[datkey] = dw;
+    this.removeDatFromDb(datkey)
+      .then(() => this.clearDatEntries(datkey))
+      .then(() => this.addDatToDb(datkey, dw.name, dw.directory))
+      .finally(() => { this.dats[datkey] = dw; })
+      .catch(e => console.log(e));
     return dw;
   }
 
-  addDatToDb(key, name, dir) {
-    this.db.run('INSERT INTO dats VALUES (?, ?, ?)',
-      key, name, dir,
-      (err) => {
-        if (err) console.error(err);
-      });
+  addDatToDb(dat, name, dir) {
+    return this.db.insert({ dat, name, dir }).into('dats');
   }
 
   removeDatFromDb(datKey) {
-    this.db.run('DELETE FROM dats WHERE dat=?', datKey, (err) => {
-      if (err) console.error(err);
-    });
+    return this.db('dats').where('dat', datKey).del();
   }
 
   // Remove all entries for a dat
-  clearDatEntries(datkey) {
-    this.db.run('DELETE FROM texts WHERE dat=?', datkey, function (err) {
-      console.log(`${this.changes} entries cleared from db with dat key: ${datkey}`);
-    });
+  clearDatEntries(datKey) {
+    return this.db('texts').where('dat', datKey).del();
   }
 
   // Adds an entry from a Dat
@@ -103,44 +117,70 @@ export default class Catalog {
     arr.shift();
     if (arr.length > 2) {
       const name = parser(arr[0]);
-      this.db.run('INSERT INTO texts VALUES (?, ?, ?, ?, ?, ?, ?)',
-        dat.key, '', '', arr[0], name.last, arr[1], arr[2],
-        (err, obj) => {
-          if (err) console.error(err);
-        });
+      return this.db.insert({
+        dat: dat.key,
+        title_hash: '',
+        file_hash: '',
+        author: arr[0],
+        author_sort: `${name.last}, ${name.first}`,
+        title: arr[1],
+        file: arr[2],
+      }).into('texts');
     }
+    return Promise.resolve(false);
   }
 
   // Returns the path to a dat
   // This is broken until i can understand making sqlite async
   pathToDat(datKey) {
-    let p = false;
-    const sql = 'SELECT * FROM dats WHERE dat=?';
-    this.db.get(sql, datKey, (err, row) => { if (row) p = row.dir; console.log(row);});
-    return p; // @todo: throw?
+    return this.db.select('dir').from('dats').where('dat', datKey).first();
   }
 
   // Gets a count of authors in the catalog
-  search(query, cb) {
+  search(query) {
     const s = `%${query}%`;
-    const sql = 'SELECT * FROM texts WHERE title LIKE ? OR author LIKE ? ORDER BY author_sort';
-    this.db.all(sql, s, s, (err, rows) => cb(err, rows));
+    return this.db('texts')
+      .where('title', 'like', s)
+      .orWhere('author', 'like', s)
+      .orderBy('author_sort', 'title_sort');
   }
 
   // Gets a count of authors in the catalog
-  getAuthors(cb) {
-    const sql = 'SELECT author, author_sort, COUNT(title) as count FROM texts GROUP BY author ORDER BY author_sort';
-    this.db.all(sql, (err, rows) => cb(err, rows));
+  getAuthors() {
+    return this.db.select('author').from('texts')
+      .countDistinct('title as count')
+      .groupBy('author')
+      .orderBy('author_sort');
   }
 
-  getTitlesForAuthor(author, cb) {
-    const sql = 'SELECT DISTINCT title, dat FROM texts WHERE author LIKE ? ORDER BY title';
-    this.db.all(sql, author, (err, rows) => cb(err, rows));
+  getTitlesForAuthor(author) {
+    return this.db('texts')
+      .distinct('dat', 'title')
+      .where('author', author)
+      .orderBy('title');
   }
 
-  getFiles(author, title, cb) {
-    const sql = 'SELECT * FROM texts WHERE author=? AND title=? ORDER BY dat, file';
-    this.db.all(sql, author, title, (err, rows) => cb(err, rows));
+  // Optionally only include files from a particular dat.
+  // Optionally specify a filename to find.
+  getFiles(author, title, dat = false, file = false) {
+    const exp = this.db('texts')
+      .where('author', author)
+      .where('title', title);
+    if (dat) {
+      exp.where('dat', dat);
+    }
+    if (file) {
+      exp.where('file', file);
+    }
+    return exp.orderBy('dat', 'file');
+  }
+
+  // Returns opf metadata object for an item, optionally preferring a specific library.
+  getOpf(author, title, dat = false) {
+    const mfn = 'metadata.opf'; // metadata file name
+    return this.getFiles(author, title, dat, mfn).first()
+      .then(row => this.pathToDat(row.dat))
+      .then(fp => opf2js(path.join(fp.dir, author, title, mfn)));
   }
 
 }

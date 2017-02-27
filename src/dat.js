@@ -16,7 +16,7 @@ export function listDatContents(dat) {
  * Adds Library-ish functions to a Dat. Expects the Dat's directory structure to
  * follow Calibre's (Author Name/ Publication Title/ Files)
  */
-export class DatWrapper {
+export default class DatWrapper {
   constructor(opts, listener) {
     this.directory = opts.directory;
     // create if it doesn't exist
