@@ -3,7 +3,7 @@ import fs from 'fs';
 import Promise from 'bluebird';
 import db from 'knex';
 import parser from 'another-name-parser';
-import DatWrapper, { listDatContents } from './dat';
+import DatWrapper, { listDatContents, listDatContents2 } from './dat';
 import { opf2js } from './opf';
 
 // @todo: this.db.close(); should be called on shutdown
@@ -146,6 +146,13 @@ export default class Catalog {
     return this.db.select('dir').from('dats').where('dat', datKey).first();
   }
 
+  // Checks out an item by author and title and dat
+  // @todo: make this work... not actually downloading yet
+  checkout(author, title, datKey) {
+    console.log(`checking out ${author}/${title} from ${datKey}`);
+    return this.dats[datKey].downloadContent(path.join(author, title));
+  }
+
   // Gets a count of authors in the catalog
   search(query) {
     const s = `%${query}%`;
@@ -168,6 +175,13 @@ export default class Catalog {
       .distinct('dat', 'title')
       .where('author', author)
       .orderBy('title');
+  }
+
+  getDatsWithTitle(author, title) {
+    return this.db('texts')
+      .distinct('dat')
+      .where('author', author)
+      .where('title', title);
   }
 
   // Optionally only include files from a particular dat.

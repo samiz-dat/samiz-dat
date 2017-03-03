@@ -3,6 +3,7 @@ import createDat from 'dat-node';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import chalk from 'chalk';
+import pda from 'pauls-dat-api';
 
 
 // Lists the contents of a dat
@@ -12,12 +13,16 @@ export function listDatContents(dat) {
   return archiveList();
 }
 
+export function listDatContents2(dat) {
+  return pda.listFiles(dat.archive, '/');
+}
+
 /**
  * Adds Library-ish functions to a Dat. Expects the Dat's directory structure to
  * follow Calibre's (Author Name/ Publication Title/ Files)
  */
 export default class DatWrapper {
-  constructor(opts, listener) {
+  constructor(opts) {
     this.directory = opts.directory;
     // create if it doesn't exist
     if (!fs.existsSync(opts.directory)) {
@@ -26,10 +31,11 @@ export default class DatWrapper {
     this.key = opts.key;
     this.name = opts.name;
     this.opts = opts;
-    this.listener = listener;
   }
 
   // Creates a dat and grabs a key
+  // Perhaps this gets rewritten to be more like beaker:
+  // https://github.com/beakerbrowser/beaker/blob/2c2336430bdb00ea8e47e13fb2e8c8d5b89440ea/app/background-process/networks/dat/dat.js#L231
   run() {
     return this.create()
       .then((dat) => {
@@ -53,6 +59,19 @@ export default class DatWrapper {
   create() {
     const createDatAsync = Promise.promisify(createDat);
     return createDatAsync(this.directory, this.opts);
+  }
+
+  // Lists the contents of a dat
+  listContents() {
+    const archive = this.dat.archive;
+    const archiveList = Promise.promisify(archive.list, { context: archive });
+    return archiveList();
+  }
+
+  // Download a file or directory
+  downloadContent(fn) {
+    console.log(`Downloading: /${fn}`);
+    return pda.download(this.dat.archive, `/${fn}`);
   }
 
   exitHandler = options => (error) => {
