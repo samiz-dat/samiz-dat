@@ -2,9 +2,10 @@ import path from 'path';
 import fs from 'fs';
 import Catalog from './catalog';
 import { opf2js } from './opf';
+import config from './config';
 
 // Directory to store all the data in (should be a config option)
-const dataDir = path.join(process.cwd(), '_data');
+const dataDir = path.join(process.cwd(), config.get('dataDir'));
 // Create data directory if it doesn't exist yet
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir);
@@ -28,7 +29,8 @@ if (process.env.npm_config_numAuthors) {
   c.discoverDats().then(() =>
     c.importDat({
       key: process.env.npm_config_dat,
-      name: process.env.npm_config_name }))
+      name: process.env.npm_config_name,
+      sparse: true }))
   .catch(e => console.log(e));
   // npm run cli --checlout --author="A Name" --title="A Title"
 } else if (process.env.npm_config_checkout
