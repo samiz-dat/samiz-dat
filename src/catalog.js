@@ -45,7 +45,9 @@ export default class Catalog {
       table.string('author');
       // table.unique('title_hash');
     })
-    .catch(e => console.error(e));
+    .catch(e => console.error(e))
+    .then(this.getDats)
+    .then(console.log);
   }
 
   // Look inside the base directory for any directories that seem to be dats
@@ -189,6 +191,8 @@ export default class Catalog {
     }
     return exp.orderBy('dat', 'file');
   }
+
+  getDats = () => this.db('dats').select();
 
   // Returns opf metadata object for an item, optionally preferring a specific library.
   getOpf(author, title, dat = false) {
