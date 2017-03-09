@@ -8,6 +8,7 @@
     "mocha": true,
   },
   "rules": {
+    "max-len": 0,
     "generator-star-spacing": 0,
     "no-param-reassign": ["error", { "props": false }],
     "no-restricted-syntax": 0,
