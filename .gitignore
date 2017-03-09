@@ -1,8 +1,8 @@
 _data/
-_data2/
+_data_1/
 node_modules/
 test-dir/
 dist/
 *.log
 
-dist/build.js
+
