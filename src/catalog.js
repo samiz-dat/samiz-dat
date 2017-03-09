@@ -1,5 +1,4 @@
 import path from 'path';
-import fs from 'fs';
 import Promise from 'bluebird';
 import db from 'knex';
 import parser from 'another-name-parser';
@@ -13,11 +12,6 @@ export default class Catalog {
   constructor(baseDir) {
     this.baseDir = baseDir;
     this.dats = [];
-    // Catalog is kept in the datastore
-    this.initDb();
-  }
-
-  initDb() {
     this.db = db({
       client: 'sqlite3',
       connection: {
@@ -28,7 +22,10 @@ export default class Catalog {
       },
       useNullAsDefault: true,
     });
-    this.db.schema.createTableIfNotExists('dats', (table) => {
+  }
+
+  initDatabase() {
+    return this.db.schema.createTableIfNotExists('dats', (table) => {
       table.string('dat');
       table.string('name');
       table.string('dir');
@@ -53,19 +50,20 @@ export default class Catalog {
 
   // Look inside the base directory for any directories that seem to be dats
   discoverDats() {
-    return getDirectories(this.baseDir).then((dirs) => {
-      const promises = [];
-      for (const d of dirs) {
-        console.log(`Attempting to load ${d} as a dat`);
-        const opts = {
-          createIfMissing: false,
-          name: d,
-          sparse: true,
-        };
-        promises.push(this.importDat(opts));
-      }
-      return promises;
-    });
+    return getDirectories(this.baseDir)
+      .then((dirs) => {
+        const promises = [];
+        for (const d of dirs) {
+          console.log(`Attempting to load ${d} as a dat`);
+          const opts = {
+            createIfMissing: false,
+            name: d,
+            sparse: true,
+          };
+          promises.push(this.importDat(opts));
+        }
+        return promises;
+      });
   }
 
   // Does the work of importing a functional dat into the catalog

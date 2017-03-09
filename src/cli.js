@@ -12,50 +12,52 @@ if (!fs.existsSync(dataDir)) {
 }
 
 function initCatalog() {
-  return new Catalog(dataDir);
+  const catalog = new Catalog(dataDir);
+  return catalog.initDatabase().then(() => catalog);
 }
 
 // npm run cli --numAuthors
 if (process.env.npm_config_numAuthors) {
-  const c = initCatalog();
-  c.getAuthors()
-  .then((rows) => {
-    console.log(`${rows.length} authors`);
-  })
-  .catch(e => console.log(e));
+  initCatalog()
+    .then(c => c.getAuthors())
+    .then((rows) => {
+      console.log(`${rows.length} authors`);
+    })
+    .catch(e => console.log(e));
 // npm run cli --dat=datkey --name="A Nice Name"
 } else if (process.env.npm_config_dat) {
-  const c = initCatalog();
-  c.discoverDats().then(() =>
-    c.importDat({
+  initCatalog()
+    .tap(c => c.discoverDats())
+    .then(c => c.importDat({
       key: process.env.npm_config_dat,
       name: process.env.npm_config_name,
       sparse: true }))
-  .catch(e => console.log(e));
+    .catch(e => console.log(e));
   // npm run cli --checlout --author="A Name" --title="A Title"
 } else if (process.env.npm_config_checkout
     && process.env.npm_config_author
     && process.env.npm_config_title) {
-  const c = initCatalog();
-  c.discoverDats().all()
-  .then(() => c.getDatsWithTitle(process.env.npm_config_author, process.env.npm_config_title))
-  .then(rows => c.checkout(process.env.npm_config_author, process.env.npm_config_title, rows.shift().dat))
-  .finally(() => console.log('Finished downloading...'))
-  .catch(e => console.log(e));
+  initCatalog().then(c => (
+      c.discoverDats()
+        .then(() => c.getDatsWithTitle(process.env.npm_config_author, process.env.npm_config_title))
+        .then(rows => c.checkout(process.env.npm_config_author, process.env.npm_config_title, rows.shift().dat))
+    ))
+    .finally(() => console.log('Finished downloading...'))
+    .catch(e => console.log(e));
 // npm run cli --listAuthors
 } else if (process.env.npm_config_listAuthors) {
-  const c = initCatalog();
-  c.getAuthors()
-  .then((rows) => {
-    for (const doc of rows) {
-      console.log(`${doc.author} (${doc.count} items)`);
-    }
-  })
-  .catch(e => console.log(e));
+  initCatalog()
+    .then(c => c.getAuthors())
+    .then((rows) => {
+      for (const doc of rows) {
+        console.log(`${doc.author} (${doc.count} items)`);
+      }
+    })
+    .catch(e => console.log(e));
 // npm run cli --search=query
 } else if (process.env.npm_config_search) {
-  const c = initCatalog();
-  c.search(process.env.npm_config_search)
+  initCatalog()
+    .then(c => c.search(process.env.npm_config_search))
     .then((rows) => {
       for (const doc of rows) {
         console.log(`${doc.author}, "${doc.title}"`);
@@ -70,8 +72,8 @@ if (process.env.npm_config_numAuthors) {
 // npm run cli --getTitles --author="Author Name"
 } else if (process.env.npm_config_getTitles
   && process.env.npm_config_author) {
-  const c = initCatalog();
-  c.getTitlesForAuthor(process.env.npm_config_author)
+  initCatalog()
+    .then(c => c.getTitlesForAuthor(process.env.npm_config_author))
     .then((rows) => {
       for (const doc of rows) {
         console.log(`${doc.title} in dat:${doc.dat}`);
@@ -82,8 +84,8 @@ if (process.env.npm_config_numAuthors) {
 } else if (process.env.npm_config_getFiles
   && process.env.npm_config_author
   && process.env.npm_config_title) {
-  const c = initCatalog();
-  c.getFiles(process.env.npm_config_author, process.env.npm_config_title)
+  initCatalog()
+    .then(c => c.getFiles(process.env.npm_config_author, process.env.npm_config_title))
     .then((rows) => {
       for (const doc of rows) {
         console.log(`${doc.file} in dat:${doc.dat}`);
@@ -94,8 +96,8 @@ if (process.env.npm_config_numAuthors) {
 } else if (process.env.npm_config_getOpf
     && process.env.npm_config_author
     && process.env.npm_config_title) {
-  const c = initCatalog();
-  c.getOpf(process.env.npm_config_author, process.env.npm_config_title)
+  initCatalog()
+    .then(c => c.getOpf(process.env.npm_config_author, process.env.npm_config_title))
     .then((opf) => {
       console.log(`Title: ${opf.title}`);
       console.log(`Authors: ${opf.authors}`);
