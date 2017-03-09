@@ -1,9 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 import Catalog from './catalog';
+import config from './config';
 
 // Directory to store all the data in (should be a config option)
-const dataDir = path.join(process.cwd(), '_data');
+const dataDir = path.join(process.cwd(), config.get('dataDir'));
 // Create data directory if it doesn't exist yet
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir);
