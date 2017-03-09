@@ -5,15 +5,8 @@ import db from 'knex';
 import parser from 'another-name-parser';
 import DatWrapper, { listDatContents, listDatContents2 } from './dat';
 import { opf2js } from './opf';
-
+import { getDirectories } from './utils/filesystem';
 // @todo: this.db.close(); should be called on shutdown
-
-// @todo: Move this to some utilities place, it is not specific to catalog
-function getDirectories(srcpath) {
-  const readdirAsync = Promise.promisify(fs.readdir);
-  return readdirAsync(srcpath)
-    .filter(file => fs.statSync(path.join(srcpath, file)).isDirectory());
-}
 
 // Class definition
 export default class Catalog {
