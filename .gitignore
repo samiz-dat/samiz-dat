@@ -4,3 +4,5 @@ node_modules/
 test-dir/
 dist/
 *.log
+
+dist/build.js
