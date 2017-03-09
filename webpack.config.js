@@ -30,6 +30,8 @@ module.exports = {
       'electron',
       'dat-node',
       'sqlite3',
+      'knex',
+      'pauls-dat-api',
     ]),
   ],
 };
