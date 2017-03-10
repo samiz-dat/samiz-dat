@@ -3,7 +3,6 @@ import createDat from 'dat-node';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import chalk from 'chalk';
-import ProgressBar from 'progress';
 import pda from 'pauls-dat-api';
 
 
