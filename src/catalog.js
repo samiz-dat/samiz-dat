@@ -8,7 +8,7 @@ import { getDirectories } from './utils/filesystem';
 // @todo: this.db.close(); should be called on shutdown
 
 // Class definition
-export default class Catalog {
+export class Catalog {
   constructor(baseDir) {
     this.baseDir = baseDir;
     this.dats = [];
@@ -86,7 +86,10 @@ export default class Catalog {
       .then(dw => this.registerDat(dw))
       .then(dw => listDatContents(dw.dat))
       .each(entry => this.importDatEntry(newDat, entry))
-      .catch(err => console.log(`* Something went wrong when importing ${opts.directory}`));
+      .catch((err) => {
+        console.log(`* Something went wrong when importing ${opts.directory}`);
+        console.log(err);
+      });
   }
 
   // Registers dat in catalog array and in database (@todo)
@@ -203,3 +206,10 @@ export default class Catalog {
   }
 
 }
+
+export function createCatalog(dataDir) {
+  const catalog = new Catalog(dataDir);
+  return catalog.initDatabase().then(() => catalog);
+}
+
+export default Catalog;
