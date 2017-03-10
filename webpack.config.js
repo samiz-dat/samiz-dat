@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   target: 'node',
-  entry: './src/index.js',
+  entry: './src/client/index.js',
   resolve: {
     extensions: ['.js', '.json'],
     enforceExtension: false,
@@ -32,7 +32,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
         title: 'config.title',
-        template: path.resolve(__dirname, 'src/index.html'),
+        template: path.resolve(__dirname, 'src/client/index.html'),
         filename: '../dist/index.html',
       }),
     new webpack.ExternalsPlugin('commonjs', [
