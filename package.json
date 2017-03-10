@@ -9,6 +9,7 @@
     "babel": "rm -rf ./dist && webpack --config ./webpack.config.js",
     "dev": "babel-node ./src/index.js",
     "cli": "babel-node ./src/cli.js",
+    "start": "electron main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -29,6 +30,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.9.0",
+    "html-webpack-plugin": "^2.28.0",
     "vue-hot-reload-api": "^2.0.9",
     "vue-html-loader": "^1.2.3",
     "vue-loader": "^11.1.0",
@@ -48,6 +50,7 @@
     "nconf": "^0.8.4",
     "pauls-dat-api": "^1.1.1",
     "sqlite3": "^3.1.8",
+    "vue": "^2.2.2",
     "xml2js": "^0.4.17"
   }
 }

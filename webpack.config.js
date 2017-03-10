@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   target: 'node',
@@ -7,6 +8,9 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.json'],
     enforceExtension: false,
+    alias: {
+    'vue': 'vue/dist/vue.common.js',
+    },
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -26,6 +30,11 @@ module.exports = {
     ],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+        title: 'config.title',
+        template: path.resolve(__dirname, 'src/index.html'),
+        filename: '../dist/index.html',
+      }),
     new webpack.ExternalsPlugin('commonjs', [
       'electron',
       'dat-node',
@@ -33,5 +42,6 @@ module.exports = {
       'knex',
       'pauls-dat-api',
     ]),
+
   ],
 };

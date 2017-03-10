@@ -7,6 +7,18 @@
     "commonjs": true,
     "mocha": true,
   },
+  // required to lint *.vue files
+  plugins: [
+    'html'
+  ],
+  // check if imports actually resolve
+  settings: {
+    'import/resolver': {
+      'webpack': {
+        'config': 'webpack.config.js'
+      }
+    }
+  },
   "rules": {
     "max-len": 0,
     "generator-star-spacing": 0,
@@ -14,6 +26,10 @@
     "no-restricted-syntax": 0,
     "no-plusplus":0,
     "no-console": 0,
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js", "**/*.spec.js"]}]
-  }
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js", "**/*.spec.js"]}],
+    "import/extensions": ["error", "always", {
+      "js": "never",
+      "vue": "never",
+    }],
+  },
 }
