@@ -36,7 +36,13 @@ if (process.env.npm_config_discover) {
       key: process.env.npm_config_dat,
       name: process.env.npm_config_name,
       sparse: true }));
-  // npm run cli --checlout --author="A Name" --title="A Title"
+// npm run cli --dir="/Path/to/Dir/to/Add" --name="A Nice Name"
+} else if (process.env.npm_config_dir) {
+  pending = createCatalog(dataDir)
+    .tap(c => c.discoverDats())
+    .then(c => c.importDir(process.env.npm_config_dir, process.env.npm_config_name))
+    .catch(e => console.log(e));
+// npm run cli --checlout --author="A Name" --title="A Title"
 } else if (process.env.npm_config_checkout
     && process.env.npm_config_author
     && process.env.npm_config_title) {
@@ -110,6 +116,7 @@ if (process.env.npm_config_discover) {
     });
 } else { // by default print help
   console.log('--dat=datkey --name="A Nice Name"\tImport a new dat to your catalog');
+  console.log('--dir="/Path/to/Dir/to/Add" --name="A Nice Name"\tImport a local directory');
   console.log('--checkout --author="A Name" --title="A Title"');
   console.log('--numAuthors\tPrint the number of authors in the catalog');
   console.log('--listAuthors\tLists the authors in the catalog');

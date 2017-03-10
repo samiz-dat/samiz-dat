@@ -1,13 +1,13 @@
 import path from 'path';
+import fs from 'fs';
 import Promise from 'bluebird';
 import db from 'knex';
 import parser from 'another-name-parser';
 import chalk from 'chalk';
 
-import DatWrapper, { listDatContents, listDatContents2 } from './dat';
+import DatWrapper, { listDatContents, listDatContents2, importFiles } from './dat';
 import { opf2js } from './opf';
 import { getDirectories } from './utils/filesystem';
-
 // @todo: this.db.close(); should be called on shutdown
 
 // Class definition
@@ -68,6 +68,16 @@ export class Catalog {
       .then(() => this);
   }
 
+  // Imports a directory on the local filesystem as a dat
+  importDir(directory, name) {
+    console.log(`Attempting to import directory: ${directory}`);
+    const opts = {
+      directory,
+      name,
+    };
+    this.importDat(opts);
+  }
+
   // Does the work of importing a functional dat into the catalog
   importDat(opts) {
     if ('key' in opts && opts.key in this.dats) {
@@ -83,8 +93,9 @@ export class Catalog {
     }
     const newDat = new DatWrapper(opts, this);
     return newDat.run()
-      .then(dw => this.registerDat(dw))
-      .then(dw => listDatContents(dw.dat))
+      .then(() => this.registerDat(newDat))
+      .then(() => importFiles(newDat))
+      .then(() => listDatContents(newDat.dat))
       .each(entry => this.importDatEntry(newDat, entry))
       .catch((err) => {
         console.log(`* Something went wrong when importing ${opts.directory}`);
@@ -96,12 +107,11 @@ export class Catalog {
   registerDat(dw) {
     const datkey = dw.dat.key.toString('hex');
     console.log(`Adding dat (${datkey}) to the catalog.`);
-    this.removeDatFromDb(datkey)
+    return this.removeDatFromDb(datkey)
       .then(() => this.clearDatEntries(datkey))
       .then(() => this.addDatToDb(datkey, dw.name, dw.directory))
       .finally(() => { this.dats[datkey] = dw; })
       .catch(e => console.log(e));
-    return dw;
   }
 
   addDatToDb(dat, name, dir) {
@@ -119,10 +129,12 @@ export class Catalog {
 
   // Adds an entry from a Dat
   importDatEntry(dat, entry) {
-    console.log(chalk.bold('adding:'), entry.name);
     const arr = entry.name.split(path.sep);
-    //arr.shift();
+    if (arr[0] === '') {
+      arr.shift();
+    }
     if (arr.length > 2) {
+      console.log(chalk.bold('adding:'), entry.name);
       const name = parser(arr[0]);
       return this.db.insert({
         dat: dat.key,

@@ -3,6 +3,7 @@ import createDat from 'dat-node';
 import _ from 'lodash';
 import Promise from 'bluebird';
 import chalk from 'chalk';
+import ProgressBar from 'progress';
 import pda from 'pauls-dat-api';
 
 
@@ -15,6 +16,13 @@ export function listDatContents(dat) {
 
 export function listDatContents2(dat) {
   return pda.listFiles(dat.archive, '/');
+}
+
+export function importFiles(dw) {
+  if (dw.dat.owner) {
+    return dw.importFiles();
+  }
+  return Promise.resolve(true);
 }
 
 /**
@@ -39,16 +47,17 @@ export default class DatWrapper {
   run() {
     return this.create()
       .then((dat) => {
+        this.dat = dat;
         this.key = dat.key.toString('hex');
+        // const opts = {}; // various network options could go here (https://github.com/datproject/dat-node)
         const network = dat.joinNetwork();
         const stats = dat.trackStats();
-        this.dat = dat;
         stats.once('update', () => {
-          console.log('stats updated', stats.get());
+          console.log(chalk.gray(chalk.bold('stats updated')), stats.get());
         });
         network.once('connection', () => {
           console.log('connects via network');
-          console.log(chalk.gray(chalk.bold('peers:'), network.connected));
+          console.log(chalk.gray(chalk.bold('peers:')), stats.peers);
         });
         // this.start(dat);
       })
@@ -59,6 +68,15 @@ export default class DatWrapper {
   create() {
     const createDatAsync = Promise.promisify(createDat);
     return createDatAsync(this.directory, this.opts);
+  }
+
+  importFiles() {
+    const dat = this.dat;
+    if (this.dat.owner) {
+      const importer = dat.importFiles(this.directory, () => console.log(`Finished importing files in ${this.directory}`));
+      importer.on('error', err => console.log(err));
+    }
+    return Promise.resolve(false);
   }
 
   // Lists the contents of a dat
