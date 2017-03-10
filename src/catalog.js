@@ -2,9 +2,12 @@ import path from 'path';
 import Promise from 'bluebird';
 import db from 'knex';
 import parser from 'another-name-parser';
+import chalk from 'chalk';
+
 import DatWrapper, { listDatContents, listDatContents2 } from './dat';
 import { opf2js } from './opf';
 import { getDirectories } from './utils/filesystem';
+
 // @todo: this.db.close(); should be called on shutdown
 
 // Class definition
@@ -53,19 +56,16 @@ export class Catalog {
   // Look inside the base directory for any directories that seem to be dats
   discoverDats() {
     return getDirectories(this.baseDir)
-      .then((dirs) => {
-        const promises = [];
-        for (const d of dirs) {
-          console.log(`Attempting to load ${d} as a dat`);
-          const opts = {
-            createIfMissing: false,
-            name: d,
-            sparse: true,
-          };
-          promises.push(this.importDat(opts));
-        }
-        return promises;
-      });
+      .map((name) => {
+        console.log(`Attempting to load dir: ${chalk.bold(name)} as a dat`);
+        const opts = {
+          name,
+          createIfMissing: false,
+          sparse: true,
+        };
+        return this.importDat(opts);
+      })
+      .then(() => this);
   }
 
   // Does the work of importing a functional dat into the catalog

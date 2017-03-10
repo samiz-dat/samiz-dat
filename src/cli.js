@@ -14,7 +14,15 @@ if (!fs.existsSync(dataDir)) {
 let pending;
 
 // npm run cli --numAuthors
-if (process.env.npm_config_numAuthors) {
+if (process.env.npm_config_discover) {
+  pending = createCatalog(dataDir)
+    .then(c => c.discoverDats())
+    .then(c => c.getAuthors())
+    .then((rows) => {
+      console.log(`${rows.length} authors`);
+    });
+// npm run cli --numAuthors
+} else if (process.env.npm_config_numAuthors) {
   pending = createCatalog(dataDir)
     .then(c => c.getAuthors())
     .then((rows) => {
