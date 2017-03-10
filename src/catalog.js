@@ -119,8 +119,9 @@ export class Catalog {
 
   // Adds an entry from a Dat
   importDatEntry(dat, entry) {
+    console.log(chalk.bold('adding:'), entry.name);
     const arr = entry.name.split(path.sep);
-    arr.shift();
+    //arr.shift();
     if (arr.length > 2) {
       const name = parser(arr[0]);
       return this.db.insert({
