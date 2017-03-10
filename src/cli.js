@@ -13,7 +13,7 @@ if (!fs.existsSync(dataDir)) {
 
 let pending;
 
-// npm run cli --numAuthors
+// npm run cli --discover
 if (process.env.npm_config_discover) {
   pending = createCatalog(dataDir)
     .then(c => c.discoverDats())
