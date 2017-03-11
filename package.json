@@ -7,7 +7,7 @@
     "prepublish": "npm run babel",
     "build": "npm run babel",
     "babel": "rm -rf ./dist && webpack --config ./webpack.config.js",
-    "dev": "babel-node ./src/index.js",
+    "dev": "rm -rf ./dist && webpack --progress --watch --config ./webpack.config.js",
     "cli": "babel-node ./src/cli.js",
     "start": "electron main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -52,6 +52,7 @@
     "pauls-dat-api": "^1.1.1",
     "sqlite3": "^3.1.8",
     "vue": "^2.2.2",
+    "vuex": "^2.2.1",
     "xml2js": "^0.4.17"
   }
 }
