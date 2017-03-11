@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron');
+const os = require('os');
 const path = require('path');
 const url = require('url');
 
@@ -6,15 +7,13 @@ const url = require('url');
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-const extensionDir = '/Users/benjamin/Library/Application Support/Google/Chrome/Default/Extensions/'
+const extensionDir = 'Library/Application Support/Google/Chrome/Default/Extensions/';
 const vueDevTools = 'nhdogjmejiglipccpnnnanhbledajbpd/3.0.8_0/';
-
-
 
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({ width: 800, height: 600 });
-  BrowserWindow.addDevToolsExtension(`${extensionDir}${vueDevTools}`);
+  BrowserWindow.addDevToolsExtension(path.join(os.homedir(), extensionDir, vueDevTools));
   // and load the index.html of the app.
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'dist/index.html'),
