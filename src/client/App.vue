@@ -8,18 +8,18 @@
 export default {
   name: 'App',
   components: {},
-  data () {
+  data() {
     return {
       categories: {},
       bookmarks: {},
-      selectedCategory: ''
+      selectedCategory: '',
     };
   },
-  created () {
+  created() {
     // do something
   },
   methods: {
-    //add som methods
+    // add som methods
   },
 };
 </script>
