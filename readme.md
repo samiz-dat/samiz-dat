@@ -8,7 +8,11 @@ The beginings of a distributed library.
 # install npm dependencies
 npm install
 # run in development
+# - first start up a webpack process
 npm run dev
+# - second launch electron app
+npm run start
+
 # build for production
 npm run build
 ```
@@ -22,3 +26,10 @@ and then look inside src/cli.js for some other commands you can run, such as:
 ```
 npm run cli --checkout --author="Ackbar Abbas" --title="Hong Kong Culture and the Politics of Disappearance (58)"
 ```
+
+## Todo:
+
+1. Setup webpack build for different environments
+  - enable hotloading and source mapping
+2. Basic tests using mocha/chai
+  - mostly for catalogue functions
