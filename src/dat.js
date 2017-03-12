@@ -1,6 +1,6 @@
 import fs from 'fs';
 import createDat from 'dat-node';
-import _ from 'lodash';
+// import _ from 'lodash';
 import Promise from 'bluebird';
 import chalk from 'chalk';
 import pda from 'pauls-dat-api';

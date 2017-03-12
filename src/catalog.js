@@ -1,13 +1,12 @@
 import path from 'path';
-import fs from 'fs';
 import Promise from 'bluebird';
 import db from 'knex';
 import parser from 'another-name-parser';
 import chalk from 'chalk';
 
-import DatWrapper, { listDatContents, listDatContents2, importFiles } from './dat';
+import DatWrapper, { listDatContents, importFiles } from './dat';
 import { opf2js } from './opf';
-import { getDirectories } from './utils/filesystem';
+import { getDirectories, notADir } from './utils/filesystem';
 // @todo: this.db.close(); should be called on shutdown
 
 // Class definition
@@ -53,6 +52,22 @@ export class Catalog {
     .then(console.log);
   }
 
+  // Every imported and added dat gets added to the `dats` table of the database. If
+  // the directories are deleted then these db entries are useless and should be removed.
+  // This will simply confirm that every dat directory in the db still exists.
+  cleanupDatsRegistry() {
+    console.log('Cleaning up the dats registry');
+    return this.getDats()
+      .map(dat => dat)
+      .filter(dat => notADir(dat.dir))
+      .each((dat) => {
+        console.log(`Removing: ${chalk.bold(dat.dir)} (directory does not exist)`);
+        return this.removeDatFromDb(dat.dat)
+          .then(() => this.clearDatEntries(dat.dat));
+      })
+      .then(() => this);
+  }
+
   // Look inside the base directory for any directories that seem to be dats
   discoverDats() {
     return getDirectories(this.baseDir)
@@ -65,17 +80,31 @@ export class Catalog {
         };
         return this.importDat(opts);
       })
+      .then(() => this.cleanupDatsRegistry())
+      .then(() => this.importDatsFromDB())
       .then(() => this);
   }
 
-  // Imports a directory on the local filesystem as a dat
+  // Imports dats listed in the dats table of the database
+  importDatsFromDB() {
+    this.getDats()
+      .map(dat => dat)
+      .filter(dat => notADir(dat.dir)) // directory exists
+      .filter(dat => !dat.dir.startsWith(this.baseDir)) // not in data directory
+      .filter(dat => !(dat.key in this.dats.keys())) // not in registry
+      .each(dat => this.importDir(dat.dir, dat.name))
+      .then(() => console.log('Imported dats from DB'));
+  }
+
+  // Imports a directory on the local filesystem as a dat.
+  // This should not be called on any directories inside `dataDir`, which are loaded differently
   importDir(directory, name) {
-    console.log(`Attempting to import directory: ${directory}`);
+    console.log(`Attempting to import local directory: ${directory}`);
     const opts = {
       directory,
       name,
     };
-    this.importDat(opts);
+    return this.importDat(opts);
   }
 
   // Does the work of importing a functional dat into the catalog
