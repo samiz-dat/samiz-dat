@@ -24,6 +24,7 @@ export class Catalog {
       },
       useNullAsDefault: true,
     });
+    this.isReady = false;
   }
 
   initDatabase() {
@@ -47,9 +48,8 @@ export class Catalog {
       table.string('author');
       // table.unique('title_hash');
     })
-    .catch(e => console.error(e))
-    .then(this.getDats)
-    .then(console.log);
+    .then(() => { this.isReady = true; })
+    .catch(e => console.error(e));
   }
 
   // Every imported and added dat gets added to the `dats` table of the database. If
