@@ -107,6 +107,17 @@ export class Catalog {
     return this.importDat(opts);
   }
 
+  // Importing a remote dat by its key
+  importRemoteDat(key, name = false) {
+    console.log(`Attempting to import remote dat: ${key}`);
+    const opts = {
+      key,
+      name: name || key,
+      sparse: true,
+    };
+    return this.importDat(opts);
+  }
+
   // Does the work of importing a functional dat into the catalog
   importDat(opts) {
     if ('key' in opts && opts.key in this.dats) {
