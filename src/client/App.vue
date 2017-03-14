@@ -5,6 +5,7 @@
     <div>{{dats}}</div>
     <div>{{error}}</div>
     <button v-on:click="getDats">List dats</button>
+    <button v-on:click="loadDirectoryAsDat">Load directory</button>
   </div>
 </template>
 
@@ -26,7 +27,7 @@
       ...mapState(['dats', 'loading', 'error']),
     },
     methods: {
-      ...mapActions(['loadCatalog', 'getDats']),
+      ...mapActions(['loadCatalog', 'loadDirectoryAsDat', 'getDats']),
     },
 };
 </script>

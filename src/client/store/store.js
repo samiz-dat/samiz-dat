@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import path from 'path';
+import { remote } from 'electron';
 import { Catalog } from '../../catalog';
 
 
@@ -39,10 +40,22 @@ const store = new Vuex.Store({
     },
     getDats: ({ commit }) => {
       commit('setLoading', true);
+      // async action to get dats
       catalog.getDats()
         .then(dats => commit('setDats', dats))
         .finally(() => commit('setLoading', false));
-      // async action to get dats
+    },
+    loadDirectoryAsDat: ({ commit }) => {
+      // need to figure out setting simple name too
+      // or just derive from the directory and let user rename later.
+      commit('setLoading', true);
+      remote.dialog.showOpenDialog({
+        properties: ['openDirectory'],
+      }, (file) => {
+        // use promise here to check if dir is dat, and then import or make
+        console.log(file);
+        commit('setLoading', false);
+      });
     },
   },
 });
