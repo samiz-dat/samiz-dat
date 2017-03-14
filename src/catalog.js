@@ -98,11 +98,11 @@ export class Catalog {
 
   // Imports a directory on the local filesystem as a dat.
   // This should not be called on any directories inside `dataDir`, which are loaded differently
-  importDir(directory, name) {
+  importDir(directory, name = false) {
     console.log(`Attempting to import local directory: ${directory}`);
     const opts = {
       directory,
-      name,
+      name: name || directory.split(path.sep).slice(-1)[0],
     };
     return this.importDat(opts);
   }

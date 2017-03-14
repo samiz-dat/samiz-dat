@@ -54,6 +54,7 @@ const store = new Vuex.Store({
       }, (file) => {
         // use promise here to check if dir is dat, and then import or make
         console.log(file);
+        catalog.importDir(file[0]);
         commit('setLoading', false);
       });
     },
