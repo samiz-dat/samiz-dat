@@ -62,6 +62,12 @@ const store = new Vuex.Store({
         }
       });
     },
+    importDat: ({ commit }, payload) => {
+      commit('setLoading', true);
+      catalog.importRemoteDat(payload.key, payload.name)
+        .catch(e => commit('setError', e))
+        .finally(() => commit('setLoading', false));
+    },
   },
 });
 
