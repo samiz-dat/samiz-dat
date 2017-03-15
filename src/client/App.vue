@@ -6,17 +6,20 @@
     <div>{{error}}</div>
     <button v-on:click="getDats">List dats</button>
     <button v-on:click="loadDirectoryAsDat">Load directory</button>
+    <dat-import-field/>
   </div>
 </template>
 
 <script>
   import { mapState, mapActions } from 'vuex';
   import loader from './components/loader.vue';
+  import datImportField from './components/datImportField.vue';
 
   export default {
     name: 'App',
     components: {
       loader,
+      datImportField,
     },
     data() {
       return {};
