@@ -29,6 +29,7 @@ const store = new Vuex.Store({
       state.error = payload;
     },
   },
+  // later we should refactor this into a seporate file
   actions: {
     loadCatalog: ({ commit }) => {
       commit('setLoading', true);
@@ -52,10 +53,13 @@ const store = new Vuex.Store({
       remote.dialog.showOpenDialog({
         properties: ['openDirectory'],
       }, (file) => {
-        // use promise here to check if dir is dat, and then import or make
-        console.log(file);
-        catalog.importDir(file[0]);
-        commit('setLoading', false);
+        if (Array.isArray(file)) {
+          catalog.importDir(file[0])
+          .catch(e => commit('setError', e))
+          .finally(() => commit('setLoading', false));
+        } else {
+          commit('setLoading', false);
+        }
       });
     },
   },
