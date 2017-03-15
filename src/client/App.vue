@@ -1,7 +1,7 @@
 <template>
   <div id="dat-library">
+    <loader :loading="loading"/>
     <h1>Dat Library</h1>
-    <div>{{loading}}</div>
     <div>{{dats}}</div>
     <div>{{error}}</div>
     <button v-on:click="getDats">List dats</button>
@@ -11,17 +11,19 @@
 
 <script>
   import { mapState, mapActions } from 'vuex';
+  import loader from './components/loader.vue';
 
   export default {
     name: 'App',
-    components: {},
+    components: {
+      loader,
+    },
     data() {
       return {};
     },
     created() {
-      // do something
+      // initialise catalog on app start
       this.loadCatalog();
-      console.log('created', this);
     },
     computed: {
       ...mapState(['dats', 'loading', 'error']),
@@ -31,3 +33,7 @@
     },
 };
 </script>
+
+<style lang="css">
+  body, html {  }
+</style>
