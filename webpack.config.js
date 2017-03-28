@@ -73,6 +73,7 @@ module.exports = {
       'sqlite3',
       'knex',
       'pauls-dat-api',
+      'dat-cardcat',
     ]),
   ],
 };

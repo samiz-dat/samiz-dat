@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import path from 'path';
 import { remote } from 'electron';
-import { Catalog } from '../../catalog';
+import { Catalog } from 'dat-cardcat';
 
 
 const dataDir = path.join(process.cwd(), '_data');
