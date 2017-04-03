@@ -10,17 +10,13 @@
   import { mapActions } from 'vuex';
 
   export default {
-    name: 'App',
+    name: 'DatImportField',
     components: {},
     data() {
       return {
         key: '',
         name: '',
       };
-    },
-    created() {
-      // initialise catalog on app start
-      this.loadCatalog();
     },
     methods: {
       ...mapActions(['importDat']),
