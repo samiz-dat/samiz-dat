@@ -3,7 +3,7 @@
     <h1>Library: {{dat.name}}</h1>
     <p><strong>Key:</strong>{{dat.dat}}</p>
     <ul>
-      <li v-for="file in files">
+      <li v-for="file in getDatFiles(dat.dat)">
         {{file.author}}, <em>{{file.title}}</em>: {{file.file}}
       </li>
     </ul>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import { mapActions, mapState } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
 
   export default {
     name: 'DatView',
@@ -24,7 +24,7 @@
       this.getFiles(this.dat.dat);
     },
     computed: {
-      ...mapState(['files']),
+      ...mapGetters(['getDatFiles']),
     },
     methods: {
       ...mapActions(['getFiles']),

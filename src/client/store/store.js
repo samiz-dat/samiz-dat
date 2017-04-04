@@ -11,7 +11,7 @@ const catalog = new Catalog(dataDir);
 const INITIAL_STATE = {
   loading: false,
   dats: [],
-  files: [],
+  files: {},
   error: null,
 };
 
@@ -26,8 +26,8 @@ const store = new Vuex.Store({
     setDats: (state, payload) => {
       state.dats = payload;
     },
-    setFiles: (state, payload) => {
-      state.files = payload;
+    setDatFiles: (state, payload) => {
+      Vue.set(state.files, payload.key, payload.files);
     },
     setError: (state, payload) => {
       state.error = payload;
@@ -35,6 +35,9 @@ const store = new Vuex.Store({
     resetError: (state) => {
       state.error = null;
     },
+  },
+  getters: {
+    getDatFiles: state => key => state.files[key],
   },
   // later we should refactor this into a seporate file
   actions: {
@@ -56,7 +59,7 @@ const store = new Vuex.Store({
     getFiles: ({ commit }, payload) => {
       commit('setLoading', true);
       catalog.getFilesFromDat(payload)
-        .then(files => commit('setFiles', files))
+        .then(files => commit('setDatFiles', { key: payload, files }))
         .finally(() => commit('setLoading', false));
     },
     loadDirectoryAsDat: ({ commit }) => {
