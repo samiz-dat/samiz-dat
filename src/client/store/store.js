@@ -58,7 +58,7 @@ const store = new Vuex.Store({
     },
     getFiles: ({ commit }, payload) => {
       commit('setLoading', true);
-      catalog.getFilesFromDat(payload)
+      catalog.getItemsWith({}, payload)
         .then(files => commit('setDatFiles', { key: payload, files }))
         .finally(() => commit('setLoading', false));
     },
