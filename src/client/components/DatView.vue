@@ -4,7 +4,7 @@
     <p><strong>Key:</strong>{{dat.dat}}</p>
     <ul>
       <li v-for="file in getDatFiles(dat.dat)">
-        {{file.author}}, <em>{{file.title}}</em>: {{file.file}}
+        <dat-item :file="file"/>
       </li>
     </ul>
   </div>
@@ -12,10 +12,11 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex';
+  import datItem from './datItem.vue';
 
   export default {
     name: 'DatView',
-    components: {},
+    components: { datItem },
     props: ['dat'],
     data() {
       return {};
