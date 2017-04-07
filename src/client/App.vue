@@ -3,7 +3,7 @@
     <loader :loading="loading"/>
     <error :error="error"/>
     <h1>Dat Library</h1>
-    <button v-on:click="getDats">List dats</button>
+    <!-- <button v-on:click="getDats">List dats</button> -->
     <button v-on:click="loadDirectoryAsDat">Load directory</button>
     <dat-import-field/>
     <dat-view v-for="dat in dats" :dat="dat" :key="dat.dat"/>
@@ -30,7 +30,9 @@
     },
     created() {
       // initialise catalog on app start
-      this.loadCatalog();
+      this.loadCatalog()
+        .then(() => console.log('ok'))
+        .then(() => this.getDats());
     },
     computed: {
       ...mapState(['dats', 'loading', 'error']),

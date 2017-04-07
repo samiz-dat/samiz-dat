@@ -43,8 +43,7 @@ const store = new Vuex.Store({
   actions: {
     loadCatalog: ({ commit }) => {
       commit('setLoading', true);
-      catalog.initDatabase()
-        .then(() => catalog.cleanupDatsRegistry())
+      return catalog.initDatabase()
         .then(() => catalog.discoverDats())
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
