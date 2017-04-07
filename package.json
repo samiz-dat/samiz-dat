@@ -10,7 +10,8 @@
     "dev": "rm -rf ./dist && webpack --progress --watch --config ./webpack.config.js",
     "cli": "babel-node ./src/cli.js",
     "start": "electron main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update-datcat": "rm -rf node_modules/dat-cardcat; npm i"
   },
   "author": "",
   "private": true,
