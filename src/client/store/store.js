@@ -62,6 +62,11 @@ const store = new Vuex.Store({
         .then(files => commit('setDatFiles', { key: payload, files }))
         .finally(() => commit('setLoading', false));
     },
+    download: ({ commit }, item) => {
+      commit('setLoading', true);
+      catalog.checkout(item)
+        .finally(() => commit('setLoading', false));
+    },
     loadDirectoryAsDat: ({ commit }) => {
       // need to figure out setting simple name too
       // or just derive from the directory and let user rename later.

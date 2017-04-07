@@ -1,5 +1,6 @@
 <template>
-  <div>{{file.author}} <em>{{file.title}}</em><a v-on:click="action">{{file.file}}</a>
+  <div>
+  <a v-on:click="downloadAuthor">{{file.author}}</a> <em>{{file.title}}</em><a v-on:click="action">{{file.file}}</a>
   </div>
 </template>
 
@@ -26,8 +27,12 @@
           console.log('open');
         } else {
           // this.download();
-          console.log('download');
+          this.download(this.file);
+          // console.log('download');
         }
+      },
+      downloadAuthor: function() {
+        this.download({ author:this.file.author });
       },
     },
 };
