@@ -4,7 +4,7 @@
     <p><strong>Key:</strong>{{dat.dat}}</p>
     <ul>
       <li v-for="file in getDatFiles(dat.dat)">
-        <dat-item :file="file"/>
+        <dat-item :file="file" :dir="dat.dir"/>
       </li>
     </ul>
   </div>
