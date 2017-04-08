@@ -42,12 +42,14 @@
 </script>
 
 <style lang="scss" scoped>
-  div.downloaded {
-    color: black;
-  }
   div {
     color: gray;
+    margin: 1rem;
+    .downloaded {
+      color: black;
+    }
   }
+
   a {
     cursor: pointer;
     &:hover {
