@@ -25,20 +25,16 @@
     },
     methods: {
       ...mapActions(['download']),
-      action: function () {
-        console.log(this.file);
+      action: function action() {
         if (this.file.downloaded) {
-          // open file
-          console.log('open');
-          // shell.openItem()
-          shell.showItemInFolder(path.join(this.dir, this.file.author, this.file.title, this.file.file));
+          const filepath = path.join(this.dir, this.file.author, this.file.title, this.file.file);
+          // shell.openItem(filepath)
+          shell.showItemInFolder(filepath);
         } else {
-          // this.download();
           this.download(this.file);
-          // console.log('download');
         }
       },
-      downloadAuthor: function () {
+      downloadAuthor: function downloadAuthor() {
         this.download({ author: this.file.author });
       },
     },

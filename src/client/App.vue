@@ -31,7 +31,6 @@
     created() {
       // initialise catalog on app start
       this.loadCatalog()
-        .then(() => console.log('ok'))
         .then(() => this.getDats());
     },
     computed: {
