@@ -1,8 +1,9 @@
 <template>
   <form method="post">
+    <p>Import external library:</p>
     <label for="key">Dat Key:</label><input type="text" name="key" v-model="key"><br>
     <label for="name">Dat Name:</label><input type="text" name="name" v-model="name"><br>
-    <button v-on:click="submit($event)">import</button>
+    <button v-on:click="submit($event)">Import</button>
   </form>
 </template>
 

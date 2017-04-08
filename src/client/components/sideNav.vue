@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <button v-on:click="loadDirectoryAsDat">Load directory</button>
+    <button v-on:click="loadDirectoryAsDat">+ Local Library</button>
     <dat-import-field/>
     <p>Selected libraries:</p>
     <ul>
