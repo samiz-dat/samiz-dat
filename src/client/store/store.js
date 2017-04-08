@@ -13,6 +13,8 @@ const INITIAL_STATE = {
   authorLetters: [],
   authorList: [],
   searchIndex: null,
+  searchQuery: null,
+  results: [],
   dats: [],
   selectedDats: [],
   files: {},
@@ -32,6 +34,8 @@ const store = new Vuex.Store({
     setSearchIndex: setIdentity('searchIndex'),
     setDats: setIdentity('dats'),
     selectDats: setIdentity('selectedDats'),
+    setResults: setIdentity('results'),
+    setSearchQuery: setIdentity('searchQuery'),
     setDatFiles: (state, payload) => {
       Vue.set(state.files, payload.key, payload.files);
     },
@@ -76,6 +80,20 @@ const store = new Vuex.Store({
       commit('setLoading', true);
       return catalog.getItemsWith({}, payload)
         .then(files => commit('setDatFiles', { key: payload, files }))
+        .finally(() => commit('setLoading', false));
+    },
+    search: ({ commit }, payload) => {
+      // when searching reset search area.
+      commit('setSearchIndex', null);
+      commit('setAuthorList', []);
+      if (!payload) {
+        commit('setSearchQuery', null);
+        return Promise.resolve();
+      }
+      commit('setSearchQuery', payload);
+      commit('setLoading', true);
+      return catalog.search(payload) // TODO: set this relative to selected dats
+        .then(results => commit('setResults', results))
         .finally(() => commit('setLoading', false));
     },
     download: ({ commit }, item) => {

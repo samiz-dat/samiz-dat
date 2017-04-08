@@ -1,7 +1,7 @@
 <template>
   <nav>
     <form method="post">
-    <label for="search">Search:</label><input type="text" name="search" v-model="search">
+    <label for="search">Search:</label><input type="text" name="search" v-model="searchQuery">
     <button v-on:click="submit($event)">Search</button>
     </form>
     <h2>Author Index</h2>
@@ -32,17 +32,18 @@
     components: {},
     data() {
       return {
-        search: '',
+        searchQuery: '',
       };
     },
     computed: {
       ...mapState(['authorLetters', 'searchIndex', 'authorList']),
     },
     methods: {
-      ...mapActions(['getAuthorsStartingWith']),
+      ...mapActions(['getAuthorsStartingWith', 'search']),
       submit(event) {
         if (event) event.preventDefault();
-        console.log(this.search);
+        console.log(this.searchQuery);
+        this.search(this.searchQuery);
       },
     },
 };
