@@ -11,6 +11,8 @@ const catalog = new Catalog(dataDir);
 const INITIAL_STATE = {
   loading: false,
   authorLetters: [],
+  authorList: [],
+  searchIndex: null,
   dats: [],
   selectedDats: [],
   files: {},
@@ -26,6 +28,8 @@ const store = new Vuex.Store({
   mutations: {
     setLoading: setIdentity('loading'),
     setAuthorLetters: setIdentity('authorLetters'),
+    setAuthorList: setIdentity('authorList'),
+    setSearchIndex: setIdentity('searchIndex'),
     setDats: setIdentity('dats'),
     selectDats: setIdentity('selectedDats'),
     setDatFiles: (state, payload) => {
@@ -50,7 +54,7 @@ const store = new Vuex.Store({
     },
     getAuthorLetters: ({ commit }) => {
       commit('setLoading', true);
-      return catalog.getAuthorLetters()
+      return catalog.getAuthorLetters() // TODO: set this relative to selected dats
         .then(letters => commit('setAuthorLetters', letters.map(v => v.letter)))
         .finally(() => commit('setLoading', false));
     },
@@ -59,6 +63,13 @@ const store = new Vuex.Store({
       // async action to get dats
       return catalog.getDats()
         .then(dats => commit('setDats', dats))
+        .finally(() => commit('setLoading', false));
+    },
+    getAuthorsStartingWith: ({ commit }, payload) => {
+      commit('setLoading', true);
+      commit('setSearchIndex', payload);
+      return catalog.getAuthors(payload) // TODO: set this relative to selected dats
+        .then(authors => commit('setAuthorList', authors))
         .finally(() => commit('setLoading', false));
     },
     getFiles: ({ commit }, payload) => {
