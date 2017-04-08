@@ -14,7 +14,7 @@ const INITIAL_STATE = {
   authorList: [],
   searchIndex: null,
   searchQuery: null,
-  results: [],
+  results: [], // need to group results into author/titles with files bundled, not listed seporately.
   dats: [],
   selectedDats: [],
   files: {},
@@ -86,7 +86,7 @@ const store = new Vuex.Store({
       // when searching reset search area.
       commit('setSearchIndex', null);
       commit('setAuthorList', []);
-      if (!payload) {
+      if (!payload || payload === '') {
         commit('setSearchQuery', null);
         return Promise.resolve();
       }
