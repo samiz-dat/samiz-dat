@@ -10,6 +10,7 @@ const catalog = new Catalog(dataDir);
 
 const INITIAL_STATE = {
   loading: false,
+  authorLetters: [],
   dats: [],
   selectedDats: [],
   files: {},
@@ -18,24 +19,19 @@ const INITIAL_STATE = {
 
 Vue.use(Vuex);
 
+const setIdentity = key => (state, payload) => { state[key] = payload; };
+
 const store = new Vuex.Store({
   state: INITIAL_STATE,
   mutations: {
-    setLoading: (state, payload) => {
-      state.loading = payload;
-    },
-    setDats: (state, payload) => {
-      state.dats = payload;
-    },
-    selectDats: (state, payload) => {
-      state.selectedDats = payload;
-    },
+    setLoading: setIdentity('loading'),
+    setAuthorLetters: setIdentity('authorLetters'),
+    setDats: setIdentity('dats'),
+    selectDats: setIdentity('selectedDats'),
     setDatFiles: (state, payload) => {
       Vue.set(state.files, payload.key, payload.files);
     },
-    setError: (state, payload) => {
-      state.error = payload;
-    },
+    setError: setIdentity('error'),
     resetError: (state) => {
       state.error = null;
     },
@@ -52,22 +48,28 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
+    getAuthorLetters: ({ commit }) => {
+      commit('setLoading', true);
+      return catalog.getAuthorLetters()
+        .then(letters => commit('setAuthorLetters', letters.map(v => v.letter)))
+        .finally(() => commit('setLoading', false));
+    },
     getDats: ({ commit }) => {
       commit('setLoading', true);
       // async action to get dats
-      catalog.getDats()
+      return catalog.getDats()
         .then(dats => commit('setDats', dats))
         .finally(() => commit('setLoading', false));
     },
     getFiles: ({ commit }, payload) => {
       commit('setLoading', true);
-      catalog.getItemsWith({}, payload)
+      return catalog.getItemsWith({}, payload)
         .then(files => commit('setDatFiles', { key: payload, files }))
         .finally(() => commit('setLoading', false));
     },
     download: ({ commit }, item) => {
       commit('setLoading', true);
-      catalog.checkout(item)
+      return catalog.checkout(item)
         .finally(() => commit('setLoading', false));
     },
     loadDirectoryAsDat: ({ commit }) => {
@@ -88,7 +90,10 @@ const store = new Vuex.Store({
     },
     importDat: ({ commit }, payload) => {
       commit('setLoading', true);
-      catalog.importRemoteDat(payload.key, payload.name)
+      if (!payload.key) { // need proper validation here
+        commit('setLoading', false);
+      }
+      return catalog.importRemoteDat(payload.key, payload.name) // need to throw errors in promise in dat-cardcat
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },

@@ -4,6 +4,7 @@
     <error :error="error"/>
     <main>
       <h1>Dat Library</h1>
+      <search-nav/>
     <!-- <button v-on:click="getDats">List dats</button> -->
       <dat-view v-for="dat in dats" :dat="dat" :key="dat.dat"/>
     </main>
@@ -18,6 +19,7 @@
   import datImportField from './components/datImportField.vue';
   import DatView from './components/DatView.vue';
   import sideNav from './components/sideNav.vue';
+  import searchNav from './components/searchNav.vue';
 
   export default {
     name: 'App',
@@ -27,22 +29,31 @@
       datImportField,
       DatView,
       sideNav,
+      searchNav,
     },
     data() {
       return {
-        selectedDats: [],
+        search: '',
       };
     },
     created() {
       // initialise catalog on app start
+      // this is currently failing occationally for two reasons
+      // 1. error because dat is LOCKED
+      // 2. promise from datcat is never resolved for some reason.
       this.loadCatalog()
-        .then(() => this.getDats());
+        .then(() => this.getDats())
+        .then(() => this.getAuthorLetters());
     },
     computed: {
       ...mapState(['dats', 'loading', 'error']),
     },
     methods: {
-      ...mapActions(['loadCatalog', 'loadDirectoryAsDat', 'getDats']),
+      ...mapActions(['loadCatalog', 'getDats', 'getAuthorLetters']),
+      submit(event) {
+        if (event) event.preventDefault();
+        console.log(this.search);
+      },
     },
 };
 </script>
