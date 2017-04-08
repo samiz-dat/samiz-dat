@@ -46,6 +46,7 @@ const store = new Vuex.Store({
   },
   getters: {
     getDatFiles: state => key => state.files[key],
+    searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
   },
   // later we should refactor this into a seporate file
   actions: {
@@ -91,7 +92,7 @@ const store = new Vuex.Store({
         .then(files => commit('setDatFiles', { key: payload, files }))
         .finally(() => commit('setLoading', false));
     },
-    search: ({ commit }, payload) => {
+    search: ({ getters, commit }, payload) => {
       // when searching reset search area.
       commit('setSearchIndex', null);
       commit('setAuthorList', []);
@@ -101,7 +102,7 @@ const store = new Vuex.Store({
       }
       commit('setSearchQuery', payload);
       commit('setLoading', true);
-      return catalog.search(payload) // TODO: set this relative to selected dats
+      return catalog.search(payload, getters.searchDats)
         .then(results => commit('setResults', results))
         .finally(() => commit('setLoading', false));
     },
