@@ -43,7 +43,6 @@
     "postcss-scss": "^0.4.1",
     "precss": "^1.4.0",
     "sass-loader": "^6.0.3",
-    "url-loader": "^0.5.8",
     "vue-hot-reload-api": "^2.0.9",
     "vue-html-loader": "^1.2.3",
     "vue-loader": "^11.1.0",

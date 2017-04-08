@@ -59,28 +59,9 @@
 };
 </script>
 
+<style src="assets/fonts/fonts.css"></style>
+<style src="assets/main.scss" lang="scss"></style>
 <style lang="scss">
-
-  button {
-    border: solid thin black;
-    background-color: white;
-    cursor: pointer;
-    margin: 1rem;
-    transition: color ease 300ms, background-color ease 300ms;
-
-    &:hover {
-      color: white;
-      background-color: black;
-    }
-  }
-
-  body, html {
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-
   #dat-library {
     display: flex;
     flex-direction: row;

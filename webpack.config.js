@@ -16,6 +16,7 @@ module.exports = {
     enforceExtension: false,
     alias: {
       'components': path.resolve(__dirname, 'src/client/components/'),
+      'assets': path.resolve(__dirname, 'src/client/assets/'),
       'vue': 'vue/dist/vue.common.js',
     },
   },
@@ -58,7 +59,16 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-      }
+      },
+      {
+        test: /\.(jpe?g|png|gif|eot|ttf|woff2|woff?)$/i,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: 'assets/[name].[hash].[ext]',
+          },
+        },
+      },
     ],
   },
   plugins: [
