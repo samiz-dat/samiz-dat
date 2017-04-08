@@ -77,12 +77,12 @@ const store = new Vuex.Store({
         .then(authors => commit('setAuthorList', authors))
         .finally(() => commit('setLoading', false));
     },
-    getFilesByAuthor: ({ state, commit }, payload) => {
+    getFilesByAuthor: ({ state, commit, getters }, payload) => {
       commit('setLoading', true);
       commit('setSearchQuery', payload);
       commit('setSearchIndex', null);
       commit('setAuthorList', []);
-      return catalog.getItemsWith({ author: payload }) // , state.selectedDats) - ATM array causes sql lite issue
+      return catalog.getItemsWith({ author: payload }, getters.searchDats)
         .then(results => commit('setResults', results))
         .finally(() => commit('setLoading', false));
     },
