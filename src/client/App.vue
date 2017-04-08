@@ -5,8 +5,9 @@
     <main>
       <h1>Dat Library</h1>
       <search-nav/>
+      <search-results/>
     <!-- <button v-on:click="getDats">List dats</button> -->
-      <dat-view v-for="dat in dats" :dat="dat" :key="dat.dat"/>
+      <!-- <dat-view v-for="dat in dats" :dat="dat" :key="dat.dat"/> -->
     </main>
     <side-nav/>
   </div>
@@ -20,6 +21,7 @@
   import DatView from './components/DatView.vue';
   import sideNav from './components/sideNav.vue';
   import searchNav from './components/searchNav.vue';
+  import searchResults from './components/searchResults.vue';
 
   export default {
     name: 'App',
@@ -30,11 +32,10 @@
       DatView,
       sideNav,
       searchNav,
+      searchResults,
     },
     data() {
-      return {
-        search: '',
-      };
+      return {};
     },
     created() {
       // initialise catalog on app start
