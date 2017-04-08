@@ -12,7 +12,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex';
-  import datItem from './datItem.vue';
+  import datItem from 'components/datItem';
 
   export default {
     name: 'DatView',

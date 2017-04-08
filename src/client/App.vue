@@ -15,13 +15,13 @@
 
 <script>
   import { mapState, mapActions } from 'vuex';
-  import loader from './components/loader.vue';
-  import error from './components/error.vue';
-  import datImportField from './components/datImportField.vue';
-  import DatView from './components/DatView.vue';
-  import sideNav from './components/sideNav.vue';
-  import searchNav from './components/searchNav.vue';
-  import searchResults from './components/searchResults.vue';
+  import loader from 'components/loader';
+  import error from 'components/error';
+  import datImportField from 'components/datImportField';
+  import DatView from 'components/DatView';
+  import sideNav from 'components/sideNav';
+  import searchNav from 'components/searchNav';
+  import searchResults from 'components/searchResults';
 
   export default {
     name: 'App',

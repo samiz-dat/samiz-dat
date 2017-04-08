@@ -12,10 +12,11 @@ module.exports = {
   target: 'node',
   entry: './src/client/index.js',
   resolve: {
-    extensions: ['.js', '.json'],
+    extensions: ['.js', '.json', '.vue'],
     enforceExtension: false,
     alias: {
-    'vue': 'vue/dist/vue.common.js',
+      'components': path.resolve(__dirname, 'src/client/components/'),
+      'vue': 'vue/dist/vue.common.js',
     },
   },
   output: {
@@ -69,10 +70,6 @@ module.exports = {
       }),
     new webpack.ExternalsPlugin('commonjs', [
       'electron',
-      'dat-node',
-      'sqlite3',
-      'knex',
-      'pauls-dat-api',
       'dat-cardcat',
     ]),
   ],
