@@ -65,7 +65,7 @@
       padding: 0;
       cursor: pointer;
 
-      &:hover {
+      &:hover, &.active {
         text-decoration: underline;
       }
     }
