@@ -11,6 +11,7 @@ const catalog = new Catalog(dataDir);
 const INITIAL_STATE = {
   loading: false,
   dats: [],
+  selectedDats: [],
   files: {},
   error: null,
 };
@@ -25,6 +26,9 @@ const store = new Vuex.Store({
     },
     setDats: (state, payload) => {
       state.dats = payload;
+    },
+    selectDats: (state, payload) => {
+      state.selectedDats = payload;
     },
     setDatFiles: (state, payload) => {
       Vue.set(state.files, payload.key, payload.files);
