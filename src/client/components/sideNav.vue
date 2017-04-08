@@ -2,6 +2,7 @@
   <aside>
     <button v-on:click="loadDirectoryAsDat">Load directory</button>
     <dat-import-field/>
+    <p>Selected libraries:</p>
     <ul>
       <li>
         <input type="checkbox" id="dat-all" value="all" v-model="selectAll" checked>
@@ -18,6 +19,8 @@
 <script>
   import { mapState, mapActions } from 'vuex';
   import datImportField from './datImportField.vue';
+
+  // TODO: make this fixed, independent of main areas scroll.
 
   export default {
     name: 'sideNav',
@@ -42,7 +45,6 @@
           return this.$store.state.selectedDats;
         },
         set(value) {
-          console.log('v', value);
           this.$store.commit('selectDats', value);
         },
       },
@@ -53,23 +55,11 @@
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   aside {
     flex: 0;
     width: 25%;
     border-left: thick black solid;
-
-    button {
-      border: solid thin black;
-      background-color: white;
-      cursor: pointer;
-      margin: 1rem;
-
-      &:hover {
-        color: white;
-        background-color: black;
-      }
-    }
 
     ul {
       padding: 0;
@@ -93,8 +83,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         background-color: #FFF;
-
         cursor: pointer;
+        transition: color ease 300ms, background-color ease 300ms;
 
 
         &:hover {
