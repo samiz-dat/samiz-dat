@@ -42,9 +42,8 @@
       ...mapActions(['getAuthorsStartingWith', 'search']),
       submit(event) {
         if (event) event.preventDefault();
-        console.log(this.searchQuery);
-        this.searchQuery = '';
         this.search(this.searchQuery);
+        this.searchQuery = '';
       },
     },
 };
