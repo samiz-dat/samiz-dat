@@ -29,6 +29,8 @@
 };
 </script>
 
-<style lang="css">
-  body, html {  }
+<style lang="scss" scoped>
+  form {
+    margin: 1rem;
+  }
 </style>
