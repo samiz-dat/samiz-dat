@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import path from 'path';
 import { remote } from 'electron';
 import { Catalog } from 'dat-cardcat';
-
+import _ from 'lodash';
 
 const dataDir = path.join(process.cwd(), '_data');
 const catalog = new Catalog(dataDir);
@@ -23,7 +23,25 @@ const INITIAL_STATE = {
 
 Vue.use(Vuex);
 
-const setIdentity = key => (state, payload) => { state[key] = payload; };
+const groupResultsByTitle = (results) => {
+  const authors = _.groupBy(results, 'author');
+  const books = _.flatMap(authors, (data, author) =>
+    _.map(_.groupBy(data, 'title'),
+      (titleData, title) => ({
+        author,
+        title,
+        files: titleData.map(v => ({
+          file: v.file,
+          dat: v.dat,
+          downloaded: v.downloaded,
+        })),
+        downloaded: _.every(titleData, 'downloaded'),
+      }),
+    ));
+  return books;
+};
+
+const setIdentity = (key, iteratee = _.identity) => (state, payload) => { state[key] = iteratee(payload); };
 
 const store = new Vuex.Store({
   state: INITIAL_STATE,
@@ -34,7 +52,7 @@ const store = new Vuex.Store({
     setSearchIndex: setIdentity('searchIndex'),
     setDats: setIdentity('dats'),
     selectDats: setIdentity('selectedDats'),
-    setResults: setIdentity('results'),
+    setResults: setIdentity('results', groupResultsByTitle),
     setSearchQuery: setIdentity('searchQuery'),
     // setDatFiles: (state, payload) => {
     //   Vue.set(state.files, payload.key, payload.files);
@@ -46,6 +64,7 @@ const store = new Vuex.Store({
   },
   getters: {
     // getDatFiles: state => key => state.files[key],
+    datWithKey: state => key => state.dats.find(d => d.dat === key),
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
   },
   // later we should refactor this into a seporate file

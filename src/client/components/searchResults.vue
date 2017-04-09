@@ -2,32 +2,26 @@
   <div>
     <h2>Search Results: <span v-show="searchQuery">{{searchQuery}}</span></h2>
     <div v-show="results.length === 0">Nothing found</div>
-    <div v-for="file in results">
-      <dat-item :file="file" :dir="datWithKey(file.dat).dir"/>
-    </div>
+    <dat-book v-for="book in results" :key="book.dat" :book="book"/>
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex';
-  import datItem from 'components/datItem';
+  import datBook from 'components/datBook';
 
   export default {
     name: 'searchResults',
     components: {
-      datItem,
+      datBook,
     },
     data() {
       return {};
     },
     computed: {
-      ...mapState(['results', 'searchQuery', 'dats']),
+      ...mapState(['results', 'searchQuery']),
     },
-    methods: {
-      datWithKey: function datWithKey(key) {
-        return this.dats.find(d => d.dat === key);
-      },
-    },
+    methods: {},
 };
 </script>
 
