@@ -38,6 +38,7 @@
         },
         set() {
           this.$store.commit('selectDats', []);
+          this.$store.dispatch('getAuthorLetters');
         },
       },
       selected: {
@@ -46,6 +47,7 @@
         },
         set(value) {
           this.$store.commit('selectDats', value);
+          this.$store.dispatch('getAuthorLetters');
         },
       },
     },
