@@ -59,7 +59,7 @@
 };
 </script>
 
-<style src="assets/fonts/fonts.css"></style>
+<style src="assets/fonts/fonts.scss"></style>
 <style src="assets/main.scss" lang="scss"></style>
 <style lang="scss">
   #dat-library {

@@ -1,0 +1,25 @@
+@define-mixin setup-font $familyname, $path, $weight: none, $stylename: none, $hasttf: no {
+  @font-face {
+    font-family: '$familyname';
+    src: url('$path.eot');
+    @if $hasttf == yes {
+      src: url('$path.eot?#iefix') format('embedded-opentype'),
+           url('$path.woff') format('woff'),
+           url('$path.ttf#$path') format('truetype');
+    } @else {
+      src: url('$path.eot?#iefix') format('embedded-opentype'),
+           url('$path.woff') format('woff');
+    }
+    @if $weight != none {
+      font-weight: $weight;
+    }
+    @if $stylename != none {
+      font-style: $stylename;
+    }
+  }
+}
+
+@mixin setup-font Roboto, Roboto/Roboto-Regular-webfont, normal, normal, normal;
+@mixin setup-font Roboto, Roboto/Roboto-Italic-webfont, normal, italic, normal;
+@mixin setup-font Roboto, Roboto/Roboto-Bold-webfont, bold, normal, normal;
+@mixin setup-font Roboto, Roboto/Roboto-BoldItalic-webfont, bold, italic, normal;
