@@ -86,6 +86,7 @@
       }
       .title {
         flex: 2;
+        font-style: italic;
       }
       .author,
       .title,
