@@ -57,10 +57,26 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    getAuthorLetters: ({ commit }) => {
-      commit('setLoading', true);
-      return catalog.getAuthorLetters() // TODO: set this relative to selected dats
-        .then(letters => commit('setAuthorLetters', letters.map(v => v.letter)))
+    getAuthorLetters: ({ dispatch, commit, state, getters }) => {
+      commit('setLoading', true); // TODO: make this a push pop type state, so first return does not stop the loader if other actions have not finished yet...
+      return catalog.getAuthorLetters(getters.searchDats)
+        .then((rows) => {
+          const letters = rows.map(v => v.letter);
+          commit('setAuthorLetters', letters);
+          const promises = [];
+          if (state.searchIndex) {
+            if (letters.find(letter => letter === state.searchIndex)) {
+              promises.push(dispatch('getAuthorsStartingWith', state.searchIndex));
+            } else {
+              commit('setSearchIndex', null);
+            }
+          }
+          if (state.searchQuery) {
+            promises.push(dispatch('search', state.searchQuery));
+          }
+          return Promise.all(promises);
+        })
+        .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     getDats: ({ commit }) => {
@@ -68,13 +84,15 @@ const store = new Vuex.Store({
       // async action to get dats
       return catalog.getDats()
         .then(dats => commit('setDats', dats))
+        .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    getAuthorsStartingWith: ({ commit }, payload) => {
+    getAuthorsStartingWith: ({ commit, getters }, payload) => {
       commit('setLoading', true);
       commit('setSearchIndex', payload);
-      return catalog.getAuthors(payload) // TODO: set this relative to selected dats
+      return catalog.getAuthors(payload, getters.searchDats)
         .then(authors => commit('setAuthorList', authors))
+        .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     getFilesByAuthor: ({ state, commit, getters }, payload) => {
@@ -84,12 +102,14 @@ const store = new Vuex.Store({
       commit('setAuthorList', []);
       return catalog.getItemsWith({ author: payload }, getters.searchDats)
         .then(results => commit('setResults', results))
+        .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     getFiles: ({ commit }, payload) => {
       commit('setLoading', true);
       return catalog.getItemsWith({}, payload)
         .then(files => commit('setDatFiles', { key: payload, files }))
+        .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     search: ({ getters, commit }, payload) => {
@@ -104,11 +124,13 @@ const store = new Vuex.Store({
       commit('setLoading', true);
       return catalog.search(payload, getters.searchDats)
         .then(results => commit('setResults', results))
+        .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     download: ({ commit }, item) => {
       commit('setLoading', true);
       return catalog.checkout(item)
+        .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     loadDirectoryAsDat: ({ commit }) => {
