@@ -6,8 +6,6 @@
       <h1>Dat Library</h1>
       <search-nav/>
       <search-results/>
-    <!-- <button v-on:click="getDats">List dats</button> -->
-      <!-- <dat-view v-for="dat in dats" :dat="dat" :key="dat.dat"/> -->
     </main>
     <side-nav/>
   </div>
@@ -18,7 +16,6 @@
   import loader from 'components/loader';
   import error from 'components/error';
   import datImportField from 'components/datImportField';
-  import DatView from 'components/DatView';
   import sideNav from 'components/sideNav';
   import searchNav from 'components/searchNav';
   import searchResults from 'components/searchResults';
@@ -29,7 +26,6 @@
       error,
       loader,
       datImportField,
-      DatView,
       sideNav,
       searchNav,
       searchResults,
