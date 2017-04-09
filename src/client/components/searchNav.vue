@@ -4,7 +4,6 @@
     <label for="search">Search:</label><input type="text" name="search" v-model="searchQuery">
     <button v-on:click="submit($event)">Search</button>
     </form>
-    <h2>Author Index</h2>
     <ul class="index">
       <li v-for="letter in authorLetters"
         :class="{active: searchIndex === letter}"
