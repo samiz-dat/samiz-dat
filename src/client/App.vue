@@ -73,7 +73,6 @@
 
     main {
       flex: 1;
-      width: 75%;
       min-height: 100%;
       margin: 1rem;
       overflow: hidden;

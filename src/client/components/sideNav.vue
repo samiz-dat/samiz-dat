@@ -58,7 +58,7 @@
 <style lang="scss" scoped>
   aside {
     flex: 0;
-    width: 25%;
+    width: 16rem;
     border-left: thick black solid;
 
     ul {
