@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ item: true, downloaded: book.downloaded }">
-    <div class="header">
+  <div class="item">
+    <div :class="{ header: true, downloaded: book.downloaded }">
       <div class="author">{{book.author}}</div>
       <div class="title">{{book.title}}</div>
       <div class="options">
@@ -11,7 +11,7 @@
     </div>
     <div class="extra">
       <ul>
-        <li v-for="(file, index) in book.files">
+        <li v-for="(file, index) in book.files" :class="{downloaded: file.downloaded}">
           <div><a v-on:click="showItemInFolder(index)">{{file.file}}</a></div>
           <div class="dat">DAT: {{file.dat}} library</div>
           </li>
@@ -67,9 +67,6 @@
     //   background-color: red;
     // }
 
-    &.downloaded {
-      color: black;
-    }
 
     .header {
       display: flex;
@@ -77,8 +74,12 @@
       flex-wrap: nowrap;
       justify-content: space-between;
       align-items: flex-start;
-      color: gray;
       margin: 0.5rem 0;
+      color: gray;
+
+      &.downloaded {
+        color: black;
+      }
 
       .author {
         flex: 1;
@@ -105,16 +106,19 @@
     }
     .extra {
       font-size: 0.8rem;
+      color: gray;
+      li.downloaded {
+        color: black;
+        a {
+          cursor: pointer;
+          &:hover {
+            color: red;
+          }
+        }
+      }
       .dat {
         font-size: 0.5rem;
       }
-    }
-  }
-
-  a {
-    cursor: pointer;
-    &:hover {
-      color: red;
     }
   }
 </style>
