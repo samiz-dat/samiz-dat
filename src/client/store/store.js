@@ -17,7 +17,7 @@ const INITIAL_STATE = {
   results: [], // need to group results into author/titles with files bundled, not listed seporately.
   dats: [],
   selectedDats: [],
-  files: {},
+  // files: {},
   error: null,
 };
 
@@ -36,16 +36,16 @@ const store = new Vuex.Store({
     selectDats: setIdentity('selectedDats'),
     setResults: setIdentity('results'),
     setSearchQuery: setIdentity('searchQuery'),
-    setDatFiles: (state, payload) => {
-      Vue.set(state.files, payload.key, payload.files);
-    },
+    // setDatFiles: (state, payload) => {
+    //   Vue.set(state.files, payload.key, payload.files);
+    // },
     setError: setIdentity('error'),
     resetError: (state) => {
       state.error = null;
     },
   },
   getters: {
-    getDatFiles: state => key => state.files[key],
+    // getDatFiles: state => key => state.files[key],
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
   },
   // later we should refactor this into a seporate file
@@ -102,13 +102,6 @@ const store = new Vuex.Store({
       commit('setAuthorList', []);
       return catalog.getItemsWith({ author: payload }, getters.searchDats)
         .then(results => commit('setResults', results))
-        .catch(e => commit('setError', e))
-        .finally(() => commit('setLoading', false));
-    },
-    getFiles: ({ commit }, payload) => {
-      commit('setLoading', true);
-      return catalog.getItemsWith({}, payload)
-        .then(files => commit('setDatFiles', { key: payload, files }))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
