@@ -19,7 +19,27 @@
   }
 }
 
-@mixin setup-font Roboto, Roboto/Roboto-Regular-webfont, normal, normal, normal;
-@mixin setup-font Roboto, Roboto/Roboto-Italic-webfont, normal, italic, normal;
-@mixin setup-font Roboto, Roboto/Roboto-Bold-webfont, bold, normal, normal;
-@mixin setup-font Roboto, Roboto/Roboto-BoldItalic-webfont, bold, italic, normal;
+@mixin setup-font Roboto, Roboto/Roboto-Black-webfont, 900, normal;
+@mixin setup-font Roboto, Roboto/Roboto-BlackItalic-webfont, 900, italic;
+@mixin setup-font Roboto, Roboto/Roboto-Bold-webfont, 700, normal;
+@mixin setup-font Roboto, Roboto/Roboto-BoldItalic-webfont, 700, italic;
+@mixin setup-font Roboto, Roboto/Roboto-Medium-webfont, 500, normal;
+@mixin setup-font Roboto, Roboto/Roboto-MediumItalic-webfont, 500, italic;
+@mixin setup-font Roboto, Roboto/Roboto-Regular-webfont, 400, normal;
+@mixin setup-font Roboto, Roboto/Roboto-Italic-webfont, 400, italic;
+@mixin setup-font Roboto, Roboto/Roboto-Light-webfont, 300, normal;
+@mixin setup-font Roboto, Roboto/Roboto-LightItalic-webfont, 300, italic;
+@mixin setup-font Roboto, Roboto/Roboto-Thin-webfont, 100, normal;
+@mixin setup-font Roboto, Roboto/Roboto-ThinItalic-webfont, 100, italic;
+
+@mixin setup-font RobotoCondensed, Roboto/RobotoCondensed-Bold-webfont, 700, normal;
+@mixin setup-font RobotoCondensed, Roboto/RobotoCondensed-BoldItalic-webfont, 700, italic;
+@mixin setup-font RobotoCondensed, Roboto/RobotoCondensed-Regular-webfont, 400, normal;
+@mixin setup-font RobotoCondensed, Roboto/RobotoCondensed-Italic-webfont, 400, italic;
+@mixin setup-font RobotoCondensed, Roboto/RobotoCondensed-Light-webfont, 300, normal;
+@mixin setup-font RobotoCondensed, Roboto/RobotoCondensed-LightItalic-webfont, 300, italic;
+
+@mixin setup-font RobotoSlab, RobotoSlab/RobotoSlab-Bold-webfont, 700, normal;
+@mixin setup-font RobotoSlab, RobotoSlab/RobotoSlab-Regular-webfont, 400, normal;
+@mixin setup-font RobotoSlab, RobotoSlab/RobotoSlab-Light-webfont, 300, normal;
+@mixin setup-font RobotoSlab, RobotoSlab/RobotoSlab-Thin-webfont, 100, normal;
