@@ -33,7 +33,7 @@ const unpackTitleFiles = results => _.map(results, (result) => {
       return {
         file: fData[0],
         dat: result.dat,
-        downloaded: fData[1],
+        downloaded: fData[1] === '1',
       };
     });
   result.downloaded = _.every(result.files, 'downloaded');
