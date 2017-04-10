@@ -23,23 +23,22 @@ const INITIAL_STATE = {
 
 Vue.use(Vuex);
 
-const groupResultsByTitle = (results) => {
-  const authors = _.groupBy(results, 'author');
-  const books = _.flatMap(authors, (data, author) =>
-    _.map(_.groupBy(data, 'title'),
-      (titleData, title) => ({
-        author,
-        title,
-        files: titleData.map(v => ({
-          file: v.file,
-          dat: v.dat,
-          downloaded: v.downloaded,
-        })),
-        downloaded: _.every(titleData, 'downloaded'),
-      }),
-    ));
-  return books;
-};
+// For a result set with results like [author, title, files]
+// unpack the files column...
+const unpackTitleFiles = results => _.map(results, (result) => {
+  const files = result.files;
+  result.files = _.map(_.split(files, ','),
+    (file) => {
+      const fData = _.split(file, ':');
+      return {
+        file: fData[0],
+        dat: result.dat,
+        downloaded: fData[1],
+      };
+    });
+  result.downloaded = _.every(result.files, 'downloaded');
+  return result;
+});
 
 const setIdentity = (key, iteratee = _.identity) => (state, payload) => { state[key] = iteratee(payload); };
 
@@ -52,7 +51,7 @@ const store = new Vuex.Store({
     setSearchIndex: setIdentity('searchIndex'),
     setDats: setIdentity('dats'),
     selectDats: setIdentity('selectedDats'),
-    setResults: setIdentity('results', groupResultsByTitle),
+    setResults: setIdentity('results', unpackTitleFiles),
     setSearchQuery: setIdentity('searchQuery'),
     // setDatFiles: (state, payload) => {
     //   Vue.set(state.files, payload.key, payload.files);
@@ -119,7 +118,7 @@ const store = new Vuex.Store({
       commit('setSearchQuery', payload);
       commit('setSearchIndex', null);
       commit('setAuthorList', []);
-      return catalog.getItemsWith({ author: payload }, getters.searchDats)
+      return catalog.getTitlesWith({ author: payload }, getters.searchDats)
         .then(results => commit('setResults', results))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
