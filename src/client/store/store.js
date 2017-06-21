@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import path from 'path';
 import { remote } from 'electron';
-import { Catalog } from 'dat-cardcat';
+import { Catalog, createCatalog } from 'dat-cardcat';
 import _ from 'lodash';
 
 const dataDir = path.join(process.cwd(), '_data');
@@ -70,8 +70,7 @@ const store = new Vuex.Store({
   actions: {
     loadCatalog: ({ commit }) => {
       commit('setLoading', true);
-      return catalog.initDatabase()
-        .then(() => catalog.discoverDats())
+      return createCatalog()
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
@@ -165,7 +164,7 @@ const store = new Vuex.Store({
       if (!payload.key) { // need proper validation here
         commit('setLoading', false);
       }
-      return catalog.importRemoteDat(payload.key, payload.name) // need to throw errors in promise in dat-cardcat
+      return catalog.importDat(payload.key, payload.name) // need to throw errors in promise in dat-cardcat
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },

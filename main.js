@@ -8,7 +8,7 @@ const url = require('url');
 let win;
 
 const extensionDir = 'Library/Application Support/Google/Chrome/Default/Extensions/';
-const vueDevTools = 'nhdogjmejiglipccpnnnanhbledajbpd/3.1.2_0/';
+const vueDevTools = 'nhdogjmejiglipccpnnnanhbledajbpd/3.1.4_0/';
 
 function createWindow() {
   // Create the browser window.
