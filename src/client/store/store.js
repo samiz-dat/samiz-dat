@@ -68,8 +68,15 @@ const store = new Vuex.Store({
   },
   // later we should refactor this into a seporate file
   actions: {
-    loadCatalog: ({ commit }) => {
+    loadCatalog: ({ dispatch, commit, state }) => {
       commit('setLoading', true);
+      catalog.on('import', (obj) => {
+        // console.log(obj);
+        if (!state.setLoading) {
+          dispatch('getDats');
+          dispatch('getAuthorLetters');
+        }
+      });
       return createCatalog()
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
