@@ -17,6 +17,8 @@ const INITIAL_STATE = {
   results: [], // need to group results into author/titles with files bundled, not listed seporately.
   dats: [],
   selectedDats: [],
+  collections: [],
+  selectedCollection: null,
   // files: {},
   error: null,
 };
@@ -51,6 +53,8 @@ const store = new Vuex.Store({
     setSearchIndex: setIdentity('searchIndex'),
     setDats: setIdentity('dats'),
     selectDats: setIdentity('selectedDats'),
+    setCollections: setIdentity('collections'),
+    selectCollection: setIdentity('selectedCollection'),
     setResults: setIdentity('results', unpackTitleFiles),
     setSearchQuery: setIdentity('searchQuery'),
     // setDatFiles: (state, payload) => {
@@ -77,7 +81,13 @@ const store = new Vuex.Store({
           dispatch('getAuthorLetters');
         }
       });
-      return createCatalog()
+      catalog.on('collections updated', () => {
+        console.log('Event: Collections updated!');
+        if (!state.setLoading) {
+          dispatch('getCollections');
+        }
+      });
+      return catalog.init()
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
@@ -126,6 +136,14 @@ const store = new Vuex.Store({
       commit('setAuthorList', []);
       return catalog.getTitlesWith({ author: payload }, getters.searchDats)
         .then(results => commit('setResults', results))
+        .catch(e => commit('setError', e))
+        .finally(() => commit('setLoading', false));
+    },
+    getCollections: ({ commit, getters }, payload) => {
+      commit('setLoading', true);
+      commit('setSearchIndex', payload);
+      return catalog.getCollections(payload)
+        .then(collections => commit('setCollections', collections))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },

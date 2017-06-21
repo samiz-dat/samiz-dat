@@ -40,13 +40,14 @@
       // 2. promise from datcat is never resolved for some reason.
       this.loadCatalog()
         .then(() => this.getDats())
+        .then(() => this.getCollections())
         .then(() => this.getAuthorLetters());
     },
     computed: {
       ...mapState(['dats', 'loading', 'error']),
     },
     methods: {
-      ...mapActions(['loadCatalog', 'getDats', 'getAuthorLetters']),
+      ...mapActions(['loadCatalog', 'getDats', 'getCollections', 'getAuthorLetters']),
       submit(event) {
         if (event) event.preventDefault();
         console.log(this.search);

@@ -13,6 +13,17 @@
         <label :for="`dat-${index}`">{{dat.name}}</label>
       </li>
     </ul>
+    <p>Selected collections:</p>
+    <ul>
+      <li>
+        <input type="checkbox" id="coll-all" value="all" v-model="allCollections" checked>
+        <label for="dat-all">All items</label>
+      </li>
+      <li v-for="(coll, index) in collections">
+        <input type="checkbox" :id="`coll-${index}`" :value="coll.collection" v-model="selectedCollections">
+        <label :for="`coll-${index}`">{{coll.collection}}</label>
+      </li>
+    </ul>
   </aside>
 </template>
 
@@ -31,7 +42,7 @@
       return {};
     },
     computed: {
-      ...mapState(['dats']),
+      ...mapState(['dats', 'collections']),
       selectAll: {
         get() {
           return (this.$store.state.selectedDats.length === 0) ? ['all'] : [];
@@ -47,6 +58,25 @@
         },
         set(value) {
           this.$store.commit('selectDats', value);
+          this.$store.dispatch('getAuthorLetters');
+        },
+      },
+      allCollections: {
+        get() {
+          return (this.$store.state.selectedCollection) ? [] : ['all'];
+        },
+        set() {
+          this.$store.commit('selectCollection', null);
+          this.$store.dispatch('getAuthorLetters');
+          this.$store.dispatch('getCollections');
+        },
+      },
+      selectedCollections: {
+        get() {
+          return this.$store.state.selectedCollection;
+        },
+        set(value) {
+          this.$store.commit('selectCollection', value);
           this.$store.dispatch('getAuthorLetters');
         },
       },
