@@ -18,7 +18,7 @@ const INITIAL_STATE = {
   dats: [],
   selectedDats: [],
   collections: [],
-  selectedCollection: null,
+  selectedCollections: [],
   // files: {},
   error: null,
 };
@@ -54,7 +54,7 @@ const store = new Vuex.Store({
     setDats: setIdentity('dats'),
     selectDats: setIdentity('selectedDats'),
     setCollections: setIdentity('collections'),
-    selectCollection: setIdentity('selectedCollection'),
+    selectCollections: setIdentity('selectedCollections'),
     setResults: setIdentity('results', unpackTitleFiles),
     setSearchQuery: setIdentity('searchQuery'),
     // setDatFiles: (state, payload) => {
@@ -69,6 +69,7 @@ const store = new Vuex.Store({
     // getDatFiles: state => key => state.files[key],
     datWithKey: state => key => state.dats.find(d => d.dat === key),
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
+    collectionsFilter: state => (state.selectedCollections.length === 0 ? undefined : state.selectedCollections),
   },
   // later we should refactor this into a seporate file
   actions: {
@@ -93,7 +94,7 @@ const store = new Vuex.Store({
     },
     getAuthorLetters: ({ dispatch, commit, state, getters }) => {
       commit('setLoading', true); // TODO: make this a push pop type state, so first return does not stop the loader if other actions have not finished yet...
-      return catalog.getAuthorLetters(getters.searchDats)
+      return catalog.getAuthorLetters({ collection: getters.collectionsFilter }, getters.searchDats)
         .then((rows) => {
           const letters = rows.map(v => v.letter);
           commit('setAuthorLetters', letters);
@@ -124,7 +125,7 @@ const store = new Vuex.Store({
     getAuthorsStartingWith: ({ commit, getters }, payload) => {
       commit('setLoading', true);
       commit('setSearchIndex', payload);
-      return catalog.getAuthors(payload, getters.searchDats)
+      return catalog.getAuthors(payload, { collection: getters.collectionsFilter }, getters.searchDats)
         .then(authors => commit('setAuthorList', authors))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
@@ -134,7 +135,7 @@ const store = new Vuex.Store({
       commit('setSearchQuery', payload);
       commit('setSearchIndex', null);
       commit('setAuthorList', []);
-      return catalog.getTitlesWith({ author: payload }, getters.searchDats)
+      return catalog.getTitlesWith({ author: payload, collection: getters.collectionsFilter }, getters.searchDats)
         .then(results => commit('setResults', results))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
