@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <button v-on:click="loadDirectoryAsDat">+ Local Library</button>
+    <el-button v-on:click="loadDirectoryAsDat" size="mini">+ Local Library</el-button>
     <dat-import-field/>
     <p>Selected libraries:</p>
     <ul>
@@ -13,6 +13,7 @@
         <label :for="`dat-${index}`">{{dat.name}}</label>
       </li>
     </ul>
+
     <p>Selected collections:</p>
     <ul>
       <li>

@@ -2,12 +2,18 @@
   <div id="dat-library">
     <loader :loading="loading"/>
     <error :error="error"/>
-    <main>
-      <h1>Dat Library</h1>
-      <search-nav/>
-      <search-results/>
-    </main>
-    <side-nav/>
+    <el-row>
+      <el-col :span="19">
+        <main>
+          <h1>Dat Library</h1>
+          <search-nav/>
+          <search-results/>
+        </main>
+      </el-col>
+      <el-col :span="5">
+        <side-nav/>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -55,7 +61,7 @@
     },
 };
 </script>
-
+<!--
 <style src="assets/fonts/fonts.scss"></style>
 <style src="assets/main.scss" lang="scss"></style>
 <style lang="scss">
@@ -76,3 +82,4 @@
     }
   }
 </style>
+-->
