@@ -64,6 +64,9 @@ const store = new Vuex.Store({
     resetError: (state) => {
       state.error = null;
     },
+    clearDats: (state) => {
+      state.selectedDats = [];
+    },
   },
   getters: {
     // getDatFiles: state => key => state.files[key],

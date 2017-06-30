@@ -1,20 +1,6 @@
 <template>
   <aside>
-    <el-button v-on:click="loadDirectoryAsDat" size="mini">+ Local Library</el-button>
-    <dat-import-field/>
-    <p>Selected libraries:</p>
-    <ul>
-      <li>
-        <input type="checkbox" id="dat-all" value="all" v-model="selectAll" checked>
-        <label for="dat-all">All libraries</label>
-      </li>
-      <li v-for="(dat, index) in dats">
-        <input type="checkbox" :id="`dat-${index}`" :value="dat.dat" v-model="selected">
-        <label :for="`dat-${index}`">{{dat.name}}</label>
-      </li>
-    </ul>
-
-    <p>Selected collections:</p>
+    <p>Reading lists:</p>
     <ul>
       <li>
         <input type="checkbox" id="coll-all" value="all" v-model="clearCollections" checked>
@@ -30,38 +16,16 @@
 
 <script>
   import { mapState, mapActions } from 'vuex';
-  import datImportField from 'components/datImportField';
-
   // TODO: make this fixed, independent of main areas scroll.
 
   export default {
     name: 'sideNav',
-    components: {
-      datImportField,
-    },
+    components: {},
     data() {
       return {};
     },
     computed: {
-      ...mapState(['dats', 'collections']),
-      selectAll: {
-        get() {
-          return (this.$store.state.selectedDats.length === 0) ? ['all'] : [];
-        },
-        set() {
-          this.$store.commit('selectDats', []);
-          this.$store.dispatch('getAuthorLetters');
-        },
-      },
-      selected: {
-        get() {
-          return this.$store.state.selectedDats;
-        },
-        set(value) {
-          this.$store.commit('selectDats', value);
-          this.$store.dispatch('getAuthorLetters');
-        },
-      },
+      ...mapState(['collections']),
       clearCollections: {
         get() {
           return (this.$store.state.selectedCollections.length === 0) ? ['all'] : [];
@@ -81,9 +45,7 @@
         },
       },
     },
-    methods: {
-      ...mapActions(['loadDirectoryAsDat']),
-    },
+    methods: {},
 };
 </script>
 

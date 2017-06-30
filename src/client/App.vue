@@ -5,6 +5,7 @@
     <el-row>
       <el-col :span="19">
         <main>
+          <dat-nav/>
           <h1>Dat Library</h1>
           <search-nav/>
           <search-results/>
@@ -22,6 +23,7 @@
   import loader from 'components/loader';
   import error from 'components/error';
   import datImportField from 'components/datImportField';
+  import datNav from 'components/datNav';
   import sideNav from 'components/sideNav';
   import searchNav from 'components/searchNav';
   import searchResults from 'components/searchResults';
@@ -32,6 +34,7 @@
       error,
       loader,
       datImportField,
+      datNav,
       sideNav,
       searchNav,
       searchResults,
