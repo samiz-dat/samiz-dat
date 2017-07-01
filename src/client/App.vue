@@ -6,7 +6,6 @@
       <el-col :span="19">
         <main>
           <dat-nav/>
-          <h1>Dat Library</h1>
           <search-nav/>
           <search-results/>
         </main>

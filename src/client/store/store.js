@@ -11,6 +11,7 @@ const catalog = new Catalog(dataDir);
 const INITIAL_STATE = {
   loading: false,
   authorLetters: [],
+  allLetters: 'abcdefghijklmnopqrstuvwxyz',
   authorList: [],
   searchIndex: null,
   searchQuery: null,

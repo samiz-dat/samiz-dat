@@ -4,14 +4,15 @@
     <label for="search">Search:</label><input type="text" name="search" v-model="searchQuery">
     <button v-on:click="submit($event)">Search</button>
     </form>
-    <ul class="index">
-      <li v-for="letter in authorLetters"
-        :class="{active: searchIndex === letter}"
-        v-on:click="getAuthorsStartingWith(letter)"
+    <el-button-group>
+      <el-button v-for="letter in allLetters"
+      v-on:click="getAuthorsStartingWith(letter)"
+      :disabled="!authorLetters.includes(letter)"
+      size="mini"
       >
-        {{letter}}
-      </li>
-    </ul>
+      {{letter}}
+      </el-button>
+    </el-button-group>
     <div v-show="searchIndex">
       <h2>Authors starting with <span class="capitalize">{{searchIndex}}</span></h2>
       <ul>
@@ -35,7 +36,7 @@
       };
     },
     computed: {
-      ...mapState(['authorLetters', 'searchIndex', 'authorList']),
+      ...mapState(['authorLetters', 'allLetters', 'searchIndex', 'authorList']),
     },
     methods: {
       ...mapActions(['getAuthorsStartingWith', 'getFilesByAuthor', 'search']),
