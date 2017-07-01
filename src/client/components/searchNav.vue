@@ -15,11 +15,23 @@
     </el-button-group>
     <div v-show="searchIndex">
       <h2>Authors starting with <span class="capitalize">{{searchIndex}}</span></h2>
-      <ul>
-        <li v-for="author in authorList">
-          <span><a v-on:click="getFilesByAuthor(author.author)">{{author.author}}</a> ({{author.count}})</span>
-        </li>
-      </ul>
+      <el-table
+        :data="authorList"
+        stripe
+        style="width: 100%">
+        <el-table-column
+          prop="author"
+          label="Name">
+          <template scope="scope">
+            <a v-on:click="getFilesByAuthor(scope.row.author)">{{scope.row.author}}</a>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="count"
+          label="Texts"
+          width="100">
+        </el-table-column>
+      </el-table>
     </div>
   </nav>
 </template>

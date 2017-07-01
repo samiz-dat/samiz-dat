@@ -2,7 +2,21 @@
   <div>
     <h2>Search Results: <span v-show="searchQuery">{{searchQuery}}</span></h2>
     <div v-show="results.length === 0">Nothing found</div>
-    <dat-book v-for="book in results" :key="book.dat" :book="book"/>
+    <el-table v-show="results.length !== 0" :data="results" style="width:100%">
+      <el-table-column type="expand">
+        <template scope="books">
+          <dat-book :key="books.row.dat" :book="books.row"/>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Author"
+        prop="author">
+      </el-table-column>
+      <el-table-column
+        label="Title"
+        prop="title">
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 

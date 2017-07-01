@@ -1,22 +1,25 @@
 <template>
   <div class="item">
     <div :class="{ header: true, downloaded: book.downloaded }">
+      <!--
       <div class="author">{{book.author}}</div>
       <div class="title">{{book.title}}</div>
-      <div class="options">
+      -->
+      <el-button-group>
         <!-- <button v-show="book.downloaded" v-on:click="showItemInFolder">Reveal in Finder</button> -->
-        <button v-show="!book.downloaded" v-on:click="downloadTitle">Download Text</button>
-        <button v-show="!book.downloaded" v-on:click="downloadAuthor">Download All By Author</button>
-      </div>
+        <el-button v-show="!book.downloaded" v-on:click="downloadTitle" size="mini">Download Text</el-button>
+        <el-button v-show="!book.downloaded" v-on:click="downloadAuthor" size="mini">Download All By Author</el-button>
+      </el-button-group>
     </div>
-    <div class="extra">
-      <ul>
-        <li v-for="(file, index) in book.files" :class="{downloaded: file.downloaded}">
-          <div><a v-on:click="showItemInFolder(index)">{{file.file}}</a></div>
-          <div class="dat">DAT: {{file.dat}} library</div>
-          </li>
-      </ul>
-    </div>
+    <el-row v-for="(file, index) in book.files">
+      <el-col :span="4">
+        <i v-show="file.downloaded" class="el-icon-check"></i>
+      </el-col>
+      <el-col :span="20">
+        <div><a v-on:click="showItemInFolder(index)">{{file.file}}</a></div>
+        <div>{{file.dat}}</div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
