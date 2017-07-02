@@ -1,38 +1,10 @@
 <template>
   <nav>
     <form method="post">
-    <label for="search">Search:</label><input type="text" name="search" v-model="searchQuery">
-    <button v-on:click="submit($event)">Search</button>
+    <el-input placeholder="Search" name="search" v-model="searchQuery" size="mini">
+      <el-button slot="append" icon="search" v-on:click="submit($event)"></el-button>
+    </el-input>
     </form>
-    <el-button-group>
-      <el-button v-for="letter in allLetters"
-      v-on:click="getAuthorsStartingWith(letter)"
-      :disabled="!authorLetters.includes(letter)"
-      size="mini"
-      >
-      {{letter}}
-      </el-button>
-    </el-button-group>
-    <div v-show="searchIndex">
-      <h2>Authors starting with <span class="capitalize">{{searchIndex}}</span></h2>
-      <el-table
-        :data="authorList"
-        stripe
-        style="width: 100%">
-        <el-table-column
-          prop="author"
-          label="Name">
-          <template scope="scope">
-            <a v-on:click="getFilesByAuthor(scope.row.author)">{{scope.row.author}}</a>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="count"
-          label="Texts"
-          width="100">
-        </el-table-column>
-      </el-table>
-    </div>
   </nav>
 </template>
 
@@ -48,10 +20,10 @@
       };
     },
     computed: {
-      ...mapState(['authorLetters', 'allLetters', 'searchIndex', 'authorList']),
+      ...mapState(['searchIndex']),
     },
     methods: {
-      ...mapActions(['getAuthorsStartingWith', 'getFilesByAuthor', 'search']),
+      ...mapActions(['search']),
       submit(event) {
         if (event) event.preventDefault();
         this.search(this.searchQuery);

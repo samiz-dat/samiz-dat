@@ -6,11 +6,12 @@
       <el-col :span="19">
         <main>
           <dat-nav/>
-          <search-nav/>
+          <author-nav/>
           <search-results/>
         </main>
       </el-col>
       <el-col :span="5">
+        <search-nav/>
         <side-nav/>
       </el-col>
     </el-row>
@@ -21,6 +22,7 @@
   import { mapState, mapActions } from 'vuex';
   import loader from 'components/loader';
   import error from 'components/error';
+  import authorNav from 'components/authorNav';
   import datImportField from 'components/datImportField';
   import datNav from 'components/datNav';
   import sideNav from 'components/sideNav';
@@ -32,6 +34,7 @@
     components: {
       error,
       loader,
+      authorNav,
       datImportField,
       datNav,
       sideNav,
