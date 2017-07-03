@@ -22,6 +22,7 @@
   import { mapState, mapActions } from 'vuex';
   import loader from 'components/loader';
   import error from 'components/error';
+  import addReadingList from 'components/addReadingList';
   import authorNav from 'components/authorNav';
   import datImportField from 'components/datImportField';
   import datNav from 'components/datNav';
@@ -34,6 +35,7 @@
     components: {
       error,
       loader,
+      addReadingList,
       authorNav,
       datImportField,
       datNav,
@@ -51,14 +53,14 @@
       // 2. promise from datcat is never resolved for some reason.
       this.loadCatalog()
         .then(() => this.getDats())
-        .then(() => this.getCollections())
+        .then(() => this.getAvailableReadingLists())
         .then(() => this.getAuthorLetters());
     },
     computed: {
       ...mapState(['dats', 'loading', 'error']),
     },
     methods: {
-      ...mapActions(['loadCatalog', 'getDats', 'getCollections', 'getAuthorLetters']),
+      ...mapActions(['loadCatalog', 'getDats', 'getAvailableReadingLists', 'getAuthorLetters']),
       submit(event) {
         if (event) event.preventDefault();
         console.log(this.search);

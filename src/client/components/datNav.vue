@@ -55,7 +55,6 @@
           return this.$store.state.selectedDats;
         },
         set(value) {
-        console.log(value);
           this.$store.commit('selectDats', value);
           this.$store.dispatch('getAuthorLetters');
         },
