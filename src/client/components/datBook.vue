@@ -44,11 +44,16 @@
       filepath: function filepath() {
         return this.book.files.map(file => path.join(this.datWithKey(file.dat).dir, this.book.author, this.book.title, file.file));
       },
+      bookpath: function bookpath() {
+        return this.book.files.map(file => path.join(this.datWithKey(file.dat).dir, this.book.author, this.book.title));
+      },
     },
     methods: {
       ...mapActions(['download']),
       showItemInFolder: function showItemInFolder(index) {
-        shell.showItemInFolder(this.filepath[index]);
+        console.log(this.filepath[index]);
+        const success = shell.showItemInFolder(this.filepath[index]);
+
       },
       downloadTitle: function downloadTitle() {
         this.download({ author: this.book.author, title: this.book.title });
