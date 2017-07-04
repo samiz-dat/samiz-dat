@@ -21,8 +21,6 @@ const INITIAL_STATE = {
   availableReadingLists: [],
   readingLists: [],
   selectedReadingLists: [],
-  collections: [],
-  selectedCollections: [],
   // files: {},
   error: null,
 };
@@ -57,8 +55,6 @@ const store = new Vuex.Store({
     setSearchIndex: setIdentity('searchIndex'),
     setDats: setIdentity('dats'),
     selectDats: setIdentity('selectedDats'),
-    setCollections: setIdentity('collections'),
-    selectCollections: setIdentity('selectedCollections'),
     setAvailableReadingLists: setIdentity('availableReadingLists'),
     setReadingLists: setIdentity('readingLists'),
     selectReadingLists: setIdentity('selectedReadingLists'),

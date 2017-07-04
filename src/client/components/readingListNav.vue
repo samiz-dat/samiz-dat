@@ -12,28 +12,12 @@
       lazy
     >
     </el-tree>
-    <!--
-    <ul>
-      <li>
-        <input type="checkbox" id="coll-all" value="all" v-model="clearCollections" checked>
-        <label for="dat-all">All items</label>
-      </li>
-      <li>
-
-      </li>
-      <li v-for="(coll, index) in readingLists">
-        <input type="checkbox" :id="`coll-${index}`" :value="coll.collection" v-model="selectedCollections">
-        <label :for="`coll-${index}`">{{ coll.collection.replace(';;', ' -> ') }}</label>
-      </li>
-    </ul>
-    -->
   </aside>
 </template>
 
 <script>
   import { mapState, mapActions, mapGetters } from 'vuex';
   import addReadingList from 'components/addReadingList';
-  // TODO: make this fixed, independent of main areas scroll.
 
   export default {
     name: 'readingListNav',
@@ -54,15 +38,6 @@
       readingListsTree: function() {
         const lists = this.uniqueReadingLists();
         return lists.map(x => ({ label: x, key: x }))
-      },
-      selectedCollections: {
-        get() {
-          return this.$store.state.selectedCollections;
-        },
-        set(value) {
-          this.$store.commit('selectReading', value);
-          this.$store.dispatch('getAuthorLetters');
-        },
       },
     },
     methods: {
