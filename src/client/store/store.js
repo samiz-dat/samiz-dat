@@ -11,7 +11,7 @@ const catalog = new Catalog(dataDir);
 const INITIAL_STATE = {
   loading: false,
   authorLetters: [],
-  allLetters: 'abcdefghijklmnopqrstuvwxyz'.split(''),
+  allLetters: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
   authorList: [],
   searchIndex: null,
   searchQuery: null,
@@ -19,6 +19,8 @@ const INITIAL_STATE = {
   dats: [],
   selectedDats: [],
   availableReadingLists: [],
+  readingLists: [],
+  selectedReadingLists: [],
   collections: [],
   selectedCollections: [],
   // files: {},
@@ -58,6 +60,8 @@ const store = new Vuex.Store({
     setCollections: setIdentity('collections'),
     selectCollections: setIdentity('selectedCollections'),
     setAvailableReadingLists: setIdentity('availableReadingLists'),
+    setReadingLists: setIdentity('readingLists'),
+    selectReadingLists: setIdentity('selectedReadingLists'),
     setResults: setIdentity('results', unpackTitleFiles),
     setSearchQuery: setIdentity('searchQuery'),
     // setDatFiles: (state, payload) => {
@@ -75,7 +79,22 @@ const store = new Vuex.Store({
     // getDatFiles: state => key => state.files[key],
     datWithKey: state => key => state.dats.find(d => d.dat === key),
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
-    collectionsFilter: state => (state.selectedCollections.length === 0 ? undefined : state.selectedCollections),
+    readingListsFilter: state => (state.selectedReadingLists.length === 0 ? undefined : state.selectedReadingLists),
+    uniqueReadingLists: state => (filter) => {
+      const unique = [];
+      for (const rl of state.readingLists) {
+        const levels = rl.collection.split(';;');
+        const idx = (filter) ? filter.length : 0;
+        const relevant = (filter)
+          ? filter.reduce(n => true && levels.indexOf(n) === n)
+          : true;
+        const level = levels[idx];
+        if (relevant && !unique.includes(level)) {
+          unique.push(level);
+        }
+      }
+      return unique;
+    },
   },
   // later we should refactor this into a seporate file
   actions: {
@@ -89,13 +108,13 @@ const store = new Vuex.Store({
         }
       });
       return catalog.init()
-        .then()
+        .then(() => dispatch('getReadingLists'))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     getAuthorLetters: ({ dispatch, commit, state, getters }) => {
       commit('setLoading', true); // TODO: make this a push pop type state, so first return does not stop the loader if other actions have not finished yet...
-      return catalog.getAuthorLetters({ collection: getters.collectionsFilter }, getters.searchDats)
+      return catalog.getAuthorLetters({ collection: getters.readingListsFilter }, getters.searchDats)
         .then((rows) => {
           const letters = rows.map(v => v.letter);
           commit('setAuthorLetters', letters);
@@ -126,8 +145,18 @@ const store = new Vuex.Store({
     getAuthorsStartingWith: ({ commit, getters }, payload) => {
       commit('setLoading', true);
       commit('setSearchIndex', payload);
-      return catalog.getAuthors(payload, { collection: getters.collectionsFilter }, getters.searchDats)
+      return catalog.getAuthors(payload, { collection: getters.readingListsFilter }, getters.searchDats)
         .then(authors => commit('setAuthorList', authors))
+        .catch(e => commit('setError', e))
+        .finally(() => commit('setLoading', false));
+    },
+    getFilesByAuthor: ({ state, commit, getters }, payload) => {
+      commit('setLoading', true);
+      commit('setSearchQuery', payload);
+      commit('setSearchIndex', null);
+      commit('setAuthorList', []);
+      return catalog.getTitlesWith({ author: payload, collection: getters.readingListsFilter }, getters.searchDats)
+        .then(results => commit('setResults', results))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
@@ -138,21 +167,19 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    getFilesByAuthor: ({ state, commit, getters }, payload) => {
+    loadReadingList: ({ dispatch, commit }, payload) => {
       commit('setLoading', true);
-      commit('setSearchQuery', payload);
-      commit('setSearchIndex', null);
-      commit('setAuthorList', []);
-      return catalog.getTitlesWith({ author: payload, collection: getters.collectionsFilter }, getters.searchDats)
-        .then(results => commit('setResults', results))
-        .catch(e => commit('setError', e))
-        .finally(() => commit('setLoading', false));
+      console.log(payload[0], payload[1]);
+      return catalog.ingestDatCollection(payload[0], payload[1])
+      .then(() => dispatch('getReadingLists'))
+      .catch(e => commit('setError', e))
+      .finally(() => commit('setLoading', false));
     },
-    getCollections: ({ commit, getters }, payload) => {
+    getReadingLists: ({ commit, getters }, payload) => {
       commit('setLoading', true);
       commit('setSearchIndex', payload);
       return catalog.getCollections(payload)
-        .then(collections => commit('setCollections', collections))
+        .then(collections => commit('setReadingLists', collections))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },

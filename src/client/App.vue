@@ -23,6 +23,7 @@
   import loader from 'components/loader';
   import error from 'components/error';
   import addReadingList from 'components/addReadingList';
+  import readingListNav from 'components/readingListNav';
   import authorNav from 'components/authorNav';
   import datImportField from 'components/datImportField';
   import datNav from 'components/datNav';
@@ -36,6 +37,7 @@
       error,
       loader,
       addReadingList,
+      readingListNav,
       authorNav,
       datImportField,
       datNav,
