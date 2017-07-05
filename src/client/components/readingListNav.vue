@@ -51,7 +51,7 @@
         const parent = (node.data.parent)
           ? node.data.parent
           : [ node.data.label ];
-        const data = this.uniqueReadingLists(parent)
+        const data = this.uniqueReadingLists(node.data.key)
           .map(x => ({
             label: x,
             parent: parent,

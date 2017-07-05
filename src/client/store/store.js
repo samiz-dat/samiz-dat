@@ -79,14 +79,14 @@ const store = new Vuex.Store({
     uniqueReadingLists: state => (filter) => {
       const unique = [];
       for (const rl of state.readingLists) {
-        const levels = rl.collection.split(';;');
-        const idx = (filter) ? filter.length : 0;
-        const relevant = (filter)
-          ? filter.reduce(n => true && levels.indexOf(n) === n)
-          : true;
-        const level = levels[idx];
-        if (relevant && !unique.includes(level)) {
-          unique.push(level);
+        const valid = (!filter || (filter && rl.collection.indexOf(filter) === 0 && filter.length < rl.collection.length));
+        if (valid) {
+          const level = (filter)
+            ? rl.collection.replace(`${filter};;`, '').split(';;')[0]
+            : rl.collection.split(';;')[0];
+          if (!unique.includes(level)) {
+            unique.push(level);
+          }
         }
       }
       return unique;
