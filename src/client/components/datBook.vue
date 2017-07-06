@@ -11,7 +11,10 @@
         <el-button v-show="!book.downloaded" v-on:click="downloadAuthor" size="mini">Download All By Author</el-button>
       </el-button-group>
     </div>
-    <el-row v-for="(file, index) in book.files">
+    <el-row
+      v-for="(file, index) in book.files"
+      :key="index"
+      >
       <el-col :span="4">
         <i v-show="file.downloaded" class="el-icon-check"></i>
       </el-col>

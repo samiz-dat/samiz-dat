@@ -1,7 +1,8 @@
 <template>
   <div>
     <el-button-group>
-      <el-button v-for="letter in allLetters"
+      <el-button v-for="(letter, index) in allLetters"
+      :key="letter"
       v-on:click="getAuthorsStartingWith(letter)"
       :disabled="!authorLetters.includes(letter)"
       size="mini"
