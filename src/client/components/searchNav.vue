@@ -1,7 +1,12 @@
 <template>
   <nav>
     <form method="post">
-    <el-input placeholder="Search" name="search" v-model="searchQuery" size="mini">
+    <el-input
+      placeholder="Search"
+      name="search"
+      v-model="searchQuery"
+      size="mini"
+    >
       <el-button slot="append" icon="search" v-on:click="submit($event)"></el-button>
     </el-input>
     </form>

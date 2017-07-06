@@ -6,6 +6,7 @@
       :data="readingListsTree"
       :props="treeProps"
       :load="loadBranch"
+      ref="readingListTree"
       node-key="key"
       show-checkbox
       @check-change="checkedBranch"
@@ -60,7 +61,7 @@
         return resolve(data);
       },
       checkedBranch(node, selected, subtreeSelected) {
-        this.$store.commit('selectReadingLists', node.key);
+        this.$store.commit('selectReadingLists', this.$refs.readingListTree.getCheckedKeys());
         this.$store.dispatch('getAuthorLetters');
       }
     },
