@@ -10,6 +10,8 @@ const catalog = new Catalog(dataDir);
 
 const INITIAL_STATE = {
   loading: false,
+  pagerLimit: 3,
+  pagerOffset: 0,
   authorLetters: [],
   allLetters: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
   authorList: [],
@@ -50,6 +52,11 @@ const store = new Vuex.Store({
   state: INITIAL_STATE,
   mutations: {
     setLoading: setIdentity('loading'),
+    setPagerLimit: setIdentity('pagerLimit'),
+    setPagerOffset: setIdentity('pagerOffset'),
+    setPage: (state, p) => {
+      state.pagerOffset = state.pagerLimit * (p - 1);
+    },
     setAuthorLetters: setIdentity('authorLetters'),
     setAuthorList: setIdentity('authorList'),
     setSearchIndex: setIdentity('searchIndex'),
@@ -138,10 +145,10 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    getAuthorsStartingWith: ({ commit, getters }, payload) => {
+    getAuthorsStartingWith: ({ state, commit, getters }, payload) => {
       commit('setLoading', true);
       commit('setSearchIndex', payload);
-      return catalog.getAuthors(payload, { collection: getters.readingListsFilter }, getters.searchDats)
+      return catalog.getAuthors(payload, { collection: getters.readingListsFilter, limit: state.pagerLimit, offset: state.pagerOffset }, getters.searchDats)
         .then(authors => commit('setAuthorList', authors))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));

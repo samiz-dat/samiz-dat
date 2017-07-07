@@ -3,7 +3,7 @@
     <el-button-group>
       <el-button v-for="(letter, index) in allLetters"
       :key="letter"
-      v-on:click="getAuthorsStartingWith(letter)"
+      @click="loadLetter(letter)"
       :disabled="!authorLetters.includes(letter)"
       size="mini"
       >
@@ -14,6 +14,7 @@
       <h2>Authors starting with <span class="capitalize">{{searchIndex}}</span></h2>
       <el-table
         :data="authorList"
+        empty-text="..."
         stripe
         style="width: 100%">
         <el-table-column
@@ -29,6 +30,12 @@
           width="100">
         </el-table-column>
       </el-table>
+      <el-pagination
+        layout="prev, pager, next"
+        :page-size="pageSize"
+        @current-change="goToPage"
+        :current-page.sync="currentPage">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -40,13 +47,27 @@
     name: 'authorNav',
     components: {},
     data() {
-      return {};
+      return {
+        letter: 'a',
+        currentPage: 1,
+        pageSize: 3,
+      };
     },
     computed: {
-      ...mapState(['authorLetters', 'allLetters', 'authorList', 'searchIndex']),
+      ...mapState(['pagerLimit', 'pagerOffset', 'authorLetters', 'allLetters', 'authorList', 'searchIndex']),
     },
     methods: {
       ...mapActions(['getAuthorsStartingWith', 'getFilesByAuthor']),
+      loadLetter(letter) {
+        this.letter = letter;
+        this.currentPage = 1;
+        this.goToPage(this.currentPage);
+      },
+      goToPage(page) {
+        this.$store.commit('setPagerLimit', this.pageSize);
+        this.$store.commit('setPage', page);
+        this.$store.dispatch('getAuthorsStartingWith', this.letter);
+      }
     },
 };
 </script>
