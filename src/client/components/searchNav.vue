@@ -31,6 +31,8 @@
       ...mapActions(['search']),
       submit(event) {
         if (event) event.preventDefault();
+        this.$store.commit('setPagerLimit', 5);
+        this.$store.commit('setPage', 1);
         this.search(this.searchQuery);
         this.searchQuery = '';
       },

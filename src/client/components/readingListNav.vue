@@ -8,7 +8,7 @@
       :load="loadBranch"
       ref="readingListTree"
       node-key="key"
-      empty-text="No reading lists yet"
+      empty-text=""
       show-checkbox
       @check-change="checkedBranch"
       lazy

@@ -17,6 +17,12 @@
         prop="title">
       </el-table-column>
     </el-table>
+    <el-pagination
+      layout="prev, pager, next"
+      :page-size="pageSize"
+      @current-change="goToPage"
+      :current-page.sync="currentPage">
+    </el-pagination>
   </div>
 </template>
 
@@ -30,12 +36,25 @@
       datBook,
     },
     data() {
-      return {};
+      return {
+        pageSize: 5,
+      };
     },
     computed: {
-      ...mapState(['results', 'searchQuery']),
+      ...mapState(['results', 'searchQuery', 'pagerOffset']),
+      currentPage: {
+        get() {
+          return (this.pagerOffset/this.pageSize) + 1;
+        },
+      },
     },
-    methods: {},
+    methods: {
+      goToPage(page) {
+        this.$store.commit('setPagerLimit', this.pageSize);
+        this.$store.commit('setPage', page);
+        this.$store.dispatch('search', this.searchQuery);
+      }
+    },
 };
 </script>
 

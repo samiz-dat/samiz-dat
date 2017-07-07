@@ -186,7 +186,7 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    search: ({ getters, commit }, payload) => {
+    search: ({ state, getters, commit }, payload) => {
       // when searching reset search area.
       commit('setSearchIndex', null);
       commit('setAuthorList', []);
@@ -196,7 +196,7 @@ const store = new Vuex.Store({
       }
       commit('setSearchQuery', payload);
       commit('setLoading', true);
-      return catalog.search(payload, getters.searchDats)
+      return catalog.search(payload, getters.searchDats, { limit: state.pagerLimit, offset: state.pagerOffset })
         .then(results => commit('setResults', results))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
