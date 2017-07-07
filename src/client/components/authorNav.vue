@@ -31,8 +31,9 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        layout="prev, pager, next"
+        :layout="pagerLayout"
         :page-size="pageSize"
+        v-show="authorList.length !== 0"
         @current-change="goToPage"
         :current-page.sync="currentPage">
       </el-pagination>
@@ -55,6 +56,12 @@
     },
     computed: {
       ...mapState(['pagerLimit', 'pagerOffset', 'authorLetters', 'allLetters', 'authorList', 'searchIndex']),
+      pagerLayout: {
+        get() {
+          // @TODO: Someday we should get total counts but for now this handles the end of the pager
+          return (this.authorList.length < this.pageSize) ? 'prev' : 'prev, next';
+        }
+      }
     },
     methods: {
       ...mapActions(['getAuthorsStartingWith', 'getFilesByAuthor']),

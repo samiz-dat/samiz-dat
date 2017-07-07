@@ -18,7 +18,8 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      layout="prev, pager, next"
+      :layout="pagerLayout"
+      v-show="results.length !== 0"
       :page-size="pageSize"
       @current-change="goToPage"
       :current-page.sync="currentPage">
@@ -38,15 +39,17 @@
     data() {
       return {
         pageSize: 5,
+        currentPage: 1, // @TODO: This will be buggy when search is changed because current-page doesn't reset to 1, which is needs to on a new search
       };
     },
     computed: {
       ...mapState(['results', 'searchQuery', 'pagerOffset']),
-      currentPage: {
+      pagerLayout: {
         get() {
-          return (this.pagerOffset/this.pageSize) + 1;
-        },
-      },
+          // @TODO: Someday we should get total counts but for now this handles the end of the pager
+          return (this.results.length < this.pageSize) ? 'prev' : 'prev, next';
+        }
+      }
     },
     methods: {
       goToPage(page) {
