@@ -1,20 +1,20 @@
 <template>
   <nav>
-    <form method="post">
-    <el-input
-      placeholder="Search"
-      name="search"
-      v-model="searchQuery"
-      size="mini"
-    >
-      <el-button slot="append" icon="search" v-on:click="submit($event)"></el-button>
-    </el-input>
+    <form method="post" v-on:submit.stop.prevent="submit()" >
+      <el-input
+        placeholder="Search"
+        name="search"
+        v-model="searchQuery"
+        size="mini"
+      >
+        <el-button slot="append" icon="search" v-on:click.stop.prevent="submit($event)"></el-button>
+      </el-input>
     </form>
   </nav>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
+  import { mapActions } from 'vuex';
 
   export default {
     name: 'searchNav',
@@ -24,15 +24,9 @@
         searchQuery: '',
       };
     },
-    computed: {
-      ...mapState(['searchIndex']),
-    },
     methods: {
       ...mapActions(['search']),
-      submit(event) {
-        if (event) event.preventDefault();
-        this.$store.commit('setPagerLimit', 5);
-        this.$store.commit('setPage', 1);
+      submit() {
         this.search(this.searchQuery);
         this.searchQuery = '';
       },
