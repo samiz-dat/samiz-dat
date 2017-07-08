@@ -14,8 +14,14 @@
         <el-col :span="3">
           <el-button @click="addDatDialogIsVisible = true">+</el-button>
           <el-dialog title="Add a new library" :visible.sync="addDatDialogIsVisible">
-            <el-button v-on:click="loadDirectoryAsDat">+ Local Library</el-button>
+            <h3>1</h3>If you have a Calibre library on your computer already, you can import it here.
+            <el-button v-on:click="loadDirectoryAsDat">+ Local Collection</el-button>
+            <h3>2</h3>If someone gave you a "key" to share their library with you, you can import it here.
             <dat-import-field/>
+            <h3>3</h3>Or if you want to create a brand new library, you can do it here.
+            <el-button v-on:click="createDirectoryAsDat">Create a New Collection</el-button>
+            <h3>B</h3>
+            <add-file/>
           </el-dialog>
         </el-col>
       </el-row>
@@ -26,6 +32,7 @@
 <script>
   import { mapState, mapActions } from 'vuex';
   import datImportField from 'components/datImportField';
+  import addFile from 'components/addFile';
 
   // TODO: make this fixed, independent of main areas scroll.
 
@@ -33,6 +40,7 @@
     name: 'datNav',
     components: {
       datImportField,
+      addFile,
     },
     data() {
       return {
@@ -61,7 +69,8 @@
       },
     },
     methods: {
-      ...mapActions(['loadDirectoryAsDat']),
+      ...mapActions(['loadDirectoryAsDat', 'createDirectoryAsDat']),
     },
 };
+
 </script>

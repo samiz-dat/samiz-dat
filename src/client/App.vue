@@ -24,6 +24,7 @@
   import { mapState, mapActions, mapGetters } from 'vuex';
   import loader from 'components/loader';
   import error from 'components/error';
+  import addFile from 'components/addFile';
   import addReadingList from 'components/addReadingList';
   import readingListNav from 'components/readingListNav';
   import authorNav from 'components/authorNav';
@@ -39,6 +40,7 @@
     components: {
       error,
       loader,
+      addFile,
       addReadingList,
       readingListNav,
       authorNav,

@@ -241,12 +241,39 @@ const store = new Vuex.Store({
         }
       });
     },
+    createDirectoryAsDat: ({ commit }) => {
+      // need to figure out setting simple name too
+      // or just derive from the directory and let user rename later.
+      commit('setLoading', true);
+      remote.dialog.showOpenDialog({
+        title: 'Create a new collection',
+        defaultPath: dataDir,
+        properties: ['openDirectory', 'createDirectory', 'promptToCreate'],
+      }, (file) => {
+        if (Array.isArray(file)) {
+          catalog.createDat(file[0])
+          .catch(e => commit('setError', e))
+          .finally(() => commit('setLoading', false));
+        } else {
+          commit('setLoading', false);
+        }
+      });
+    },
     importDat: ({ commit }, payload) => {
       commit('setLoading', true);
       if (!payload.key) { // need proper validation here
         commit('setLoading', false);
       }
       return catalog.importDat(payload.key, payload.name) // need to throw errors in promise in dat-cardcat
+        .catch(e => commit('setError', e))
+        .finally(() => commit('setLoading', false));
+    },
+    addFileToDat: ({ commit }, payload) => {
+      commit('setLoading', true);
+      if (!payload.key) { // need proper validation here
+        commit('setLoading', false);
+      }
+      return catalog.addFileToDat(payload.file, payload.dat, payload.author, payload.title) // need to throw errors in promise in dat-cardcat
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
