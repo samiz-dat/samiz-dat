@@ -25,9 +25,9 @@
       };
     },
     methods: {
-      ...mapActions(['search']),
+      ...mapActions(['newSearch']),
       submit() {
-        this.search(this.searchQuery);
+        this.newSearch(this.searchQuery);
         this.searchQuery = '';
       },
     },
