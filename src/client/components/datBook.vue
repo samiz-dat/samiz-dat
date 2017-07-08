@@ -56,7 +56,6 @@
       showItemInFolder: function showItemInFolder(index) {
         console.log(this.filepath[index]);
         const success = shell.showItemInFolder(this.filepath[index]);
-
       },
       downloadTitle: function downloadTitle() {
         this.download({ author: this.book.author, title: this.book.title });

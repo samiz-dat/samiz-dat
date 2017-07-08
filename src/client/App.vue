@@ -7,7 +7,9 @@
         <main>
           <dat-nav/>
           <author-nav/>
-          <search-results/>
+          <author-list v-if="onAuthorsPage"/>
+          <search-results v-if="onSearchPage"/>
+          <!-- <reading-list v-if="onReadingList"/> -->
         </main>
       </el-col>
       <el-col :span="5">
@@ -19,12 +21,13 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
+  import { mapState, mapActions, mapGetters } from 'vuex';
   import loader from 'components/loader';
   import error from 'components/error';
   import addReadingList from 'components/addReadingList';
   import readingListNav from 'components/readingListNav';
   import authorNav from 'components/authorNav';
+  import authorList from 'components/authorList';
   import datImportField from 'components/datImportField';
   import datNav from 'components/datNav';
   import sideNav from 'components/sideNav';
@@ -39,6 +42,7 @@
       addReadingList,
       readingListNav,
       authorNav,
+      authorList,
       datImportField,
       datNav,
       sideNav,
@@ -59,7 +63,12 @@
         .then(() => this.getAuthorLetters());
     },
     computed: {
-      ...mapState(['dats', 'loading', 'error']),
+      ...mapState(['dats', 'loading', 'error', 'route']),
+      ...mapGetters([
+        'onReadingList',
+        'onAuthorsPage',
+        'onSearchPage',
+      ]),
     },
     methods: {
       ...mapActions(['loadCatalog', 'getDats', 'getAvailableReadingLists', 'getAuthorLetters']),
