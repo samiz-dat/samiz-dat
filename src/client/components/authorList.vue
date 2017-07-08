@@ -2,7 +2,7 @@
   <div>
     <h2>Authors starting with <span class="capitalize">{{selectedLetter}}</span></h2>
     <el-table
-      :data="authorList"
+      :data="results"
       empty-text="..."
       stripe
       style="width: 100%"
@@ -22,7 +22,7 @@
       />
     </el-table>
     <el-pagination
-      v-show="authorList.length !== 0"
+      v-show="results.length !== 0"
       @current-change="goToPage"
       :layout="pagerLayout"
       :page-size="pagerLimit"
@@ -47,13 +47,13 @@
         'pagerOffset',
         'authorLetters',
         'allLetters',
-        'authorList',
+        'results',
         'selectedLetter',
       ]),
       pagerLayout: {
         get() {
           // @TODO: Someday we should get total counts but for now this handles the end of the pager
-          return (this.authorList.length < this.pagerLimit) ? 'prev' : 'prev, next';
+          return (this.results.length < this.pagerLimit) ? 'prev' : 'prev, next';
         },
       },
     },

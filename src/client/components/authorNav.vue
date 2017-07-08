@@ -23,7 +23,7 @@
       return {};
     },
     computed: {
-      ...mapState(['allLetters', 'authorLetters'])
+      ...mapState(['allLetters', 'authorLetters']),
     },
     methods: {
       ...mapActions(['showAuthorsStartingWith']),
