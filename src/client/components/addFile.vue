@@ -1,9 +1,9 @@
 <template>
-  <form method="post">
+  <form method="post" v-show="writeableDats.length !== 0">
     <p>Add a file:</p>
     <el-select v-model="dat" placeholder="Select a Library">
       <el-option
-        v-for="(dat, index) in dats"
+        v-for="(dat, index) in writeableDats"
         :label="dat.name"
         :key="dat.dat"
         :value="dat.dat">
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import { mapActions, mapState } from 'vuex';
+  import { mapActions, mapState, mapGetters } from 'vuex';
   import { remote } from 'electron';
 
   export default {
@@ -33,6 +33,7 @@
     },
     computed: {
       ...mapState(['dats']),
+      ...mapGetters(['writeableDats']),
     },
     methods: {
       ...mapActions(['addFileToDat']),
