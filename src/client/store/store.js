@@ -6,12 +6,10 @@ import { Catalog } from 'dat-cardcat';
 import _ from 'lodash';
 
 const dataDir = path.join(process.cwd(), '_data');
-// this should probably also be stored in state.
 const catalog = new Catalog(dataDir);
 
 const INITIAL_STATE = {
   loading: false,
-  route: '', // in liue of a need for real routing - use simple string for conditional display.
   page: 0,
   pagerLimit: 3,
   pagerOffset: 0,
@@ -55,7 +53,6 @@ const store = new Vuex.Store({
   state: INITIAL_STATE,
   mutations: {
     setLoading: setIdentity('loading'),
-    setRoute: setIdentity('route'),
     setPagerLimit: setIdentity('pagerLimit'),
     setPage: (state, p) => {
       state.page = p;
@@ -63,6 +60,7 @@ const store = new Vuex.Store({
     },
     refreshPagination: (state) => {
       state.page = 1;
+      state.pagerOffset = 0;
       state.results = [];
     },
     setAuthorLetters: setIdentity('authorLetters'),
@@ -73,8 +71,7 @@ const store = new Vuex.Store({
     setAvailableReadingLists: setIdentity('availableReadingLists'),
     setReadingLists: setIdentity('readingLists'),
     selectReadingLists: setIdentity('selectedReadingLists'),
-    setResults: setIdentity('results', unpackTitleFiles),
-    setAuthors: setIdentity('results'),
+    setResults: setIdentity('results'),
     setSearchQuery: setIdentity('searchQuery'),
     // setDatFiles: (state, payload) => {
     //   Vue.set(state.files, payload.key, payload.files);
@@ -89,9 +86,6 @@ const store = new Vuex.Store({
   },
   getters: {
     // getDatFiles: state => key => state.files[key],
-    onSearchPage: state => state.route === 'search', // if this starts to get complex we should implement vue-router
-    onAuthorsPage: state => state.route === 'authors',
-    onReadingList: state => state.route === 'reading-list',
     datWithKey: state => key => state.dats.find(d => d.dat === key),
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
     readingListsFilter: state => (state.selectedReadingLists.length === 0 ? undefined : state.selectedReadingLists),
@@ -130,7 +124,6 @@ const store = new Vuex.Store({
     // @TODO: this should be renamed to better describe its actual action. it also reloads searchs/authors
     getAuthorLetters: ({ dispatch, commit, state, getters }) => {
       commit('setLoading', true); // TODO: make this a push pop type state, so first return does not stop the loader if other actions have not finished yet...
-      commit('setRoute', 'authors');
       return catalog.getAuthorLetters({ collection: getters.readingListsFilter, dat: getters.searchDats })
         .then((rows) => {
           const letters = rows.map(v => v.letter);
@@ -160,7 +153,6 @@ const store = new Vuex.Store({
         .finally(() => commit('setLoading', false));
     },
     showAuthorsStartingWith: ({ state, commit, getters, dispatch }, payload) => {
-      commit('setRoute', 'authors');
       commit('setSelectedLetter', payload);
       commit('refreshPagination');
       return dispatch('getAuthors');
@@ -168,19 +160,21 @@ const store = new Vuex.Store({
     getAuthors: ({ state, commit, getters }) => {
       commit('setLoading', true);
       return catalog.getAuthors(state.selectedLetter, { collection: getters.readingListsFilter, limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
-        .then(authors => commit('setAuthors', authors))
+        .then(authors => commit('setResults', authors))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
+    },
+    showFilesByAuthor: ({ state, commit, getters, dispatch }, payload) => {
+      commit('setSearchQuery', payload); // these can be passed via routes and dont need to be in store
+      commit('setSelectedLetter', null); // these can be passed via routes and dont need to be in store
+      commit('refreshPagination');
+      return dispatch('getFilesByAuthor', payload);
     },
     getFilesByAuthor: ({ state, commit, getters }, payload) => {
       // @TODO: need to paginate
       commit('setLoading', true);
-      commit('setSearchQuery', payload);
-      commit('setSelectedLetter', null);
-      commit('setRoute', 'search');
-      console.log({ author: payload, collection: getters.readingListsFilter, dat: getters.searchDats });
-      return catalog.getTitlesWith({ author: payload, collection: getters.readingListsFilter, dat: getters.searchDats })
-        .then(results => commit('setResults', results))
+      return catalog.getTitlesWith({ author: payload, collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset })
+        .then(results => commit('setResults', unpackTitleFiles(results)))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
@@ -212,7 +206,6 @@ const store = new Vuex.Store({
       // we could bundle these state changes into a single commit type
       commit('refreshPagination');
       commit('setSelectedLetter', null);
-      commit('setRoute', 'search');
       if (!payload || payload === '') {
         commit('setSearchQuery', null);
         return Promise.resolve();
@@ -223,7 +216,7 @@ const store = new Vuex.Store({
     search: ({ state, getters, commit }) => {
       commit('setLoading', true);
       return catalog.search(state.searchQuery, { limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
-        .then(results => commit('setResults', results))
+        .then(results => commit('setResults', unpackTitleFiles(results)))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },

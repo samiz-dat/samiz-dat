@@ -15,6 +15,9 @@ module.exports = {
     extensions: ['.js', '.json', '.vue'],
     enforceExtension: false,
     alias: {
+      'store': path.resolve(__dirname, 'src/client/store/'),
+      'routes': path.resolve(__dirname, 'src/client/routes/'),
+      'containers': path.resolve(__dirname, 'src/client/containers/'),
       'components': path.resolve(__dirname, 'src/client/components/'),
       'assets': path.resolve(__dirname, 'src/client/assets/'),
       'vue': 'vue/dist/vue.common.js',

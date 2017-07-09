@@ -3,7 +3,7 @@
   <el-button-group>
     <el-button v-for="(letter, index) in allLetters"
     :key="letter"
-    @click="showAuthorsStartingWith(letter)"
+    @click="action(letter)"
     :disabled="!authorLetters.includes(letter)"
     size="mini"
     >
@@ -14,19 +14,22 @@
 </template>
 
 <script>
-  import { mapActions, mapState } from 'vuex';
+  import { mapState } from 'vuex';
 
   export default {
     name: 'authorNav',
     components: {},
+    props: {
+      action: {
+        type: Function,
+        required: true,
+      },
+    },
     data() {
       return {};
     },
     computed: {
       ...mapState(['allLetters', 'authorLetters']),
-    },
-    methods: {
-      ...mapActions(['showAuthorsStartingWith']),
     },
 };
 </script>

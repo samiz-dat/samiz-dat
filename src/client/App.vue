@@ -6,10 +6,8 @@
       <el-col :span="19">
         <main>
           <dat-nav/>
-          <author-nav/>
-          <author-list v-if="onAuthorsPage"/>
-          <search-results v-if="onSearchPage"/>
-          <!-- <reading-list v-if="onReadingList"/> -->
+          <author-nav :action="showAuthors"/>
+          <router-view></router-view>
         </main>
       </el-col>
       <el-col :span="5">
@@ -28,12 +26,10 @@
   import addReadingList from 'components/addReadingList';
   import readingListNav from 'components/readingListNav';
   import authorNav from 'components/authorNav';
-  import authorList from 'components/authorList';
   import datImportField from 'components/datImportField';
   import datNav from 'components/datNav';
   import sideNav from 'components/sideNav';
   import searchNav from 'components/searchNav';
-  import searchResults from 'components/searchResults';
 
   export default {
     name: 'App',
@@ -44,12 +40,10 @@
       addReadingList,
       readingListNav,
       authorNav,
-      authorList,
       datImportField,
       datNav,
       sideNav,
       searchNav,
-      searchResults,
     },
     data() {
       return {};
@@ -73,10 +67,15 @@
       ]),
     },
     methods: {
-      ...mapActions(['loadCatalog', 'getDats', 'getAvailableReadingLists', 'getAuthorLetters']),
+      ...mapActions(['loadCatalog', 'getDats', 'getAvailableReadingLists', 'getAuthorLetters', 'showAuthorsStartingWith']),
       submit(event) {
         if (event) event.preventDefault();
         console.log(this.search);
+      },
+      showAuthors(letter) {
+        // @todo make letter search part of url params using router link
+        this.$router.push('/authors');
+        this.showAuthorsStartingWith(letter);
       },
     },
 };

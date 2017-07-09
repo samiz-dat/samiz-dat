@@ -27,6 +27,7 @@
     methods: {
       ...mapActions(['newSearch']),
       submit() {
+        this.$router.push('/search');
         this.newSearch(this.searchQuery);
         this.searchQuery = '';
       },
