@@ -57,3 +57,9 @@
     },
 };
 </script>
+
+<style lang="scss" scoped>
+  main {
+    padding: 1rem;
+  }
+</style>

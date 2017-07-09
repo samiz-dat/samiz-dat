@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='a-to-z-wrapper'>
   <el-button-group>
     <el-button v-for="(letter, index) in allLetters"
     :key="letter"
@@ -33,3 +33,11 @@
     },
 };
 </script>
+
+<style lang="scss" scoped>
+  .a-to-z-wrapper {
+    margin: 0;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+</style>
