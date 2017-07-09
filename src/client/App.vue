@@ -2,48 +2,29 @@
   <div id="dat-library">
     <loader :loading="loading"/>
     <error :error="error"/>
-    <el-row>
-      <el-col :span="19">
-        <main>
-          <dat-nav/>
-          <author-nav :action="showAuthors"/>
-          <router-view></router-view>
-        </main>
-      </el-col>
-      <el-col :span="5">
-        <search-nav/>
-        <side-nav/>
-      </el-col>
-    </el-row>
+    <!-- <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+      <el-menu-item index="1">Processing Center</el-menu-item>
+      <el-menu-item index="3"><a href="https://www.ele.me" target="_blank">Orders</a></el-menu-item>
+    </el-menu> -->
+    <!-- @todo: make this into a proper nav -->
+    <router-link to="/">home</router-link>
+    <router-link to="/search">search</router-link>
+    <router-link to="/libraries">libraries</router-link>
+    <router-link to="/reading-lists">reading lists</router-link>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-  import { mapState, mapActions, mapGetters } from 'vuex';
+  import { mapState, mapActions } from 'vuex';
   import loader from 'components/loader';
   import error from 'components/error';
-  import addFile from 'components/addFile';
-  import addReadingList from 'components/addReadingList';
-  import readingListNav from 'components/readingListNav';
-  import authorNav from 'components/authorNav';
-  import datImportField from 'components/datImportField';
-  import datNav from 'components/datNav';
-  import sideNav from 'components/sideNav';
-  import searchNav from 'components/searchNav';
 
   export default {
     name: 'App',
     components: {
       error,
       loader,
-      addFile,
-      addReadingList,
-      readingListNav,
-      authorNav,
-      datImportField,
-      datNav,
-      sideNav,
-      searchNav,
     },
     data() {
       return {};
@@ -60,23 +41,9 @@
     },
     computed: {
       ...mapState(['dats', 'loading', 'error', 'route']),
-      ...mapGetters([
-        'onReadingList',
-        'onAuthorsPage',
-        'onSearchPage',
-      ]),
     },
     methods: {
-      ...mapActions(['loadCatalog', 'getDats', 'getAvailableReadingLists', 'getAuthorLetters', 'showAuthorsStartingWith']),
-      submit(event) {
-        if (event) event.preventDefault();
-        console.log(this.search);
-      },
-      showAuthors(letter) {
-        // @todo make letter search part of url params using router link
-        this.$router.push('/authors');
-        this.showAuthorsStartingWith(letter);
-      },
+      ...mapActions(['loadCatalog', 'getDats', 'getAvailableReadingLists', 'getAuthorLetters']),
     },
 };
 </script>

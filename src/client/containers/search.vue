@@ -1,0 +1,61 @@
+<template>
+  <div id="search">
+    <el-row>
+      <el-col :span="19">
+        <main>
+          <dat-nav/>
+          <author-nav :action="showAuthors"/>
+          <router-view></router-view>
+        </main>
+      </el-col>
+      <el-col :span="5">
+        <search-nav/>
+        <side-nav/>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
+<script>
+  import { mapState, mapActions } from 'vuex';
+  import addFile from 'components/addFile';
+  import addReadingList from 'components/addReadingList';
+  import readingListNav from 'components/readingListNav';
+  import authorNav from 'components/authorNav';
+  import datImportField from 'components/datImportField';
+  import datNav from 'components/datNav';
+  import sideNav from 'components/sideNav';
+  import searchNav from 'components/searchNav';
+
+  export default {
+    name: 'search',
+    components: {
+      addFile,
+      addReadingList,
+      readingListNav,
+      authorNav,
+      datImportField,
+      datNav,
+      sideNav,
+      searchNav,
+    },
+    data() {
+      return {};
+    },
+    computed: {
+      ...mapState(['dats', 'loading', 'error', 'route']),
+    },
+    methods: {
+      ...mapActions(['showAuthorsStartingWith']),
+      submit(event) {
+        if (event) event.preventDefault();
+        console.log(this.search);
+      },
+      showAuthors(letter) {
+        // @todo make letter search part of url params using router link
+        this.$router.push('/search/authors');
+        this.showAuthorsStartingWith(letter);
+      },
+    },
+};
+</script>

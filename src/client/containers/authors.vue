@@ -50,7 +50,7 @@
       },
       showTextsBy(author) {
         // @TODO: use url param to pass to container and do action from there.
-        this.$router.push('/byAuthor');
+        this.$router.push('/search/byAuthor');
         this.showFilesByAuthor(author);
       },
     },
