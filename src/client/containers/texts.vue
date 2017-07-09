@@ -51,14 +51,14 @@
     },
     methods: {
       ...mapMutations(['setPage']),
-      ...mapActions(['search', 'getTextsByAuthor']),
+      ...mapActions(['search', 'getFilesByAuthor']),
       goToPage(page) {
         this.setPage(page);
         switch (this.display) {
           case 'SEARCH':
             return this.search(this.searchQuery);
           case 'BY_AUTHOR':
-            return this.getTextsByAuthor(this.searchQuery);
+            return this.getFilesByAuthor(this.searchQuery);
           default:
             return this.search();
         }
