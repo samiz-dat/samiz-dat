@@ -38,9 +38,7 @@
 <style lang="scss" scoped>
 
   nav {
-    border-bottom: thick solid black;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
+    margin: 0 1rem;
   }
 
   .capitalize {

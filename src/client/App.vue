@@ -6,11 +6,27 @@
       <el-menu-item index="1">Processing Center</el-menu-item>
       <el-menu-item index="3"><a href="https://www.ele.me" target="_blank">Orders</a></el-menu-item>
     </el-menu> -->
-    <!-- @todo: make this into a proper nav -->
-    <router-link to="/">home</router-link>
-    <router-link to="/search">search</router-link>
-    <router-link to="/libraries">libraries</router-link>
-    <router-link to="/reading-lists">reading lists</router-link>
+    <el-row type="flex" class="extra-light-grey-bg" align="middle" justify="space-around">
+      <el-col :span="16">
+        <el-menu :router="true" :default-active="$route.path" mode="horizontal">
+          <el-menu-item index="/">home</el-menu-item>
+          <el-menu-item index="/search">discover</el-menu-item>
+          <el-menu-item index="/libraries">libraries</el-menu-item>
+          <el-menu-item index="/reading-lists">reading lists</el-menu-item>
+        </el-menu>
+      </el-col>
+      <el-col :span="8">
+        <search-nav />
+        <!-- <el-input
+          placeholder="Search"
+          name="search"
+          v-model="searchQuery"
+          size="mini"
+        >
+          <el-button slot="append" icon="search" v-on:click.stop.prevent="submit($event)"></el-button>
+        </el-input> -->
+      </el-col>
+    </el-row>
     <router-view></router-view>
   </div>
 </template>
@@ -19,12 +35,14 @@
   import { mapState, mapActions } from 'vuex';
   import loader from 'components/loader';
   import error from 'components/error';
+  import searchNav from 'components/searchNav';
 
   export default {
     name: 'App',
     components: {
       error,
       loader,
+      searchNav,
     },
     data() {
       return {};
@@ -47,25 +65,34 @@
     },
 };
 </script>
-<!--
-<style src="assets/fonts/fonts.scss"></style>
-<style src="assets/main.scss" lang="scss"></style>
-<style lang="scss">
-  #dat-library {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    flex-wrap: nowrap;
-    justify-content: center;
-    min-height: 100%;
-    width: 100%;
 
-    main {
-      flex: 1;
-      min-height: 100%;
-      margin: 1rem;
-      overflow: hidden;
-    }
+<!-- <style src="assets/fonts/fonts.scss"></style>
+<style src="assets/main.scss" lang="scss"></style> -->
+<style lang="scss">
+  body {
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    margin: 0;
+    padding: 0;
+    width:100%;
   }
+  .extra-light-grey-bg {
+    background-color: #EFF2F7;
+  }
+  // #dat-library {
+  //   display: flex;
+  //   flex-direction: row;
+  //   align-items: stretch;
+  //   flex-wrap: nowrap;
+  //   justify-content: center;
+  //   min-height: 100%;
+  //   width: 100%;
+
+  //   main {
+  //     flex: 1;
+  //     min-height: 100%;
+  //     margin: 1rem;
+  //     overflow: hidden;
+  //   }
+  // }
 </style>
--->
+

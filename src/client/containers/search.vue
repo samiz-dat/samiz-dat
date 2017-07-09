@@ -9,7 +9,6 @@
         </main>
       </el-col>
       <el-col :span="5">
-        <search-nav/>
         <side-nav/>
       </el-col>
     </el-row>
