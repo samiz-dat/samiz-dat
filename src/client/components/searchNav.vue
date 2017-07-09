@@ -24,7 +24,7 @@
     },
     methods: {
       submit() {
-        this.$router.push({ name: 'search', params: { query: this.searchQuery }});
+        this.$router.push({ name: 'search', params: { query: this.searchQuery } });
         this.searchQuery = '';
       },
     },
