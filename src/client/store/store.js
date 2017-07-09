@@ -279,6 +279,16 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
+    removeDat: ({ dispatch, commit }, payload) => {
+      commit('setLoading', true);
+      if (!payload) { // need proper validation here
+        commit('setLoading', false);
+      }
+      return catalog.removeDat(payload) // need to throw errors in promise in dat-cardcat
+        .then(() => dispatch('getDats'))
+        .catch(e => commit('setError', e))
+        .finally(() => commit('setLoading', false));
+    },
     addFileToDat: ({ commit }, payload) => {
       commit('setLoading', true);
       if (!payload.key) { // need proper validation here

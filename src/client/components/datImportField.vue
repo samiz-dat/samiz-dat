@@ -1,10 +1,15 @@
 <template>
-  <form method="post">
-    <p>Import external library:</p>
-    <el-input name="key" v-model="key" placeholder="Dat Key"></el-input><br />
-    <el-input name="name" v-model="name" placeholder="Name it"></el-input><br />
-    <el-button v-on:click="submit($event)" size="mini">Import</el-button>
-  </form>
+  <el-form ref="form">
+    <el-form-item label="Library Key">
+      <el-input name="key" v-model="key" placeholder="Dat Key"></el-input><br />
+    </el-form-item>
+    <el-form-item label="Name">
+      <el-input name="name" v-model="name" placeholder="Name it"></el-input><br />
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" v-on:click="submit($event)">Import</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script>
