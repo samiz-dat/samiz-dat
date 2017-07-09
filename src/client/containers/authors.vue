@@ -54,15 +54,14 @@
     },
     methods: {
       ...mapMutations(['setPage']),
-      ...mapActions(['getAuthors', 'showFilesByAuthor']),
+      ...mapActions(['getAuthors']),
       goToPage(page) {
         this.setPage(page);
         this.getAuthors();
       },
       showTextsBy(author) {
         // @TODO: use url param to pass to container and do action from there.
-        this.$router.push('/search/byAuthor');
-        this.showFilesByAuthor(author);
+        this.$router.push({ name: 'byAuthor', params: { author } });
       },
     },
 };

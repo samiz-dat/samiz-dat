@@ -17,8 +17,8 @@ const routes = [
   { path: '/search',
     component: search,
     children: [
-      { path: '', component: texts, props: { display: 'SEARCH' } }, // @TODO: make this shared consts
-      { path: 'byAuthor', component: texts, props: { display: 'BY_AUTHOR' } }, // @TODO: make this shared consts
+      { path: ':query', name: 'search', component: texts, props: { display: 'SEARCH' } }, // @TODO: make this shared consts
+      { path: 'byAuthor/:author', name: 'byAuthor', component: texts, props: { display: 'BY_AUTHOR' } }, // @TODO: make this shared consts
       { path: 'authors/:letter', name: 'authors', component: authors },
     ],
   },

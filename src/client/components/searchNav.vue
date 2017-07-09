@@ -14,8 +14,6 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex';
-
   export default {
     name: 'searchNav',
     components: {},
@@ -25,10 +23,8 @@
       };
     },
     methods: {
-      ...mapActions(['newSearch']),
       submit() {
-        this.$router.push('/search');
-        this.newSearch(this.searchQuery);
+        this.$router.push({ name: 'search', params: { query: this.searchQuery }});
         this.searchQuery = '';
       },
     },

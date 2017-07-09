@@ -15,6 +15,7 @@
 
 <script>
   import { mapState, mapMutations, mapActions } from 'vuex';
+  import store from 'store/store';
   import textList from 'components/textList';
 
   export default {
@@ -29,6 +30,26 @@
     },
     data() {
       return {};
+    },
+    beforeRouteEnter(to, from, next) {
+      // this is not defined so have to access store directely
+      if (to.params.author) {
+        store.dispatch('showFilesByAuthor', to.params.author)
+          .then(() => next());
+      } else if (to.params.query) {
+        store.dispatch('newSearch', to.params.query)
+          .then(() => next());
+      }
+    },
+    beforeRouteUpdate(to, from, next) {
+      // this is not defined so have to access store directely
+      if (to.params.author) {
+        store.dispatch('showFilesByAuthor', to.params.author)
+          .then(() => next());
+      } else if (to.params.query) {
+        store.dispatch('newSearch', to.params.query)
+          .then(() => next());
+      }
     },
     computed: {
       ...mapState(['results', 'searchQuery', 'page', 'pagerLimit']),
