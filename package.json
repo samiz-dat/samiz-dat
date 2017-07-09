@@ -15,8 +15,11 @@
     "update-datcat": "rm -rf node_modules/dat-cardcat; npm i"
   },
   "author": "",
-  "private": true,
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/e-e-e/dat-library"
+  },
   "devDependencies": {
     "babel-cli": "^6.23.0",
     "babel-core": "^6.23.1",
