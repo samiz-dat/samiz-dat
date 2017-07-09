@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{title}}<span v-show="searchQuery">{{searchQuery}}</span></h2>
+    <h2>{{title}}<span v-show="query">{{query}}</span></h2>
     <textList :data="results"/>
     <!-- refactor this so its part of list and configurable via props -->
     <el-pagination
@@ -29,30 +29,40 @@
       },
     },
     data() {
-      return {};
+      return {
+        query: '',
+      };
     },
     beforeRouteEnter(to, from, next) {
       // this is not defined so have to access store directely
       if (to.params.author) {
         store.dispatch('showFilesByAuthor', to.params.author)
-          .then(() => next());
+          .then(() => next(vm => vm.setQuery(to.params.author)));
       } else if (to.params.query) {
         store.dispatch('newSearch', to.params.query)
-          .then(() => next());
+          .then(() => next(vm => vm.setQuery(to.params.query)));
       }
     },
     beforeRouteUpdate(to, from, next) {
       // this is not defined so have to access store directely
       if (to.params.author) {
+        this.setQuery(to.params.author);
         store.dispatch('showFilesByAuthor', to.params.author)
           .then(() => next());
       } else if (to.params.query) {
+        this.setQuery(to.params.query);
         store.dispatch('newSearch', to.params.query)
           .then(() => next());
       }
     },
     computed: {
-      ...mapState(['results', 'searchQuery', 'page', 'pagerLimit']),
+      ...mapState([
+        'fetching',
+        'results',
+        'searchQuery',
+        'page',
+        'pagerLimit',
+      ]),
       pagerLayout: {
         get() {
           // @TODO: Someday we should get total counts but for now this handles the end of the pager
@@ -73,16 +83,22 @@
     methods: {
       ...mapMutations(['setPage']),
       ...mapActions(['search', 'getFilesByAuthor']),
+      setQuery(q) {
+        this.query = q;
+      },
       goToPage(page) {
-        this.setPage(page);
-        switch (this.display) {
-          case 'SEARCH':
-            return this.search(this.searchQuery);
-          case 'BY_AUTHOR':
-            return this.getFilesByAuthor(this.searchQuery);
-          default:
-            return this.search();
+        if (!this.fetching) {
+          this.setPage(page);
+          switch (this.display) {
+            case 'SEARCH':
+              return this.search(this.query);
+            case 'BY_AUTHOR':
+              return this.getFilesByAuthor(this.query);
+            default:
+              return this.search();
+          }
         }
+        return null;
       },
     },
 };

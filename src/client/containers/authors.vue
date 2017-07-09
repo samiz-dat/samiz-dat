@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Authors starting with <span class="capitalize">{{selectedLetter}}</span></h2>
+    <h2>Authors starting with <span class="capitalize">{{$route.params.letter}}</span></h2>
     <author-list :data="results" :action="showTextsBy" />
     <el-pagination
       v-show="results.length !== 0"
@@ -39,11 +39,8 @@
       ...mapState([
         'page',
         'pagerLimit',
-        'pagerOffset',
-        'authorLetters',
-        'allLetters',
         'results',
-        'selectedLetter',
+        'fetching',
       ]),
       pagerLayout: {
         get() {
@@ -56,8 +53,10 @@
       ...mapMutations(['setPage']),
       ...mapActions(['getAuthors']),
       goToPage(page) {
-        this.setPage(page);
-        this.getAuthors();
+        if (!this.fetching) { // stop page from reloading before new search is updated - this is a bit hacky
+          this.setPage(page);
+          this.getAuthors(this.$route.params.letter);
+        }
       },
       showTextsBy(author) {
         // @TODO: use url param to pass to container and do action from there.

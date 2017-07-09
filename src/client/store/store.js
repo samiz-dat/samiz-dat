@@ -10,6 +10,7 @@ const catalog = new Catalog(dataDir);
 
 const INITIAL_STATE = {
   loading: false,
+  fetching: false, // for when fetching new page data - stop page syncs calling update actions
   page: 0,
   pagerLimit: 3,
   pagerOffset: 0,
@@ -53,12 +54,14 @@ const store = new Vuex.Store({
   state: INITIAL_STATE,
   mutations: {
     setLoading: setIdentity('loading'),
+    setFetching: setIdentity('fetching'),
     setPagerLimit: setIdentity('pagerLimit'),
     setPage: (state, p) => {
       state.page = p;
       state.pagerOffset = state.pagerLimit * (p - 1);
     },
     refreshPagination: (state) => {
+      state.fetching = true;
       state.page = 1;
       state.pagerOffset = 0;
       state.results = [];
@@ -153,31 +156,56 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    showAuthorsStartingWith: ({ state, commit, getters, dispatch }, payload) => {
-      commit('setSelectedLetter', payload);
+    newSearch: ({ commit, dispatch }, payload) => {
+      // when searching reset search area.
+      // we could bundle these state changes into a single commit type
       commit('refreshPagination');
-      return dispatch('getAuthors');
+      commit('setSelectedLetter', null);
+      if (!payload || payload === '') {
+        commit('setSearchQuery', null);
+        return Promise.resolve();
+      }
+      commit('setSearchQuery', payload);
+      return dispatch('search');
     },
-    getAuthors: ({ state, commit, getters }) => {
+    search: ({ state, getters, commit }) => {
       commit('setLoading', true);
-      return catalog.getAuthors(state.selectedLetter, { collection: getters.readingListsFilter, limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
+      return catalog.search(state.searchQuery, { limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
+        .then(results => commit('setResults', unpackTitleFiles(results)))
+        .catch(e => commit('setError', e))
+        .finally(() => {
+          commit('setLoading', false);
+          commit('setFetching', false);
+        });
+    },
+    showAuthorsStartingWith: ({ state, commit, getters, dispatch }, payload) => {
+      commit('refreshPagination');
+      return dispatch('getAuthors', payload);
+    },
+    getAuthors: ({ state, commit, getters }, payload) => {
+      commit('setLoading', true);
+      return catalog.getAuthors(payload, { collection: getters.readingListsFilter, limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
         .then(authors => commit('setResults', authors))
         .catch(e => commit('setError', e))
-        .finally(() => commit('setLoading', false));
+        .finally(() => {
+          commit('setLoading', false);
+          commit('setFetching', false);
+        });
     },
     showFilesByAuthor: ({ state, commit, getters, dispatch }, payload) => {
       commit('setSearchQuery', payload); // these can be passed via routes and dont need to be in store
-      commit('setSelectedLetter', null); // these can be passed via routes and dont need to be in store
       commit('refreshPagination');
       return dispatch('getFilesByAuthor', payload);
     },
     getFilesByAuthor: ({ state, commit, getters }, payload) => {
-      // @TODO: need to paginate
       commit('setLoading', true);
       return catalog.getTitlesWith({ author: payload, collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset })
         .then(results => commit('setResults', unpackTitleFiles(results)))
         .catch(e => commit('setError', e))
-        .finally(() => commit('setLoading', false));
+        .finally(() => {
+          commit('setLoading', false);
+          commit('setFetching', false);
+        });
     },
     getAvailableReadingLists: ({ commit }) => {
       commit('setLoading', true);
@@ -199,25 +227,6 @@ const store = new Vuex.Store({
       commit('setSelectedLetter', payload);
       return catalog.getCollections(payload)
         .then(collections => commit('setReadingLists', collections))
-        .catch(e => commit('setError', e))
-        .finally(() => commit('setLoading', false));
-    },
-    newSearch: ({ commit, dispatch }, payload) => {
-      // when searching reset search area.
-      // we could bundle these state changes into a single commit type
-      commit('refreshPagination');
-      commit('setSelectedLetter', null);
-      if (!payload || payload === '') {
-        commit('setSearchQuery', null);
-        return Promise.resolve();
-      }
-      commit('setSearchQuery', payload);
-      return dispatch('search');
-    },
-    search: ({ state, getters, commit }) => {
-      commit('setLoading', true);
-      return catalog.search(state.searchQuery, { limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
-        .then(results => commit('setResults', unpackTitleFiles(results)))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
