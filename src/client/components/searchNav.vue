@@ -5,7 +5,7 @@
         placeholder="Search"
         name="search"
         v-model="searchQuery"
-        size="mini"
+        size="small"
       >
         <el-button slot="append" icon="search" v-on:click.stop.prevent="submit($event)"></el-button>
       </el-input>

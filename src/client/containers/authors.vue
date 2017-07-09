@@ -14,6 +14,8 @@
 
 <script>
   import { mapState, mapActions, mapMutations } from 'vuex';
+  import store from 'store/store';
+
   import authorList from 'components/authorList';
 
   export default {
@@ -23,6 +25,15 @@
     },
     data() {
       return {};
+    },
+    beforeRouteEnter(to, from, next) {
+      // this is not defined so have to access store directely
+      store.dispatch('showAuthorsStartingWith', to.params.letter)
+        .then(() => next());
+    },
+    beforeRouteUpdate(to, from, next) {
+      store.dispatch('showAuthorsStartingWith', to.params.letter)
+        .then(() => next());
     },
     computed: {
       ...mapState([

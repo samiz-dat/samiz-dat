@@ -19,7 +19,7 @@ const routes = [
     children: [
       { path: '', component: texts, props: { display: 'SEARCH' } }, // @TODO: make this shared consts
       { path: 'byAuthor', component: texts, props: { display: 'BY_AUTHOR' } }, // @TODO: make this shared consts
-      { path: 'authors', component: authors },
+      { path: 'authors/:letter', name: 'authors', component: authors },
     ],
   },
 ];

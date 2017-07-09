@@ -52,8 +52,7 @@
       },
       showAuthors(letter) {
         // @todo make letter search part of url params using router link
-        this.$router.push('/search/authors');
-        this.showAuthorsStartingWith(letter);
+        this.$router.push({ name: 'authors', params: { letter } });
       },
     },
 };
