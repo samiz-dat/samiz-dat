@@ -1,16 +1,16 @@
 <template>
   <div id="search">
     <el-row>
-      <el-col :span="19">
+      <el-col :span="24">
         <main>
           <dat-nav/>
           <author-nav :action="showAuthors"/>
           <router-view></router-view>
         </main>
       </el-col>
-      <el-col :span="5">
+      <!-- <el-col :span="5">
         <side-nav/>
-      </el-col>
+      </el-col> -->
     </el-row>
   </div>
 </template>

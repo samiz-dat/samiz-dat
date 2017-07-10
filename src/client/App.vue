@@ -2,29 +2,17 @@
   <div id="dat-library">
     <loader :loading="loading"/>
     <error :error="error"/>
-    <!-- <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="1">Processing Center</el-menu-item>
-      <el-menu-item index="3"><a href="https://www.ele.me" target="_blank">Orders</a></el-menu-item>
-    </el-menu> -->
     <el-row type="flex" class="extra-light-grey-bg" align="middle" justify="space-around">
       <el-col :span="16">
         <el-menu :router="true" :default-active="$route.path" mode="horizontal">
           <el-menu-item index="/">home</el-menu-item>
           <el-menu-item index="/search">browse</el-menu-item>
           <el-menu-item index="/libraries">libraries</el-menu-item>
-          <el-menu-item index="/reading-lists">reading lists</el-menu-item>
+          <!-- <el-menu-item index="/reading-lists">reading lists</el-menu-item> -->
         </el-menu>
       </el-col>
       <el-col :span="8">
         <search-nav />
-        <!-- <el-input
-          placeholder="Search"
-          name="search"
-          v-model="searchQuery"
-          size="mini"
-        >
-          <el-button slot="append" icon="search" v-on:click.stop.prevent="submit($event)"></el-button>
-        </el-input> -->
       </el-col>
     </el-row>
     <router-view></router-view>
