@@ -20,10 +20,10 @@
         </template>
         To share this library with someone, send them this key:
         <p>
-          <el-input :value="dat.dat"></el-input>
+          <el-input readonly :value="dat.dat"></el-input>
         </p>
         <el-button-group>
-          <el-button type="primary" v-on:click="download({ dat: dat.dat })" v-show="dat.writeable !== true">Download entire library</el-button>
+          <el-button type="primary" v-on:click="download({ dat: dat.dat })" v-show="!dat.writeable">Download entire library</el-button>
           <el-button type="warning" v-on:click="removeDat(dat.dat)"><i class="el-icon-delete"></i></el-button>
         </el-button-group>
       </el-collapse-item>
