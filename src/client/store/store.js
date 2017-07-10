@@ -207,6 +207,20 @@ const store = new Vuex.Store({
           commit('setFetching', false);
         });
     },
+    showEverything: ({ commit, dispatch }) => {
+      commit('refreshPagination');
+      return dispatch('getEverything');
+    },
+    getEverything: ({ state, commit, getters }) => {
+      commit('setLoading', true);
+      return catalog.getTitlesWith({ collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset })
+        .then(results => commit('setResults', unpackTitleFiles(results)))
+        .catch(e => commit('setError', e))
+        .finally(() => {
+          commit('setLoading', false);
+          commit('setFetching', false);
+        });
+    },
     getAvailableReadingLists: ({ commit }) => {
       commit('setLoading', true);
       return catalog.getAvailableCollections()

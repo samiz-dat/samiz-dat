@@ -6,6 +6,7 @@
           <dat-nav/>
           <author-nav :action="showAuthors"/>
           <router-view></router-view>
+          <texts v-if="isParentSearchRoute"/>
         </main>
       </el-col>
       <!-- <el-col :span="5">
@@ -25,6 +26,7 @@
   import datNav from 'components/datNav';
   import sideNav from 'components/sideNav';
   import searchNav from 'components/searchNav';
+  import texts from 'containers/texts';
 
   export default {
     name: 'search',
@@ -37,12 +39,17 @@
       datNav,
       sideNav,
       searchNav,
+      texts,
     },
     data() {
       return {};
     },
     computed: {
       ...mapState(['dats', 'loading', 'error', 'route']),
+      isParentSearchRoute() {
+        // weird hack because vue-router explicitly does not support empty child routes.
+        return this.$route.path === '/search';
+      },
     },
     methods: {
       ...mapActions(['showAuthorsStartingWith']),

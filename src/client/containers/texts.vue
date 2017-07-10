@@ -30,8 +30,11 @@
     },
     data() {
       return {
-        query: '',
+        query: null,
       };
+    },
+    created() {
+      if (!this.display) store.dispatch('showEverything');
     },
     beforeRouteEnter(to, from, next) {
       // this is not defined so have to access store directely
@@ -82,7 +85,7 @@
     },
     methods: {
       ...mapMutations(['setPage']),
-      ...mapActions(['search', 'getFilesByAuthor']),
+      ...mapActions(['search', 'getFilesByAuthor', 'getEverything']),
       setQuery(q) {
         this.query = q;
       },
@@ -95,7 +98,7 @@
             case 'BY_AUTHOR':
               return this.getFilesByAuthor(this.query);
             default:
-              return this.search();
+              return this.getEverything();
           }
         }
         return null;
