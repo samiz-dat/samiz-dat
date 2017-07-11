@@ -13,7 +13,7 @@
     </el-button-group>
 
     <library-list :dats="dats"/>
-    
+
   </div>
 </template>
 
@@ -38,6 +38,14 @@
     },
     methods: {
       ...mapActions(['loadDirectoryAsDat', 'createDirectoryAsDat']),
+      loadDat() {
+        this.loadDirectoryAsDat();
+        addRemoteDialogIsVisible = false;
+      },
+      createDat() {
+        this.createDirectoryAsDat();
+        addRemoteDialogIsVisible = false;
+      },
     },
 };
 </script>

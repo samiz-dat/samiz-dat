@@ -260,6 +260,7 @@ const store = new Vuex.Store({
       }, (file) => {
         if (Array.isArray(file)) {
           catalog.importDir(file[0])
+          .then(() => dispatch('getDats'))
           .catch(e => commit('setError', e))
           .finally(() => commit('setLoading', false));
         } else {
@@ -278,6 +279,7 @@ const store = new Vuex.Store({
       }, (file) => {
         if (Array.isArray(file)) {
           catalog.createDat(file[0])
+          .then(() => dispatch('getDats'))
           .catch(e => commit('setError', e))
           .finally(() => commit('setLoading', false));
         } else {
@@ -291,6 +293,7 @@ const store = new Vuex.Store({
         commit('setLoading', false);
       }
       return catalog.importDat(payload.key, payload.name) // need to throw errors in promise in dat-cardcat
+        .then(() => dispatch('getDats'))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
