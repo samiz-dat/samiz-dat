@@ -10,7 +10,7 @@
         <el-input readonly :value="dat.dat"></el-input>
       </p>
       <el-button-group>
-        <el-button type="primary" v-on:click="download({ dat: dat.dat })" v-show="!dat.writeable">Download entire library</el-button>
+        <el-button type="primary" v-on:click="downloadDat(dat.dat)" v-show="!dat.writeable">Download entire library</el-button>
         <el-button type="warning" v-on:click="removeDat(dat.dat)"><i class="el-icon-delete"></i></el-button>
       </el-button-group>
       <library-stats :dat="dat"/>
@@ -45,6 +45,13 @@
     },
     methods: {
       ...mapActions(['removeDat', 'download']),
+      downloadDat(key) {
+        this.download({ dat: key });
+        this.$notify({
+          title: 'Download',
+          message: 'starting now',
+        });
+      }
     },
 };
 </script>

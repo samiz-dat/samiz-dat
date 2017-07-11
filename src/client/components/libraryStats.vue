@@ -15,7 +15,7 @@
       Downloaded:
     </el-col>
     <el-col :span="16">
-      <el-progress :text-inside="true" :stroke-width="18" :percentage="Math.round(stats.downloaded)" status="success"></el-progress>
+      <el-progress :text-inside="true" :stroke-width="18" :percentage="Math.round(percentage)" status="success"></el-progress>
     </el-col>
     </el-row>
   </div>
@@ -48,6 +48,10 @@
       ...mapGetters(['datStats']),
       stats() {
         return this.datStats(this.dat.dat) || defaultStats;
+      },
+      percentage() {
+        const stats = this.stats;
+        return stats.downloaded || 0;
       }
     },
     methods: {},

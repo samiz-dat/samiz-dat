@@ -25,6 +25,8 @@ const INITIAL_STATE = {
   availableReadingLists: [],
   readingLists: [],
   selectedReadingLists: [],
+  datStats: {},
+  downloadStat: {},
   // files: {},
   error: null,
 };
@@ -76,6 +78,8 @@ const store = new Vuex.Store({
     selectReadingLists: setIdentity('selectedReadingLists'),
     setResults: setIdentity('results'),
     setSearchQuery: setIdentity('searchQuery'),
+    setDownloadStat: setIdentity('downloadStat'),
+    setDatStats: setIdentity('datStats'),
     // setDatFiles: (state, payload) => {
     //   Vue.set(state.files, payload.key, payload.files);
     // },
@@ -92,7 +96,7 @@ const store = new Vuex.Store({
     datWithKey: state => key => state.dats.find(d => d.dat === key),
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
     writeableDats: state => state.dats.filter(d => d.writeable === true),
-    datStats: state => key => catalog.getDatStats(key),
+    datStats: state => key => (_.has(state.datStats, key)) ? state.datStats[key] : {},
     readingListsFilter: state => (state.selectedReadingLists.length === 0 ? undefined : state.selectedReadingLists),
     uniqueReadingLists: state => (filter) => {
       const unique = [];
@@ -120,6 +124,10 @@ const store = new Vuex.Store({
           dispatch('getDats');
           dispatch('getAuthorLetters');
         }
+      });
+      catalog.on('download', (data) => {
+        commit('setDownloadStat', data);
+        dispatch('getDatStats');
       });
       return catalog.init()
         .then(() => dispatch('getReadingLists'))
@@ -149,13 +157,26 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    getDats: ({ commit }) => {
+    getDats: ({ dispatch, commit }) => {
       commit('setLoading', true);
       // async action to get dats
       return catalog.getDats()
         .then(dats => commit('setDats', dats))
+        .then(() => dispatch('getDatStats'))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
+    },
+    getDatStats: ({ commit }) => {
+      // async action to get dats
+      return catalog.getDats()
+        .then((dats) => {
+          const stats = {};
+          for (const d of dats) {
+            stats[d.dat] = catalog.getDatStats(d.dat);
+          }
+          commit('setDatStats', stats);
+        })
+        .catch(e => commit('setError', e));
     },
     newSearch: ({ commit, dispatch }, payload) => {
       // when searching reset search area.
@@ -251,7 +272,7 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    loadDirectoryAsDat: ({ commit }) => {
+    loadDirectoryAsDat: ({ dispatch, commit }) => {
       // need to figure out setting simple name too
       // or just derive from the directory and let user rename later.
       commit('setLoading', true);
@@ -268,7 +289,7 @@ const store = new Vuex.Store({
         }
       });
     },
-    createDirectoryAsDat: ({ commit }) => {
+    createDirectoryAsDat: ({ dispatch, commit }) => {
       // need to figure out setting simple name too
       // or just derive from the directory and let user rename later.
       commit('setLoading', true);
@@ -287,7 +308,7 @@ const store = new Vuex.Store({
         }
       });
     },
-    importDat: ({ commit }, payload) => {
+    importDat: ({ dispatch, commit }, payload) => {
       commit('setLoading', true);
       if (!payload.key) { // need proper validation here
         commit('setLoading', false);

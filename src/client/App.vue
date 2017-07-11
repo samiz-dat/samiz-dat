@@ -16,6 +16,7 @@
       </el-col>
     </el-row>
     <router-view></router-view>
+    <download-progress class="bottom-bar"/>
   </div>
 </template>
 
@@ -24,6 +25,7 @@
   import loader from 'components/loader';
   import error from 'components/error';
   import searchNav from 'components/searchNav';
+  import downloadProgress from 'components/downloadProgress';
 
   export default {
     name: 'App',
@@ -31,6 +33,7 @@
       error,
       loader,
       searchNav,
+      downloadProgress,
     },
     data() {
       return {};
@@ -63,6 +66,14 @@
     padding: 0;
     width:100%;
   }
+
+  .bottom-bar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
   .extra-light-grey-bg {
     background-color: #EFF2F7;
   }
