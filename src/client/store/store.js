@@ -92,6 +92,7 @@ const store = new Vuex.Store({
     datWithKey: state => key => state.dats.find(d => d.dat === key),
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
     writeableDats: state => state.dats.filter(d => d.writeable === true),
+    datStats: state => key => catalog.getDatStats(key),
     readingListsFilter: state => (state.selectedReadingLists.length === 0 ? undefined : state.selectedReadingLists),
     uniqueReadingLists: state => (filter) => {
       const unique = [];
