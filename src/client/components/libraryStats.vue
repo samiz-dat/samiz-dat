@@ -3,12 +3,20 @@
     <p/>
     <el-row>
       <el-col :span="4">
-        <el-badge :value="stats.peers || '0'" class="item">Peers</el-badge>
+        <el-badge :value="stats.peers.peers || '0'" class="item">Peers</el-badge>
       </el-col>
       <el-col :span="4">
-        <el-badge :value="stats.total || '0'" class="item">Total</el-badge>
+        <el-badge :value="stats.peers.total || '0'" class="item">Total</el-badge>
       </el-col>
       <el-col :span="16"/>
+    </el-row>
+    <el-row>
+    <el-col :span="8">
+      Files:
+    </el-col>
+    <el-col :span="16">
+      {{ stats.filesCount.total }}
+    </el-col>
     </el-row>
     <el-row>
     <el-col :span="8">
