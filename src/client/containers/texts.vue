@@ -33,9 +33,6 @@
         query: null,
       };
     },
-    created() {
-      if (!this.display) store.dispatch('showEverything');
-    },
     beforeRouteEnter(to, from, next) {
       // this is not defined so have to access store directely
       if (to.params.author) {
@@ -79,13 +76,13 @@
           case 'BY_AUTHOR':
             return 'Text by: ';
           default:
-            return 'Everything';
+            return '';
         }
       },
     },
     methods: {
       ...mapMutations(['setPage']),
-      ...mapActions(['search', 'getFilesByAuthor', 'getEverything']),
+      ...mapActions(['search', 'getFilesByAuthor']),
       setQuery(q) {
         this.query = q;
       },
@@ -97,8 +94,6 @@
               return this.search(this.query);
             case 'BY_AUTHOR':
               return this.getFilesByAuthor(this.query);
-            default:
-              return this.getEverything();
           }
         }
         return null;

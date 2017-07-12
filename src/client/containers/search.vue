@@ -6,7 +6,7 @@
           <dat-nav/>
           <author-nav :action="showAuthors"/>
           <router-view></router-view>
-          <texts v-if="isParentSearchRoute"/>
+          <all-texts v-if="isParentSearchRoute"/>
         </main>
       </el-col>
       <!-- <el-col :span="5">
@@ -26,7 +26,7 @@
   import datNav from 'components/datNav';
   import sideNav from 'components/sideNav';
   import searchNav from 'components/searchNav';
-  import texts from 'containers/texts';
+  import allTexts from 'containers/allTexts';
 
   export default {
     name: 'search',
@@ -39,7 +39,7 @@
       datNav,
       sideNav,
       searchNav,
-      texts,
+      allTexts,
     },
     data() {
       return {};
