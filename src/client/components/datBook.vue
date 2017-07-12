@@ -16,11 +16,11 @@
       :key="index"
       >
       <el-col :span="4">
-        <i v-show="file.downloaded" class="el-icon-check"></i>
+        <i :class="fileIcon(file)"></i>
         <!-- show spinner different icon when not downloaded? -->
       </el-col>
       <el-col :span="20">
-        <div><a v-on:click="showItemInFolder(index)">{{file.file}}</a></div>
+        <div>{{file.file}} <el-button v-if="file.downloaded" size="mini" icon="search" v-on:click="showItemInFolder(index)"></el-button></div>
         <!-- display some progress bar here when file is downloading -->
       </el-col>
     </el-row>
@@ -41,7 +41,9 @@
       },
     },
     data() {
-      return {};
+      return {
+        downloading: false,
+      };
     },
     computed: {
       ...mapGetters(['datWithKey']),
@@ -59,10 +61,16 @@
         const success = shell.showItemInFolder(this.filepath[index]);
       },
       downloadTitle: function downloadTitle() {
+        this.downloading = true;
         this.download({ author: this.book.author, title: this.book.title });
       },
       downloadAuthor: function downloadAuthor() {
+        this.downloading = true;
         this.download({ author: this.book.author });
+      },
+      fileIcon(file) {
+        if (this.downloading) return 'el-icon-loading';
+        return file.downloaded ? 'el-icon-check' : 'el-icon-minus';
       },
     },
 };
