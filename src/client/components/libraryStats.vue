@@ -11,20 +11,28 @@
       <el-col :span="16"/>
     </el-row>
     <el-row>
-    <el-col :span="8">
-      Files:
-    </el-col>
-    <el-col :span="16">
-      {{ stats.filesCount.total }}
-    </el-col>
+      <el-col :span="8">
+        Files:
+      </el-col>
+      <el-col :span="16">
+        {{ stats.filesCount.total }}
+      </el-col>
     </el-row>
     <el-row>
-    <el-col :span="8">
-      Downloaded:
-    </el-col>
-    <el-col :span="16">
-      <el-progress :text-inside="true" :stroke-width="18" :percentage="Math.round(percentage)" status="success"></el-progress>
-    </el-col>
+      <el-col :span="8">
+        Downloaded Content:
+      </el-col>
+      <el-col :span="16">
+        <el-progress :text-inside="true" :stroke-width="18" :percentage="Math.round(percentage)" status="success"></el-progress>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="8">
+        Downloaded Metadata:
+      </el-col>
+      <el-col :span="16">
+        <el-progress :text-inside="true" :stroke-width="18" :percentage="Math.round(metadataPercentage)" status="primary"></el-progress>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -45,6 +53,7 @@
         defaultStats: {
           total: 0,
           peers: 0,
+          metadata: 0,
           downloaded: 0,
           uploadSpeed: 0,
           downloadSpeed: 0,
@@ -55,12 +64,16 @@
       ...mapState(['loading', 'error', 'route']),
       ...mapGetters(['datStats']),
       stats() {
-        return this.datStats(this.dat.dat) || defaultStats;
+        return this.datStats(this.dat.dat) || this.defaultStats;
       },
       percentage() {
         const stats = this.stats;
         return stats.downloaded || 0;
-      }
+      },
+      metadataPercentage() {
+        const stats = this.stats;
+        return stats.metadata || 0;
+      },
     },
     methods: {},
 };

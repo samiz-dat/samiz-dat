@@ -61,7 +61,7 @@
           title: 'Download',
           message: 'starting now',
         });
-      }
+      },
     },
 };
 </script>
