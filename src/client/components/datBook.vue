@@ -22,7 +22,6 @@
       <el-col :span="20">
         <div><a v-on:click="showItemInFolder(index)">{{file.file}}</a></div>
         <!-- display some progress bar here when file is downloading -->
-        <div>{{file.dat}}</div>
       </el-col>
     </el-row>
   </div>
