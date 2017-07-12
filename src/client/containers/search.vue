@@ -26,7 +26,7 @@
   import datNav from 'components/datNav';
   import sideNav from 'components/sideNav';
   import searchNav from 'components/searchNav';
-  import allTexts from 'containers/alltexts';
+  import allTexts from 'containers/allTexts';
 
   export default {
     name: 'search',
