@@ -1,6 +1,6 @@
 <template>
   <div id="libraries">
-    <h1>LIBRARIES</h1>
+    <h2>Libraries</h2>
 
     <el-dialog title="Import a remote library" :visible.sync="addRemoteDialogIsVisible">
       <dat-import-field/>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import { mapState, mapActions, mapGetters } from 'vuex';
+  import { mapState, mapActions } from 'vuex';
   import datImportField from 'components/datImportField';
   import libraryList from 'components/libraryList';
 
@@ -40,11 +40,11 @@
       ...mapActions(['loadDirectoryAsDat', 'createDirectoryAsDat']),
       loadDat() {
         this.loadDirectoryAsDat();
-        addRemoteDialogIsVisible = false;
+        this.addRemoteDialogIsVisible = false;
       },
       createDat() {
         this.createDirectoryAsDat();
-        addRemoteDialogIsVisible = false;
+        this.addRemoteDialogIsVisible = false;
       },
     },
 };
