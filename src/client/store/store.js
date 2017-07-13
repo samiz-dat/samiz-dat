@@ -37,7 +37,7 @@ Vue.use(Vuex);
 // unpack the files column...
 const unpackTitleFiles = results => _.map(results, (result) => {
   const files = result.files;
-  result.files = _.map(_.split(files, ','),
+  result.files = _.map(_.split(files, ';;'),
     (file) => {
       const fData = _.split(file, ':');
       return {
