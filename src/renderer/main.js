@@ -5,6 +5,7 @@ import router from 'routes/routes';
 import store from 'store/store';
 import App from './App';
 
+if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.use(ElementUI);
 
 /* eslint-disable no-new */

@@ -1,17 +1,16 @@
 <template>
   <div id="search">
     <el-row>
-      <el-col :span="24">
+      <el-col :span="19">
         <main>
-          <dat-nav/>
           <author-nav :action="showAuthors"/>
           <router-view></router-view>
           <all-texts v-if="isParentSearchRoute"/>
         </main>
       </el-col>
-      <!-- <el-col :span="5">
+      <el-col :span="5">
         <side-nav/>
-      </el-col> -->
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -23,7 +22,6 @@
   import readingListNav from 'components/readingListNav';
   import authorNav from 'components/authorNav';
   import datImportField from 'components/datImportField';
-  import datNav from 'components/datNav';
   import sideNav from 'components/sideNav';
   import searchNav from 'components/searchNav';
   import allTexts from 'containers/allTexts';
@@ -36,7 +34,6 @@
       readingListNav,
       authorNav,
       datImportField,
-      datNav,
       sideNav,
       searchNav,
       allTexts,

@@ -31,7 +31,7 @@
     computed: {
       ...mapState(['availableReadingLists', 'readingLists']),
       ...mapGetters(['uniqueReadingLists']),
-      unusedReadingLists: function() {
+      unusedReadingLists() {
         const lists = this.uniqueReadingLists();
         return this.availableReadingLists.filter(rl => !lists.includes(rl[0]));
       },
@@ -41,7 +41,7 @@
       load() {
         this.loadReadingList(this.readingListChoice);
         this.addReadingListDialogIsVisible = false;
-      }
+      },
     },
 };
 </script>

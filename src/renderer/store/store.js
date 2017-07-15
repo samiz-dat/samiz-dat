@@ -8,6 +8,13 @@ import _ from 'lodash';
 const dataDir = path.join(process.cwd(), '_data');
 const catalog = new Catalog(dataDir);
 
+// THIS IS JUST TEMPORARILY HERE TO HELP DEBUG ELECTRON ERRORS
+// DELAYING ERRORS UNTIL CONSOLE IS ACTIVE SO WE CAN READ THEM
+// let catalog;
+// setTimeout(() => {
+//   catalog = new Catalog(dataDir);
+// }, 2000);
+
 const INITIAL_STATE = {
   loading: false,
   fetching: false, // for when fetching new page data - stop page syncs calling update actions
@@ -166,9 +173,9 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    getDatStats: ({ commit }) => {
+    getDatStats: ({ commit }) =>
       // async action to get dats
-      return catalog.getDats()
+       catalog.getDats()
         .then((dats) => {
           const stats = {};
           for (const d of dats) {
@@ -176,8 +183,7 @@ const store = new Vuex.Store({
           }
           commit('setDatStats', stats);
         })
-        .catch(e => commit('setError', e));
-    },
+        .catch(e => commit('setError', e)),
     newSearch: ({ commit, dispatch }, payload) => {
       // when searching reset search area.
       // we could bundle these state changes into a single commit type
