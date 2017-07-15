@@ -11,6 +11,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
   target: 'node',
   entry: './src/client/index.js',
+  stats: { children: false },
   resolve: {
     extensions: ['.js', '.json', '.vue'],
     enforceExtension: false,
@@ -33,6 +34,7 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
+          optimizeSSR: false,
           loaders: {
             css: ExtractTextPlugin.extract({
               use: 'css-loader',
@@ -79,7 +81,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new ExtractTextPlugin("style.css"),
+    new ExtractTextPlugin('style.css'),
     new HtmlWebpackPlugin({
         title: 'config.title',
         template: path.resolve(__dirname, 'src/client/index.html'),
