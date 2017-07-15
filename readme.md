@@ -29,10 +29,10 @@ npm run cli --checkout --author="Ackbar Abbas" --title="Hong Kong Culture and th
 ```
 
 **Note:** Node and electron have different versions of NODE_MODULE_VERSION and as such need dependent libraries compiled seporately.
-To install modules for electron: 
+To install modules for electron:
 ```
 # Electron's version.
-export npm_config_target=1.4.8
+export npm_config_target=1.6.11
 # The architecture of Electron, can be ia32 or x64.
 export npm_config_arch=x64
 export npm_config_target_arch=x64
