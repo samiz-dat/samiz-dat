@@ -60,7 +60,6 @@
     }
   },
   "dependencies": {
-    "axios": "^0.16.1",
     "babel-polyfill": "^6.23.0",
     "dat-cardcat": "^0.2.21",
     "electron": "^1.7.2",
