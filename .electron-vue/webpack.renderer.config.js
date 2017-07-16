@@ -10,7 +10,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const cssnext = require('postcss-cssnext');
 const precss = require('precss');
-const atImport = require("postcss-import");
+const atImport = require('postcss-import');
 /**
  * List of node_modules to include in webpack bundle
  *
@@ -18,15 +18,15 @@ const atImport = require("postcss-import");
  * that provide pure *.vue files that need compiling
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/webpack-configurations.html#white-listing-externals
  */
-let whiteListedModules = ['vue'];
+const whiteListedModules = ['vue'];
 
-let rendererConfig = {
+const rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    renderer: path.join(__dirname, '../src/renderer/main.js')
+    renderer: path.join(__dirname, '../src/renderer/main.js'),
   },
   externals: [
-    ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))
+    ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d)),
   ],
   module: {
     rules: [
@@ -46,21 +46,21 @@ let rendererConfig = {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader'
-        })
+          use: 'css-loader',
+        }),
       },
       {
         test: /\.html$/,
-        use: 'vue-html-loader'
+        use: 'vue-html-loader',
       },
       {
         test: /\.js$/,
         use: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.node$/,
-        use: 'node-loader'
+        use: 'node-loader',
       },
       {
         test: /\.vue$/,
@@ -88,9 +88,9 @@ let rendererConfig = {
           loader: 'url-loader',
           query: {
             limit: 10000,
-            name: 'imgs/[name].[ext]'
-          }
-        }
+            name: 'imgs/[name].[ext]',
+          },
+        },
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
@@ -98,15 +98,15 @@ let rendererConfig = {
           loader: 'url-loader',
           query: {
             limit: 10000,
-            name: 'fonts/[name].[ext]'
-          }
-        }
-      }
-    ]
+            name: 'fonts/[name].[ext]',
+          },
+        },
+      },
+    ],
   },
   node: {
     __dirname: process.env.NODE_ENV !== 'production',
-    __filename: process.env.NODE_ENV !== 'production'
+    __filename: process.env.NODE_ENV !== 'production',
   },
   plugins: [
     new webpack.ExternalsPlugin('commonjs', [
@@ -120,35 +120,35 @@ let rendererConfig = {
       minify: {
         collapseWhitespace: true,
         removeAttributeQuotes: true,
-        removeComments: true
+        removeComments: true,
       },
       nodeModules: process.env.NODE_ENV !== 'production'
         ? path.resolve(__dirname, '../node_modules')
-        : false
+        : false,
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
   ],
   output: {
     filename: '[name].js',
     libraryTarget: 'commonjs2',
-    path: path.join(__dirname, '../dist/electron')
+    path: path.join(__dirname, '../dist/electron'),
   },
   resolve: {
     alias: {
       '@': path.join(__dirname, '../src/renderer'),
-      'store': path.resolve(__dirname, '../src/renderer/store/'),
-      'routes': path.resolve(__dirname, '../src/renderer/routes/'),
-      'containers': path.resolve(__dirname, '../src/renderer/containers/'),
-      'components': path.resolve(__dirname, '../src/renderer/components/'),
-      'assets': path.resolve(__dirname, '../src/renderer/assets/'),
-      'vue$': 'vue/dist/vue.esm.js'
+      store: path.resolve(__dirname, '../src/renderer/store/'),
+      routes: path.resolve(__dirname, '../src/renderer/routes/'),
+      containers: path.resolve(__dirname, '../src/renderer/containers/'),
+      components: path.resolve(__dirname, '../src/renderer/components/'),
+      assets: path.resolve(__dirname, '../src/renderer/assets/'),
+      vue$: 'vue/dist/vue.esm.js',
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node'],
-    enforceExtension: false
+    enforceExtension: false,
   },
-  target: 'electron-renderer'
-}
+  target: 'electron-renderer',
+};
 
 /**
  * Adjust rendererConfig for development settings
@@ -156,36 +156,36 @@ let rendererConfig = {
 if (process.env.NODE_ENV !== 'production') {
   rendererConfig.plugins.push(
     new webpack.DefinePlugin({
-      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
-    })
-  )
+      __static: `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
+    }),
+  );
 }
 
 /**
  * Adjust rendererConfig for production settings
  */
 if (process.env.NODE_ENV === 'production') {
-  rendererConfig.devtool = ''
+  rendererConfig.devtool = '';
 
   rendererConfig.plugins.push(
     new BabiliWebpackPlugin({
       removeConsole: true,
-      removeDebugger: true
+      removeDebugger: true,
     }),
     new CopyWebpackPlugin([
       {
         from: path.join(__dirname, '../static'),
         to: path.join(__dirname, '../dist/electron/static'),
-        ignore: ['.*']
-      }
+        ignore: ['.*'],
+      },
     ]),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      'process.env.NODE_ENV': '"production"',
     }),
     new webpack.LoaderOptionsPlugin({
-      minimize: true
-    })
-  )
+      minimize: true,
+    }),
+  );
 }
 
-module.exports = rendererConfig
+module.exports = rendererConfig;
