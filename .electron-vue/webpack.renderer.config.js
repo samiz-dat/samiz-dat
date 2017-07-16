@@ -156,9 +156,9 @@ const rendererConfig = {
 if (process.env.NODE_ENV !== 'production') {
   rendererConfig.plugins.push(
     new webpack.DefinePlugin({
-      __static: `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
-    }),
-  );
+      __static: `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
+    })
+  )
 }
 
 /**
@@ -184,8 +184,8 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
-    }),
-  );
+    })
+  )
 }
 
 module.exports = rendererConfig;
