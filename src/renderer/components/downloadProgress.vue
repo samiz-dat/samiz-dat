@@ -1,10 +1,10 @@
 <template>
-  <el-row v-show="percentage">
+  <el-row v-show="currFile">
     <el-col :span="8">
-      {{ downloadStat.file }}
+      {{ currFile }}
     </el-col>
     <el-col :span="16">
-      <el-progress :text-inside="true" :stroke-width="18" :percentage="Math.round(percentage)" status="success"></el-progress>
+      <el-progress :text-inside="true" :stroke-width="18" :percentage="Math.round(currPercentage)" status="success"></el-progress>
     </el-col>
   </el-row>
 </template>
@@ -20,8 +20,16 @@
     },
     computed: {
       ...mapState(['loading', 'error', 'route', 'downloadStat']),
-      percentage() {
-        return (this.downloadStat && this.downloadStat.progress) ? this.downloadStat.progress : 0;
+      currFile() {
+        return (this.downloadStat && this.downloadStat.file) ? this.downloadStat.file : undefined;
+      },
+      currPercentage() {
+        return (this.downloadStat
+          && this.downloadStat.progress
+          && !isNaN(this.downloadStat.progress)
+          && this.downloadStat.progress <=100 )
+        ? this.downloadStat.progress
+        : 0;
       },
     },
 };

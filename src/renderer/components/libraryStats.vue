@@ -51,8 +51,8 @@
     data() {
       return {
         defaultStats: {
-          total: 0,
-          peers: 0,
+          filesCount: { have: 0, total: 0 },
+          peers: { peers: 0, total: 0 },
           metadata: 0,
           downloaded: 0,
           uploadSpeed: 0,
