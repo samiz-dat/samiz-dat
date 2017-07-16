@@ -1,9 +1,13 @@
 {
   "name": "dat-library",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "e-e-e <e-e-e@users.noreply.github.com>",
-  "description": "A tool for searching, building and sharing ditributed p2p libraries.",
-  "license": null,
+  "description": "A tool for searching, building and sharing distributed p2p libraries.",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/e-e-e/dat-library"
+  },
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -23,7 +27,7 @@
   },
   "build": {
     "productName": "dat-library",
-    "appId": "org.simulatedgreg.electron-vue",
+    "appId": "dat.library.app",
     "directories": {
       "output": "build"
     },
