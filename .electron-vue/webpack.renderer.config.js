@@ -1,16 +1,16 @@
-'use strict'
+process.env.BABEL_ENV = 'renderer';
 
-process.env.BABEL_ENV = 'renderer'
+const path = require('path');
+const { dependencies } = require('../package.json');
+const webpack = require('webpack');
 
-const path = require('path')
-const { dependencies } = require('../package.json')
-const webpack = require('webpack')
-
-const BabiliWebpackPlugin = require('babili-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-
+const BabiliWebpackPlugin = require('babili-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const cssnext = require('postcss-cssnext');
+const precss = require('precss');
+const atImport = require("postcss-import");
 /**
  * List of node_modules to include in webpack bundle
  *
@@ -72,6 +72,13 @@ let rendererConfig = {
               sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
               scss: 'vue-style-loader!css-loader!sass-loader',
             },
+            postcss: [
+              atImport(),
+              precss(),
+              cssnext({
+                browsers: ['last 2 versions'],
+              }),
+            ],
           },
         },
       },
