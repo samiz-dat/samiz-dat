@@ -1,7 +1,7 @@
 <template>
   <form method="post" v-show="writeableDats.length !== 0">
     <p>Add a file:</p>
-    <el-select v-model="dat" placeholder="Select a Library">
+    <el-select v-if="!defaultDat" v-model="dat" placeholder="Select a Library">
       <el-option
         v-for="(dat, index) in writeableDats"
         :label="dat.name"
@@ -23,6 +23,11 @@
   export default {
     name: 'AddFile',
     components: {},
+    props: {
+      defaultDat: {
+        type: String,
+      }
+    },
     data() {
       return {
         author: '',
@@ -39,8 +44,14 @@
       ...mapActions(['addFileToDat']),
       submit(event) {
         if (event) event.preventDefault();
-        const { author, title, dat, file } = this;
-        this.addFileToDat({ author, title, dat, file });
+        const { author, title, dat, file, defaultDat } = this;
+        console.log('this');
+        this.addFileToDat({
+          author,
+          title,
+          dat: defaultDat || dat,
+          file
+        });
       },
       findFileDialog() {
         remote.dialog.showOpenDialog({
