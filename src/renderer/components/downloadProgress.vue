@@ -27,7 +27,7 @@
         return (this.downloadStat
           && this.downloadStat.progress
           && !isNaN(this.downloadStat.progress)
-          && this.downloadStat.progress <=100 )
+          && this.downloadStat.progress <= 100)
         ? this.downloadStat.progress
         : 0;
       },

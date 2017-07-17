@@ -1,5 +1,6 @@
 _data/
 _data*/
+dist/*
 dist/electron/*
 dist/web/*
 build/*

@@ -11,6 +11,7 @@
       </p>
       <el-button-group>
         <el-button type="primary" v-on:click="downloadDat(dat.dat)" v-show="!dat.writeable">Download entire library</el-button>
+        <el-button type="info" v-on:click="openLibrary(dat.dat)"><i class="el-icon-view"></i></el-button>
         <el-button type="warning" v-on:click="confirmDeleteVisible = true"><i class="el-icon-delete"></i></el-button>
       </el-button-group>
       <el-dialog title="Are you sure?" :visible.sync="confirmDeleteVisible">
@@ -25,6 +26,7 @@
 
 <script>
   import { mapState, mapActions, mapGetters } from 'vuex';
+  import { shell } from 'electron';
   import libraryStats from 'components/libraryStats';
 
   export default {
@@ -44,7 +46,7 @@
     },
     computed: {
       ...mapState(['loading', 'error', 'route']),
-      ...mapGetters(['datStats']),
+      ...mapGetters(['datStats', 'datWithKey']),
       stats() {
         return this.datStats(this.dat.dat);
       },
@@ -61,6 +63,10 @@
           title: 'Download',
           message: 'starting now',
         });
+      },
+      openLibrary(key) {
+        const dir = this.datWithKey(key).dir;
+        shell.showItemInFolder(dir);
       },
     },
 };
