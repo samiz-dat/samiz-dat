@@ -45,7 +45,7 @@
       // 2. promise from datcat is never resolved for some reason.
       this.loadCatalog()
         .then(() => this.getDats())
-        .then(() => this.getAvailableReadingLists())
+        // .then(() => this.getAvailableReadingLists())
         .then(() => this.getAuthorLetters());
     },
     computed: {

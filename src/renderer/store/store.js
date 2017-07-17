@@ -138,12 +138,13 @@ const store = new Vuex.Store({
         dispatch('getDatStats');
       });
       return catalog.init()
-        .then(() => dispatch('getReadingLists'))
+        // .then(() => dispatch('getReadingLists'))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     // @TODO: this should be renamed to better describe its actual action. it also reloads searchs/authors
     getAuthorLetters: ({ dispatch, commit, state, getters }) => {
+      if (!catalog.isReady) return undefined;
       commit('setLoading', true); // TODO: make this a push pop type state, so first return does not stop the loader if other actions have not finished yet...
       return catalog.getAuthorLetters({ collection: getters.readingListsFilter, dat: getters.searchDats })
         .then((rows) => {
@@ -166,6 +167,7 @@ const store = new Vuex.Store({
         .finally(() => commit('setLoading', false));
     },
     getDats: ({ dispatch, commit }) => {
+      if (!catalog.isReady) return undefined;
       commit('setLoading', true);
       // async action to get dats
       return catalog.getDats()
@@ -174,9 +176,10 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
-    getDatStats: ({ commit }) =>
+    getDatStats: ({ commit }) => {
       // async action to get dats
-       catalog.getDats()
+      if (!catalog.isReady) return undefined;
+      return catalog.getDats()
         .then((dats) => {
           const stats = {};
           for (const d of dats) {
@@ -184,7 +187,8 @@ const store = new Vuex.Store({
           }
           commit('setDatStats', stats);
         })
-        .catch(e => commit('setError', e)),
+        .catch(e => commit('setError', e));
+    },
     newSearch: ({ commit, dispatch }, payload) => {
       // when searching reset search area.
       // we could bundle these state changes into a single commit type
@@ -212,6 +216,7 @@ const store = new Vuex.Store({
       return dispatch('getAuthors', payload);
     },
     getAuthors: ({ state, commit, getters }, payload) => {
+      if (!catalog.isReady) return undefined;
       commit('setLoading', true);
       return catalog.getAuthors(payload, { collection: getters.readingListsFilter, limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
         .then(authors => commit('setResults', authors))
@@ -241,6 +246,7 @@ const store = new Vuex.Store({
       return dispatch('getEverything');
     },
     getEverything: ({ state, commit, getters }) => {
+      if (!catalog.isReady) return undefined;
       commit('setLoading', true);
       return catalog.getTitlesWith({ collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset })
         .then(results => commit('setResults', unpackTitleFiles(results)))
@@ -251,6 +257,7 @@ const store = new Vuex.Store({
         });
     },
     getAvailableReadingLists: ({ commit }) => {
+      if (!catalog.isReady) return undefined;
       commit('setLoading', true);
       return catalog.getAvailableCollections()
         .then(collections => commit('setAvailableReadingLists', collections))
@@ -258,14 +265,15 @@ const store = new Vuex.Store({
         .finally(() => commit('setLoading', false));
     },
     loadReadingList: ({ dispatch, commit }, payload) => {
+      if (!catalog.isReady) return undefined;
       commit('setLoading', true);
-      console.log(payload[0], payload[1]);
       return catalog.ingestDatCollection(payload[0], payload[1])
       .then(() => dispatch('getReadingLists'))
       .catch(e => commit('setError', e))
       .finally(() => commit('setLoading', false));
     },
     getReadingLists: ({ commit, getters }, payload) => {
+      if (!catalog.isReady) return undefined;
       commit('setLoading', true);
       commit('setSelectedLetter', payload);
       return catalog.getCollections(payload)
@@ -274,6 +282,7 @@ const store = new Vuex.Store({
         .finally(() => commit('setLoading', false));
     },
     download: ({ commit }, item) => {
+      if (!catalog.isReady) return undefined;
       commit('setLoading', true);
       return catalog.checkout(item)
         .catch(e => commit('setError', e))
@@ -316,30 +325,27 @@ const store = new Vuex.Store({
       });
     },
     importDat: ({ dispatch, commit }, payload) => {
+      // need proper validation here
+      if (!catalog.isReady || !payload.key) return undefined;
       commit('setLoading', true);
-      if (!payload.key) { // need proper validation here
-        commit('setLoading', false);
-      }
       return catalog.importDat(payload.key, payload.name) // need to throw errors in promise in dat-cardcat
         .then(() => dispatch('getDats'))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     removeDat: ({ dispatch, commit }, payload) => {
+      // need proper validation here
+      if (!catalog.isReady || !payload) return undefined;
       commit('setLoading', true);
-      if (!payload) { // need proper validation here
-        commit('setLoading', false);
-      }
       return catalog.removeDat(payload) // need to throw errors in promise in dat-cardcat
         .then(() => dispatch('getDats'))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
     addFileToDat: ({ commit }, payload) => {
+      // need proper validation here
+      if (!catalog.isReady || !payload.key) return undefined;
       commit('setLoading', true);
-      if (!payload.key) { // need proper validation here
-        commit('setLoading', false);
-      }
       return catalog.addFileToDat(payload.file, payload.dat, payload.author, payload.title) // need to throw errors in promise in dat-cardcat
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
