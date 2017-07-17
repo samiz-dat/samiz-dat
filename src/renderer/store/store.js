@@ -328,7 +328,7 @@ const store = new Vuex.Store({
     },
     addFileToDat: ({ commit }, payload) => {
       // need proper validation here
-      if (!catalog.isReady || !payload.key) return undefined;
+      if (!catalog.isReady || !payload.dat) return undefined;
       commit('setLoading', true);
       return catalog.addFileToDat(payload.file, payload.dat, payload.author, payload.title) // need to throw errors in promise in dat-cardcat
         .catch(e => commit('setError', e))
