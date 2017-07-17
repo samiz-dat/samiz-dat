@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import path from 'path';
+import os from 'os';
 import { remote } from 'electron';
 import { Catalog } from 'dat-cardcat';
 import _ from 'lodash';
 
-const dataDir = path.join(process.cwd(), '_data');
+const dataDir = path.join(os.homedir(), 'dat-librarys');
 const catalog = new Catalog(dataDir);
 
 // THIS IS JUST TEMPORARILY HERE TO HELP DEBUG ELECTRON ERRORS
