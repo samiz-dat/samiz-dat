@@ -143,28 +143,14 @@ const store = new Vuex.Store({
         .finally(() => commit('setLoading', false));
     },
     // @TODO: this should be renamed to better describe its actual action. it also reloads searchs/authors
-    getAuthorLetters: ({ dispatch, commit, state, getters }) => {
+    getAuthorLetters: ({ commit, getters }) => {
       if (!catalog.isReady) return undefined;
-      commit('setLoading', true); // TODO: make this a push pop type state, so first return does not stop the loader if other actions have not finished yet...
       return catalog.getAuthorLetters({ collection: getters.readingListsFilter, dat: getters.searchDats })
         .then((rows) => {
           const letters = rows.map(v => v.letter);
           commit('setAuthorLetters', letters);
-          const promises = [];
-          if (state.selectedLetter) {
-            if (letters.find(letter => letter === state.selectedLetter)) {
-              promises.push(dispatch('showAuthorsStartingWith', state.selectedLetter));
-            } else {
-              commit('setSelectedLetter', null);
-            }
-          }
-          if (state.searchQuery) {
-            promises.push(dispatch('search', state.searchQuery));
-          }
-          return Promise.all(promises);
         })
-        .catch(e => commit('setError', e))
-        .finally(() => commit('setLoading', false));
+        .catch(e => commit('setError', e));
     },
     getDats: ({ dispatch, commit }) => {
       if (!catalog.isReady) return undefined;
@@ -200,7 +186,7 @@ const store = new Vuex.Store({
       return dispatch('search');
     },
     search: ({ state, getters, commit }) => {
-      commit('setLoading', true);
+      commit('setLoading', true); // TODO: make this a push pop type state, so first return does not stop the loader if other actions have not finished yet...
       return catalog.search(state.searchQuery, { limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
         .then(results => commit('setResults', unpackTitleFiles(results)))
         .catch(e => commit('setError', e))
