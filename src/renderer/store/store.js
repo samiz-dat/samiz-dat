@@ -168,13 +168,11 @@ const store = new Vuex.Store({
     },
     getDats: ({ dispatch, commit }) => {
       if (!catalog.isReady) return undefined;
-      commit('setLoading', true);
       // async action to get dats
       return catalog.getDats()
         .then(dats => commit('setDats', dats))
         .then(() => dispatch('getDatStats'))
-        .catch(e => commit('setError', e))
-        .finally(() => commit('setLoading', false));
+        .catch(e => commit('setError', e));
     },
     getDatStats: ({ commit }) => {
       // async action to get dats
