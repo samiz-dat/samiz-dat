@@ -19,6 +19,9 @@
     name: 'DatImportField',
     components: {},
     props: {
+      onSubmit: {
+        type: Function,
+      },
       libraryInfo: {
         type: Object,
         default: () => ({ key: '', name: '' }),
@@ -39,6 +42,7 @@
       submit(event) {
         if (event) event.preventDefault();
         const { key, name } = this;
+        if (this.onSubmit) this.onSubmit();
         this.importDat({ key, name });
         this.$notify({
           title: 'Import',

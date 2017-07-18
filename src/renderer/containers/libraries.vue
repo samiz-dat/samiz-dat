@@ -3,7 +3,7 @@
     <h2>Libraries</h2>
 
     <el-dialog title="Import a remote library" :visible.sync="addRemoteDialogIsVisible">
-      <dat-import-field/>
+      <dat-import-field :onSubmit="() => addRemoteDialogIsVisible=false"/>
     </el-dialog>
 
     <el-button-group>
