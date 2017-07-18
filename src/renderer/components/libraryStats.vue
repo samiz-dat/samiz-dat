@@ -3,10 +3,10 @@
     <p/>
     <el-row>
       <el-col :span="4">
-        <el-badge :value="stats.peers.peers || '0'" class="item">Peers</el-badge>
+        <el-badge :value="stats.peers.total || '0'" class="item">Peers</el-badge>
       </el-col>
       <el-col :span="4">
-        <el-badge :value="stats.peers.total || '0'" class="item">Total</el-badge>
+        <el-badge :value="stats.peers.complete || '0'" class="item">Complete</el-badge>
       </el-col>
       <el-col :span="16"/>
     </el-row>
@@ -52,7 +52,7 @@
       return {
         defaultStats: {
           filesCount: { have: 0, total: 0 },
-          peers: { peers: 0, total: 0 },
+          peers: { complete: 0, total: 0 },
           metadata: 0,
           downloaded: 0,
           uploadSpeed: 0,

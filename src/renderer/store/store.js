@@ -126,6 +126,9 @@ const store = new Vuex.Store({
   actions: {
     loadCatalog: ({ dispatch, commit, state }) => {
       commit('setLoading', true);
+      catalog.on('imported', () => {
+        dispatch('getDatStats');
+      });
       catalog.on('import', (obj) => {
         // console.log(obj);
         if (!state.setLoading) {
