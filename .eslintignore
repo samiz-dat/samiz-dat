@@ -1,1 +1,4 @@
-webpack.config.js
+.electron-vue/**
+test/unit/coverage/**
+test/unit/*.js
+test/e2e/*.js
