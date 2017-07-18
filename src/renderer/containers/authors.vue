@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Authors starting with <span class="capitalize">{{$route.params.letter}}</span></h2>
+    <h2>Authors starting with <span class="capitalised">{{$route.params.letter}}</span></h2>
     <author-list :data="results" :action="showTextsBy" />
     <el-pagination
       v-show="results.length !== 0"
