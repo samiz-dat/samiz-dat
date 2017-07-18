@@ -16,7 +16,9 @@
       </el-col>
     </el-row>
     <router-view></router-view>
-    <download-progress class="bottom-bar"/>
+    <transition>
+      <download-progress v-if="showProgress()" class="bottom-bar"/>
+    </transition>
   </div>
 </template>
 
@@ -49,24 +51,20 @@
         .then(() => this.getAuthorLetters());
     },
     computed: {
-      ...mapState(['dats', 'loading', 'error', 'route']),
+      ...mapState(['dats', 'loading', 'error', 'route', 'downloadStatTime']),
     },
     methods: {
       ...mapActions(['loadCatalog', 'getDats', 'getAvailableReadingLists', 'getAuthorLetters']),
+      showProgress() {
+        return (Date.now() - this.downloadStatTime) < 5000;
+      },
     },
 };
 </script>
 
 <style src="assets/fonts/fonts.scss"></style>
 <style src="assets/main.scss" lang="scss"></style>
-<style lang="scss">
-  // body {
-  //   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-  //   margin: 0;
-  //   padding: 0;
-  //   width:100%;
-  // }
-
+<style lang="scss" scoped>
   .bottom-bar {
     position: fixed;
     right: 0;
@@ -77,20 +75,12 @@
   .extra-light-grey-bg {
     background-color: #EFF2F7;
   }
-  // #dat-library {
-  //   display: flex;
-  //   flex-direction: row;
-  //   align-items: stretch;
-  //   flex-wrap: nowrap;
-  //   justify-content: center;
-  //   min-height: 100%;
-  //   width: 100%;
 
-  //   main {
-  //     flex: 1;
-  //     min-height: 100%;
-  //     margin: 1rem;
-  //     overflow: hidden;
-  //   }
-  // }
+  .fade-leave-active {
+    transition: opacity .5s;
+  }
+
+  .fade-leave-to {
+    opacity: 0;
+  }
 </style>

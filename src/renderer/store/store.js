@@ -36,6 +36,7 @@ const INITIAL_STATE = {
   selectedReadingLists: [],
   datStats: {},
   downloadStat: {},
+  downloadStatTime: null,
   // files: {},
   error: null,
 };
@@ -88,7 +89,10 @@ const store = new Vuex.Store({
     setResults: setIdentity('results'),
     setTotalResults: setIdentity('totalResults'),
     setSearchQuery: setIdentity('searchQuery'),
-    setDownloadStat: setIdentity('downloadStat'),
+    setDownloadStat: (state, payload) => {
+      state.downloadStat = payload;
+      state.downloadStatTime = Date.now();
+    },
     setDatStats: setIdentity('datStats'),
     // setDatFiles: (state, payload) => {
     //   Vue.set(state.files, payload.key, payload.files);

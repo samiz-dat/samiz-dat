@@ -1,6 +1,6 @@
 <template>
   <el-row v-show="currFile">
-    <el-col :span="8">
+    <el-col :span="8" class="smallprint">
       {{ currFile }}
     </el-col>
     <el-col :span="16">
