@@ -5,9 +5,10 @@
     <el-pagination
       v-show="results.length !== 0"
       @current-change="goToPage"
-      :layout="pagerLayout"
+      layout="prev, pager, next"
       :page-size="pagerLimit"
       :current-page.sync="page"
+      :total="totalResults"
     />
   </div>
 </template>
@@ -40,14 +41,9 @@
         'page',
         'pagerLimit',
         'results',
+        'totalResults',
         'fetching',
       ]),
-      pagerLayout: {
-        get() {
-          // @TODO: Someday we should get total counts but for now this handles the end of the pager
-          return (this.results.length < this.pagerLimit) ? 'prev' : 'prev, next';
-        },
-      },
     },
     methods: {
       ...mapMutations(['setPage']),

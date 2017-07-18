@@ -28,6 +28,7 @@ const INITIAL_STATE = {
   // authorList: [],
   searchQuery: null,
   results: [],
+  totalResults: 0,
   dats: [],
   selectedDats: [],
   availableReadingLists: [],
@@ -85,6 +86,7 @@ const store = new Vuex.Store({
     setReadingLists: setIdentity('readingLists'),
     selectReadingLists: setIdentity('selectedReadingLists'),
     setResults: setIdentity('results'),
+    setTotalResults: setIdentity('totalResults'),
     setSearchQuery: setIdentity('searchQuery'),
     setDownloadStat: setIdentity('downloadStat'),
     setDatStats: setIdentity('datStats'),
@@ -190,7 +192,9 @@ const store = new Vuex.Store({
     },
     search: ({ state, getters, commit }) => {
       commit('setLoading', true); // TODO: make this a push pop type state, so first return does not stop the loader if other actions have not finished yet...
-      return catalog.search(state.searchQuery, { limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
+      return catalog.countSearch(state.searchQuery, { dat: getters.searchDats })
+        .then(num => commit('setTotalResults', num))
+        .then(() => catalog.search(state.searchQuery, { limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats }))
         .then(results => commit('setResults', unpackTitleFiles(results)))
         .catch(e => commit('setError', e))
         .finally(() => {
@@ -205,7 +209,9 @@ const store = new Vuex.Store({
     getAuthors: ({ state, commit, getters }, payload) => {
       if (!catalog.isReady) return undefined;
       commit('setLoading', true);
-      return catalog.getAuthors(payload, { collection: getters.readingListsFilter, limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats })
+      return catalog.countAuthors(payload, { collection: getters.readingListsFilter, dat: getters.searchDats })
+        .then(num => commit('setTotalResults', num))
+        .then(() => catalog.getAuthors(payload, { collection: getters.readingListsFilter, limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats }))
         .then(authors => commit('setResults', authors))
         .catch(e => commit('setError', e))
         .finally(() => {
@@ -220,7 +226,9 @@ const store = new Vuex.Store({
     },
     getFilesByAuthor: ({ state, commit, getters }, payload) => {
       commit('setLoading', true);
-      return catalog.getTitlesWith({ author: payload, collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset })
+      return catalog.countTitlesWith({ author: payload, collection: getters.readingListsFilter, dat: getters.searchDats })
+        .then(num => commit('setTotalResults', num))
+        .then(() => catalog.getTitlesWith({ author: payload, collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset }))
         .then(results => commit('setResults', unpackTitleFiles(results)))
         .catch(e => commit('setError', e))
         .finally(() => {
@@ -235,7 +243,9 @@ const store = new Vuex.Store({
     getEverything: ({ state, commit, getters }) => {
       if (!catalog.isReady) return undefined;
       commit('setLoading', true);
-      return catalog.getTitlesWith({ collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset })
+      return catalog.countTitlesWith({ collection: getters.readingListsFilter, dat: getters.searchDats })
+        .then(num => commit('setTotalResults', num))
+        .then(() => catalog.getTitlesWith({ collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset }))
         .then(results => commit('setResults', unpackTitleFiles(results)))
         .catch(e => commit('setError', e))
         .finally(() => {

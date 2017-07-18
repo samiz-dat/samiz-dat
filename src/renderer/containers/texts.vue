@@ -4,11 +4,12 @@
     <textList :data="results"/>
     <!-- refactor this so its part of list and configurable via props -->
     <el-pagination
-      :layout="pagerLayout"
       v-show="results.length !== 0"
       :page-size="pagerLimit"
       @current-change="goToPage"
-      :current-page.sync="page">
+      :current-page.sync="page"
+      layout="prev, pager, next"
+      :total="totalResults">
     </el-pagination>
   </div>
 </template>
@@ -59,16 +60,11 @@
       ...mapState([
         'fetching',
         'results',
+        'totalResults',
         'searchQuery',
         'page',
         'pagerLimit',
       ]),
-      pagerLayout: {
-        get() {
-          // @TODO: Someday we should get total counts but for now this handles the end of the pager
-          return (this.results.length < this.pagerLimit) ? 'prev' : 'prev, next';
-        },
-      },
       title() {
         switch (this.display) {
           case 'SEARCH':
