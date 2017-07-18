@@ -5,9 +5,9 @@
     <el-row type="flex" class="extra-light-grey-bg" align="middle" justify="space-around">
       <el-col :span="16">
         <el-menu :router="true" :default-active="$route.path" mode="horizontal">
-          <el-menu-item index="/">home</el-menu-item>
           <el-menu-item index="/search">browse</el-menu-item>
           <el-menu-item index="/libraries">libraries</el-menu-item>
+          <el-menu-item index="/">info</el-menu-item>
           <!-- <el-menu-item index="/reading-lists">reading lists</el-menu-item> -->
         </el-menu>
       </el-col>
