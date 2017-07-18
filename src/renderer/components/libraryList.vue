@@ -10,7 +10,7 @@
         <el-input readonly :value="dat.dat"></el-input>
       </p>
       <el-button-group>
-        <el-button type="primary" v-on:click="downloadDat(dat.dat)" v-show="!dat.writeable">Download entire library</el-button>
+        <el-button type="primary" v-on:click="downloadDat(dat.dat)" v-if="!dat.writeable">Download entire library</el-button>
         <el-button type="primary" v-on:click="openLibrary(dat.dat)"><i class="el-icon-view"></i></el-button>
         <el-button type="primary" v-on:click="openAddFileDialog(dat.dat)" v-if="dat.writeable">Add file</el-button>
         <el-button type="warning" v-on:click="confirmDeleteVisible = true"><i class="el-icon-delete"></i></el-button>
