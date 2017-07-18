@@ -60,6 +60,7 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "dat-cardcat": "^0.2.21",
+    "electron-updater": "^2.7.1",
     "element-ui": "^1.3.7",
     "lodash": "^4.17.4",
     "vue": "^2.3.3",
