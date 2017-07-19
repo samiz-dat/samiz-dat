@@ -17,7 +17,7 @@
     </el-row>
     <router-view></router-view>
     <transition>
-      <download-progress v-if="showProgress()" class="bottom-bar"/>
+      <download-progress v-show="showProgress" :downloadStat="downloadStat" class="bottom-bar"/>
     </transition>
   </div>
 </template>
@@ -38,7 +38,10 @@
       downloadProgress,
     },
     data() {
-      return {};
+      return {
+        downloadTimeout: null,
+        showProgress: false,
+      };
     },
     created() {
       // initialise catalog on app start
@@ -50,14 +53,24 @@
         // .then(() => this.getAvailableReadingLists())
         .then(() => this.getAuthorLetters());
     },
+    beforeDestroy() {
+      if (this.timeout) clearTimeout(this.timeout);
+    },
+    watch: {
+      downloadStat() {
+        if (!this.downloadStat) return;
+        if (this.timeout) clearTimeout(this.timeout);
+        this.showProgress = true;
+        this.timeout = setTimeout(() => {
+          this.showProgress = false;
+        }, 1000);
+      },
+    },
     computed: {
-      ...mapState(['dats', 'loading', 'error', 'route', 'downloadStatTime']),
+      ...mapState(['dats', 'loading', 'error', 'route', 'downloadStat']),
     },
     methods: {
       ...mapActions(['loadCatalog', 'getDats', 'getAvailableReadingLists', 'getAuthorLetters']),
-      showProgress() {
-        return (Date.now() - this.downloadStatTime) < 5000;
-      },
     },
 };
 </script>

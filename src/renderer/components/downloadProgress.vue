@@ -10,16 +10,19 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
 
   export default {
     name: 'downloadProgress',
     components: {},
+    props: {
+      downloadStat: {
+        type: Object,
+      },
+    },
     data() {
       return {};
     },
     computed: {
-      ...mapState(['loading', 'error', 'route', 'downloadStat']),
       currFile() {
         return (this.downloadStat && this.downloadStat.file) ? this.downloadStat.file : undefined;
       },
