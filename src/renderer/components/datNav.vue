@@ -47,5 +47,6 @@
 <style lang="scss" scoped>
 .el-checkbox-group label.el-checkbox {
   margin-left: 0px;
+  display: block;
 }
 </style>
