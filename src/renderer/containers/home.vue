@@ -45,7 +45,7 @@
       openImportDialog(key, name) {
         this.libraryInfo = { key, name };
         this.addRemoteDialogIsVisible = true;
-      }
+      },
     },
 };
 </script>

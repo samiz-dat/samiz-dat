@@ -1,18 +1,16 @@
 <template>
   <el-table
+    id="authorList"
     :data="data"
     empty-text="..."
     stripe
     style="width: 100%"
+    @row-click="clickedRow"
   >
     <el-table-column
       prop="author"
       label="Name"
-    >
-      <template scope="scope">
-        <a v-on:click="action(scope.row.author)">{{scope.row.author}}</a>
-      </template>
-    </el-table-column>
+    />
     <el-table-column
       prop="count"
       label="Texts"
@@ -34,5 +32,18 @@
         required: true,
       },
     },
+    methods: {
+      clickedRow(row) {
+        this.action(row.author);
+      },
+    },
 };
 </script>
+<style lang="scss">
+  // total hack to get pointer cursor
+  #authorList .el-table__row {
+    &:hover {
+      cursor: pointer !important;
+    }
+  }
+</style>
