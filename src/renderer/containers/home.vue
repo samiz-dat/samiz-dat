@@ -1,12 +1,11 @@
 <template>
-  <el-row id="home" :gutter="40">
-    <el-col :span="1">&nbsp;</el-col>
-    <el-col :span="22">
-      <h1>Local Branch of Dat Library</h1>
+  <div id="home">
+    <div>
+      <h2>Local Branch of Dat Library</h2>
       <p>
       Intentions victorious truth evil aversion morality christian love. Salvation morality prejudice faithful christianity zarathustra ultimate decrepit ascetic philosophy intentions convictions intentions. Eternal-return sexuality right salvation burying will reason ubermensch salvation. Moral endless ideal zarathustra joy. Morality snare christianity intentions enlightenment ultimate aversion. Burying right convictions battle free philosophy contradict contradict virtues contradict pious ubermensch victorious virtues. You might add <el-button type="text" @click="openImportDialog('1943c202c68e66231ec5c2bde9e17ff6103011176515931fcb8eed3415ba8849', 'Random')">Another hosted by Dat Library</el-button>
       </p><p>
-      Or there is this one: <el-button type="text" @click="openImportDialog('ea17a8f2a05b6dc7f8556ec76b77b966004dec711c313bb8564a4895e2955cc0', 'Grr')">The Grr Testing Library</el-button>. 
+      Or there is this one: <el-button type="text" @click="openImportDialog('ea17a8f2a05b6dc7f8556ec76b77b966004dec711c313bb8564a4895e2955cc0', 'Grr')">The Grr Testing Library</el-button>.
       Madness dead spirit aversion grandeur justice horror pious. Burying passion madness law pinnacle overcome spirit marvelous oneself deceptions ocean horror transvaluation society.
       </p><p>
       Of sea endless noble revaluation pious. Philosophy abstract virtues christianity evil. Ocean fearful selfish abstract gains spirit joy contradict.
@@ -21,14 +20,11 @@
       </p><p>
       Hope faithful war good moral justice holiest grandeur burying deceptions mountains love overcome sea. Madness ultimate transvaluation right ideal ultimate hatred love ultimate. Salvation transvaluation endless self eternal-return decrepit burying endless. Holiest holiest revaluation deceptions joy strong fearful christianity. Convictions convictions faith passion convictions value.
       </p>
-    </el-col>
-    <el-col :span="1"><div/></el-col>
-
+    </div>
     <el-dialog title="Import a remote library" :visible.sync="addRemoteDialogIsVisible">
       <dat-import-field :libraryInfo="libraryInfo"/>
     </el-dialog>
-
-  </el-row>
+  </div>
 </template>
 
 <script>
@@ -53,3 +49,9 @@
     },
 };
 </script>
+
+<style lang="scss" scoped>
+  #home {
+    margin: 1rem;
+  }
+</style>
