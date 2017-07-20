@@ -173,6 +173,10 @@ const store = new Vuex.Store({
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
+    refreshLastSearch: ({ state, dispatch }) => {
+      const query = state.resultsQuery;
+      return (query) ? dispatch(query.func, query.payload) : null;
+    },
     // @TODO: this should be renamed to better describe its actual action. it also reloads searchs/authors
     getAuthorLetters: ({ commit, getters }) => {
       if (!catalog.isReady) return undefined;

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
+  import { mapState } from 'vuex';
 
   // TODO: make this fixed, independent of main areas scroll.
 
@@ -26,7 +26,8 @@
         },
         set() {
           this.$store.commit('selectDats', []);
-          this.$store.dispatch('getAuthorLetters');
+          this.$store.dispatch('getAuthorLetters')
+            .then(() => this.$store.dispatch('refreshLastSearch'));
         },
       },
       selected: {
@@ -35,7 +36,8 @@
         },
         set(value) {
           this.$store.commit('selectDats', value);
-          this.$store.dispatch('getAuthorLetters');
+          this.$store.dispatch('getAuthorLetters')
+            .then(() => this.$store.dispatch('refreshLastSearch'));
         },
       },
     },
