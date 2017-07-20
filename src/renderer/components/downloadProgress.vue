@@ -52,9 +52,5 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    // div.progress {
-    //   width: 80%;
-    // }
   }
 </style>
