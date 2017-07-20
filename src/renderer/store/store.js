@@ -20,7 +20,7 @@ const INITIAL_STATE = {
   loading: false,
   fetching: false, // for when fetching new page data - stop page syncs calling update actions
   page: 0,
-  pagerLimit: 3,
+  pagerLimit: 10,
   pagerOffset: 0,
   selectedLetter: null,
   authorLetters: [],
