@@ -10,6 +10,7 @@
 </template>
 
 <script>
+  import { isFinite } from 'lodash';
 
   export default {
     name: 'downloadProgress',
@@ -29,7 +30,7 @@
       currPercentage() {
         return (this.downloadStat
           && this.downloadStat.progress
-          && !isNaN(this.downloadStat.progress)
+          && isFinite(this.downloadStat.progress)
           && this.downloadStat.progress <= 100)
         ? this.downloadStat.progress
         : 0;
