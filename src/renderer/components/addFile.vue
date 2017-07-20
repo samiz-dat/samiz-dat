@@ -26,7 +26,10 @@
     props: {
       defaultDat: {
         type: String,
-      }
+      },
+      onSubmit: {
+        type: Function,
+      },
     },
     data() {
       return {
@@ -44,12 +47,13 @@
       ...mapActions(['addFileToDat', 'getDatStats']),
       submit(event) {
         if (event) event.preventDefault();
+        if (this.onSubmit) this.onSubmit();
         const { author, title, dat, file, defaultDat } = this;
         this.addFileToDat({
           author,
           title,
           dat: defaultDat || dat,
-          file
+          file,
         })
         .then(() => this.getDatStats())
         .then(() => this.$notify({

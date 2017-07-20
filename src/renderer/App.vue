@@ -2,21 +2,11 @@
   <div id="dat-library">
     <loader :loading="loading"/>
     <error :error="error"/>
-    <el-row type="flex" class="extra-light-grey-bg" align="middle" justify="space-around">
-      <el-col :span="16">
-        <el-menu :router="true" :default-active="$route.path" mode="horizontal">
-          <el-menu-item index="/search">browse</el-menu-item>
-          <el-menu-item index="/libraries">libraries</el-menu-item>
-          <el-menu-item index="/">info</el-menu-item>
-          <!-- <el-menu-item index="/reading-lists">reading lists</el-menu-item> -->
-        </el-menu>
-      </el-col>
-      <el-col :span="8">
-        <search-nav />
-      </el-col>
-    </el-row>
+    <main-nav/>
     <router-view></router-view>
-    <download-progress class="bottom-bar"/>
+    <transition name="fade">
+      <download-progress v-show="showProgress" :downloadStat="downloadStat" class="bottom-bar"/>
+    </transition>
   </div>
 </template>
 
@@ -24,7 +14,7 @@
   import { mapState, mapActions } from 'vuex';
   import loader from 'components/loader';
   import error from 'components/error';
-  import searchNav from 'components/searchNav';
+  import mainNav from 'components/mainNav';
   import downloadProgress from 'components/downloadProgress';
 
   export default {
@@ -32,11 +22,14 @@
     components: {
       error,
       loader,
-      searchNav,
+      mainNav,
       downloadProgress,
     },
     data() {
-      return {};
+      return {
+        downloadTimeout: null,
+        showProgress: false,
+      };
     },
     created() {
       // initialise catalog on app start
@@ -48,8 +41,21 @@
         // .then(() => this.getAvailableReadingLists())
         .then(() => this.getAuthorLetters());
     },
+    beforeDestroy() {
+      if (this.timeout) clearTimeout(this.timeout);
+    },
+    watch: {
+      downloadStat() {
+        if (!this.downloadStat) return;
+        if (this.timeout) clearTimeout(this.timeout);
+        this.showProgress = true;
+        this.timeout = setTimeout(() => {
+          this.showProgress = false;
+        }, 1000);
+      },
+    },
     computed: {
-      ...mapState(['dats', 'loading', 'error', 'route']),
+      ...mapState(['dats', 'loading', 'error', 'route', 'downloadStat']),
     },
     methods: {
       ...mapActions(['loadCatalog', 'getDats', 'getAvailableReadingLists', 'getAuthorLetters']),
@@ -59,14 +65,7 @@
 
 <style src="assets/fonts/fonts.scss"></style>
 <style src="assets/main.scss" lang="scss"></style>
-<style lang="scss">
-  // body {
-  //   font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-  //   margin: 0;
-  //   padding: 0;
-  //   width:100%;
-  // }
-
+<style lang="scss" scoped>
   .bottom-bar {
     position: fixed;
     right: 0;
@@ -74,23 +73,11 @@
     left: 0;
   }
 
-  .extra-light-grey-bg {
-    background-color: #EFF2F7;
+  .fade-leave-active {
+    transition: opacity .5s;
   }
-  // #dat-library {
-  //   display: flex;
-  //   flex-direction: row;
-  //   align-items: stretch;
-  //   flex-wrap: nowrap;
-  //   justify-content: center;
-  //   min-height: 100%;
-  //   width: 100%;
 
-  //   main {
-  //     flex: 1;
-  //     min-height: 100%;
-  //     margin: 1rem;
-  //     overflow: hidden;
-  //   }
-  // }
+  .fade-leave-to {
+    opacity: 0;
+  }
 </style>

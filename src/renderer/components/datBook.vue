@@ -69,8 +69,9 @@
         this.download({ author: this.book.author });
       },
       fileIcon(file) {
+        if (file.downloaded) return 'el-icon-check';
         if (this.downloading) return 'el-icon-loading';
-        return file.downloaded ? 'el-icon-check' : 'el-icon-minus';
+        return 'el-icon-minus';
       },
     },
 };

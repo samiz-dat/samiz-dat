@@ -20,7 +20,7 @@ const INITIAL_STATE = {
   loading: false,
   fetching: false, // for when fetching new page data - stop page syncs calling update actions
   page: 0,
-  pagerLimit: 3,
+  pagerLimit: 10,
   pagerOffset: 0,
   selectedLetter: null,
   authorLetters: [],
@@ -29,6 +29,7 @@ const INITIAL_STATE = {
   searchQuery: null,
   results: [],
   totalResults: 0,
+  resultsQuery: {},
   dats: [],
   selectedDats: [],
   availableReadingLists: [],
@@ -87,8 +88,22 @@ const store = new Vuex.Store({
     selectReadingLists: setIdentity('selectedReadingLists'),
     setResults: setIdentity('results'),
     setTotalResults: setIdentity('totalResults'),
+    setResultsQuery: setIdentity('resultsQuery'),
     setSearchQuery: setIdentity('searchQuery'),
-    setDownloadStat: setIdentity('downloadStat'),
+    setDownloadStat: (state, payload) => {
+      state.downloadStat = payload;
+      state.downloadStatTime = Date.now();
+    },
+    setDownloadedResult: (state, payload) => {
+      const results = state.results;
+      _.forEach(results, (r) => {
+        if (r.author === payload.author && r.title === payload.title) {
+          _.forEach(r.files, (f) => {
+            if (f.dat === payload.dat && f.file === payload.file) { f.downloaded = true; state.results = results; }
+          });
+        }
+      });
+    },
     setDatStats: setIdentity('datStats'),
     // setDatFiles: (state, payload) => {
     //   Vue.set(state.files, payload.key, payload.files);
@@ -141,11 +156,26 @@ const store = new Vuex.Store({
       catalog.on('download', (data) => {
         commit('setDownloadStat', data);
         dispatch('getDatStats');
+        if (data.progress === 100) {
+          // @TODO: rather than crudely parsing file here -
+          // we should make dat-cardcat pass over format type,
+          // and make formatter into a seporate module
+          const x = _.split(data.file, '/');
+          commit('setDownloadedResult', { author: x[1], title: x[2], file: x[3], dat: data.key });
+        }
+        // SD: possible to re-run current results query if desired
+        // if (state.resultsQuery && state.resultsQuery.func) {
+        //  dispatch(state.resultsQuery.func, state.resultsQuery.params);
+        // }
       });
       return catalog.init()
         // .then(() => dispatch('getReadingLists'))
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
+    },
+    refreshLastSearch: ({ state, dispatch }) => {
+      const query = state.resultsQuery;
+      return (query) ? dispatch(query.func, query.payload) : null;
     },
     // @TODO: this should be renamed to better describe its actual action. it also reloads searchs/authors
     getAuthorLetters: ({ commit, getters }) => {
@@ -192,6 +222,7 @@ const store = new Vuex.Store({
     },
     search: ({ state, getters, commit }) => {
       commit('setLoading', true); // TODO: make this a push pop type state, so first return does not stop the loader if other actions have not finished yet...
+      commit('setResultsQuery', { func: 'search', payload: null });
       return catalog.countSearch(state.searchQuery, { dat: getters.searchDats })
         .then(num => commit('setTotalResults', num))
         .then(() => catalog.search(state.searchQuery, { limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats }))
@@ -209,6 +240,7 @@ const store = new Vuex.Store({
     getAuthors: ({ state, commit, getters }, payload) => {
       if (!catalog.isReady) return undefined;
       commit('setLoading', true);
+      commit('setResultsQuery', { func: 'getAuthors', payload });
       return catalog.countAuthors(payload, { collection: getters.readingListsFilter, dat: getters.searchDats })
         .then(num => commit('setTotalResults', num))
         .then(() => catalog.getAuthors(payload, { collection: getters.readingListsFilter, limit: state.pagerLimit, offset: state.pagerOffset, dat: getters.searchDats }))
@@ -226,6 +258,7 @@ const store = new Vuex.Store({
     },
     getFilesByAuthor: ({ state, commit, getters }, payload) => {
       commit('setLoading', true);
+      commit('setResultsQuery', { func: 'getFilesByAuthor', payload });
       return catalog.countTitlesWith({ author: payload, collection: getters.readingListsFilter, dat: getters.searchDats })
         .then(num => commit('setTotalResults', num))
         .then(() => catalog.getTitlesWith({ author: payload, collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset }))
@@ -243,6 +276,7 @@ const store = new Vuex.Store({
     getEverything: ({ state, commit, getters }) => {
       if (!catalog.isReady) return undefined;
       commit('setLoading', true);
+      commit('setResultsQuery', { func: 'getEverything', payload: null });
       return catalog.countTitlesWith({ collection: getters.readingListsFilter, dat: getters.searchDats })
         .then(num => commit('setTotalResults', num))
         .then(() => catalog.getTitlesWith({ collection: getters.readingListsFilter, dat: getters.searchDats, limit: state.pagerLimit, offset: state.pagerOffset }))

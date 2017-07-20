@@ -53,7 +53,7 @@ export default {
     z-index: 999999;
     .content {
       width: 10em;
-      animation: flickerAnimation 2s infinite ease-in-out;
+      animation: pulseAnimation 2s infinite ease-in-out;
       h1 {
         color: white;
 
@@ -61,7 +61,7 @@ export default {
     }
   }
 
-  @keyframes flickerAnimation {
+  @keyframes pulseAnimation {
     0%   { opacity:1; }
     50%  { opacity:0; }
     100% { opacity:1; }

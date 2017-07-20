@@ -38,8 +38,8 @@
 </template>
 
 <script>
-  import { mapState, mapActions, mapGetters } from 'vuex';
-
+  import { mapState, mapGetters } from 'vuex';
+  import { isFinite } from 'lodash';
   export default {
     name: 'libraryStats',
     components: {},
@@ -68,13 +68,21 @@
       },
       percentage() {
         const stats = this.stats;
-        return stats.downloaded || 0;
+        return this.sanitisePercentage(stats.downloaded);
       },
       metadataPercentage() {
         const stats = this.stats;
-        return stats.metadata || 0;
+        return this.sanitisePercentage(stats.metadata);
       },
     },
-    methods: {},
+    methods: {
+      sanitisePercentage: (value) => {
+        return (value
+          && isFinite(value)
+          && value <= 100)
+        ? value
+        : 0;
+      }
+    },
 };
 </script>

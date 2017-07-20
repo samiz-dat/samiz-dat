@@ -1,32 +1,36 @@
 <template>
-  <el-row v-show="currFile">
-    <el-col :span="8">
+  <div v-show="currFile" class='status-bar'>
+    <div class="smallprint">
       {{ currFile }}
-    </el-col>
-    <el-col :span="16">
+    </div>
+    <div class="progress">
       <el-progress :text-inside="true" :stroke-width="18" :percentage="Math.round(currPercentage)" status="success"></el-progress>
-    </el-col>
-  </el-row>
+    </div>
+  </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex';
+  import { isFinite } from 'lodash';
 
   export default {
     name: 'downloadProgress',
     components: {},
+    props: {
+      downloadStat: {
+        type: Object,
+      },
+    },
     data() {
       return {};
     },
     computed: {
-      ...mapState(['loading', 'error', 'route', 'downloadStat']),
       currFile() {
-        return (this.downloadStat && this.downloadStat.file) ? this.downloadStat.file : undefined;
+        return this.downloadStat && this.downloadStat.file;
       },
       currPercentage() {
         return (this.downloadStat
           && this.downloadStat.progress
-          && !isNaN(this.downloadStat.progress)
+          && isFinite(this.downloadStat.progress)
           && this.downloadStat.progress <= 100)
         ? this.downloadStat.progress
         : 0;
@@ -34,3 +38,20 @@
     },
 };
 </script>
+
+<style lang="scss" scoped>
+  .status-bar {
+    background-color: white;
+    display: flex;
+    height: 2rem;
+    flex-direction: column;
+    padding: 0.5rem;
+    border: none;
+    border-top: black solid 0.1rem;
+    div.smallprint {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+</style>

@@ -21,7 +21,7 @@
         <el-button @click="confirmDeleteVisible = false">Not now</el-button>
       </el-dialog>
       <el-dialog title="Add a file?" :visible.sync="addFileDialogIsVisible">
-        <add-file :defaultDat="selectedDat"></add-file>
+        <add-file :defaultDat="selectedDat" :onSubmit="() => addFileDialogIsVisible = false"></add-file>
       </el-dialog>
       <library-stats :dat="dat"/>
     </el-collapse-item>
