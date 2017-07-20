@@ -2,19 +2,7 @@
   <div id="dat-library">
     <loader :loading="loading"/>
     <error :error="error"/>
-    <el-row type="flex" class="extra-light-grey-bg" align="middle" justify="space-around">
-      <el-col :span="16">
-        <el-menu :router="true" :default-active="$route.path" mode="horizontal">
-          <el-menu-item index="/search">Browse</el-menu-item>
-          <el-menu-item index="/libraries">Libraries</el-menu-item>
-          <el-menu-item index="/">Info</el-menu-item>
-          <!-- <el-menu-item index="/reading-lists">reading lists</el-menu-item> -->
-        </el-menu>
-      </el-col>
-      <el-col :span="8">
-        <search-nav />
-      </el-col>
-    </el-row>
+    <main-nav/>
     <router-view></router-view>
     <transition name="fade">
       <download-progress v-show="showProgress" :downloadStat="downloadStat" class="bottom-bar"/>
@@ -26,7 +14,7 @@
   import { mapState, mapActions } from 'vuex';
   import loader from 'components/loader';
   import error from 'components/error';
-  import searchNav from 'components/searchNav';
+  import mainNav from 'components/mainNav';
   import downloadProgress from 'components/downloadProgress';
 
   export default {
@@ -34,7 +22,7 @@
     components: {
       error,
       loader,
-      searchNav,
+      mainNav,
       downloadProgress,
     },
     data() {
@@ -83,10 +71,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-  }
-
-  .extra-light-grey-bg {
-    background-color: #EFF2F7;
   }
 
   .fade-leave-active {
