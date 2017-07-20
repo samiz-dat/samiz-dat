@@ -16,7 +16,7 @@
       </el-col>
     </el-row>
     <router-view></router-view>
-    <transition>
+    <transition name="fade">
       <download-progress v-show="showProgress" :downloadStat="downloadStat" class="bottom-bar"/>
     </transition>
   </div>
