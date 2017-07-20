@@ -1,7 +1,11 @@
 <template>
   <el-form ref="form">
-    <p>Adding a remote library only downloads that library's basic catalogue for searching. You can then choose to download the entire library or only selected titles or authors that interest you.</p>
-    <p>By downloading the contents of a library you also help contribute to the hosting and distribution of that library.</p>
+    <p>
+    Adding a remote library will, at first, only download that library's basic catalogue for searching. You can then choose to download the entire library or only selected titles or authors within it.
+    </p>
+    <p>
+    By downloading a library you also help contribute to the hosting and distribution of that library.
+    </p>
     <el-form-item label="Library Key">
       <el-input name="key" v-model="key" placeholder="Dat Key"></el-input><br />
     </el-form-item>
@@ -30,6 +34,7 @@
       },
     },
     created() {
+      console.log('created', this.libraryInfo);
       this.key = this.libraryInfo.key;
       this.name = this.libraryInfo.name;
     },
