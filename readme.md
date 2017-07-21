@@ -2,8 +2,6 @@
 
 The beginings of a distributed library.
 
-THIS READ ME NEEDS ATTENTION!
-
 ## Setup
 
 **Note:** Node and electron have different versions of NODE_MODULE_VERSION and as such need dependent libraries compiled seporately.
@@ -27,22 +25,10 @@ For more infomation look at the [electron docs on using native modules](https://
 
 ```bash
 # run in development
-# - first start up a webpack process
 npm run dev
 
 # build for production
 npm run build
-npm run start
-```
-
-For testing, the first time you run, you should do:
-```
-npm run cli --dat=96171cc0845174e7e3c73592479cd9ca8d4caf1d039e6f38a0c06f48dff88bd1 --name="South Asian Scholarship"
-```
-
-and then look inside src/cli.js for some other commands you can run, such as:
-```
-npm run cli --checkout --author="Ackbar Abbas" --title="Hong Kong Culture and the Politics of Disappearance (58)"
 ```
 
 ## Dev
