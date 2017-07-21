@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron' // eslint-disable-line
+import { app, Menu, BrowserWindow } from 'electron' // eslint-disable-line
 import { autoUpdater } from 'electron-updater';
 
 /**
@@ -28,6 +28,25 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  // Create the Application Menu
+  // Create the Application's main menu
+  const template = [
+    {
+      label: 'Application',
+      submenu: [
+        { label: 'Quit', accelerator: 'Command+Q', click: () => { app.quit(); } },
+      ] },
+    {
+      label: 'Edit',
+      submenu: [
+        { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+        { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+        { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+      ] },
+  ];
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 app.on('ready', createWindow);
@@ -59,4 +78,3 @@ autoUpdater.on('update-downloaded', () => {
 app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates();
 });
-
