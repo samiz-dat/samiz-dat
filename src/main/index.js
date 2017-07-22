@@ -1,5 +1,5 @@
 import path from 'path';
-import { app, dialog, shell, Menu, Tray, BrowserWindow } from 'electron'; // eslint-disable-line
+import { app, dialog, shell, Menu, BrowserWindow } from 'electron'; // eslint-disable-line
 import updateNotification from './updateNotification';
 /**
  * Set `__static` path to static files in production
@@ -22,6 +22,7 @@ function createWindow() {
     height: 563,
     useContentSize: true,
     width: 1000,
+    icon: path.join(__static, '/icons/256x256.png'),
   });
 
   mainWindow.loadURL(winURL);
@@ -58,15 +59,14 @@ function createWindow() {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
-let tray;
-function createTray() {
-  tray = new Tray(path.join(__static, '/icons/256x256.png'));
-  tray.setToolTip('Dat Library');
-}
+// let tray;
+// function createTray() {
+//   tray = new Tray());
+//   tray.setToolTip('Dat Library');
+// }
 
 app.on('ready', () => {
   updateNotification();
-  createTray();
   createWindow();
 });
 
