@@ -10,7 +10,7 @@ export default function () {
   if (ignore) return;
   github.get('/repos/e-e-e/dat-library/releases/latest')
     .then((res) => {
-      if (semver.lt(process.env.npm_package_version, res.data.tag_name)) {
+      if (semver.lt(process.env.package_version, res.data.tag_name)) {
         dialog.showMessageBox({
           type: 'info',
           buttons: ['Not now', 'Update'],
