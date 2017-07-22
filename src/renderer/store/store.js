@@ -147,7 +147,6 @@ const store = new Vuex.Store({
         dispatch('getDatStats');
       });
       catalog.on('import', (obj) => {
-        // console.log(obj);
         if (!state.setLoading) {
           dispatch('getDats');
           dispatch('getAuthorLetters');
@@ -327,10 +326,11 @@ const store = new Vuex.Store({
         properties: ['openDirectory'],
       }, (file) => {
         if (Array.isArray(file)) {
+          commit('setLoading', false);
           catalog.importDir(file[0])
           .then(() => dispatch('getDats'))
-          .catch(e => commit('setError', e))
-          .finally(() => commit('setLoading', false));
+          .catch(e => commit('setError', e));
+          // .finally(() => commit('setLoading', false));
         } else {
           commit('setLoading', false);
         }
