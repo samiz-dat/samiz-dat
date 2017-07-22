@@ -59,10 +59,10 @@ let mainConfig = {
     new webpack.NoEmitOnErrorsPlugin(),
   ],
   resolve: {
-    extensions: ['.js', '.json', '.node']
+    extensions: ['.js', '.json', '.node'],
   },
-  target: 'electron-main'
-}
+  target: 'electron-main',
+};
 
 /**
  * Adjust mainConfig for development settings
