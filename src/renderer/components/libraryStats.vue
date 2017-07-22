@@ -8,14 +8,17 @@
       <el-col :span="4">
         <el-badge :value="stats.peers.complete || '0'" class="item">Complete</el-badge>
       </el-col>
-      <el-col :span="16"/>
+      <el-col :span="4">
+        &uarr; {{ stats.uploadSpeed || 0 }} &bull; &darr; {{ stats.downloadSpeed || 0 }}
+      </el-col>
+      <el-col :span="12"/>
     </el-row>
     <el-row>
       <el-col :span="8">
         Files:
       </el-col>
       <el-col :span="16">
-        {{ stats.filesCount.total }}
+        {{ stats.filesCount.total }} ({{ this.datSize }})
       </el-col>
     </el-row>
     <el-row>
@@ -40,6 +43,8 @@
 <script>
   import { mapState, mapGetters } from 'vuex';
   import { isFinite } from 'lodash';
+  import prettyBytes from 'pretty-bytes';
+
   export default {
     name: 'libraryStats',
     components: {},
@@ -57,6 +62,7 @@
           downloaded: 0,
           uploadSpeed: 0,
           downloadSpeed: 0,
+          size: 0,
         },
       };
     },
@@ -73,6 +79,10 @@
       metadataPercentage() {
         const stats = this.stats;
         return this.sanitisePercentage(stats.metadata);
+      },
+      datSize() {
+        const stats = this.stats;
+        return prettyBytes(stats.size);
       },
     },
     methods: {
