@@ -30,31 +30,31 @@
           <li>a tool for research</li>
           <li>a way of sharing</li>
           <li>built on top of the <el-button type="text" @click="open('https://datproject.org/')">Dat Protocol</el-button></li>
-          <li>this text will be updated with software updates</li>
+          <li>not static - this text will be rewritten in future releases</li>
           </ul>
           </p>
 
-          <p><b>OR:</b></p>
+          <p><strong>OR:</strong></p>
 
           <p>
           Let’s say you have a collection of an out-of-print, obscure, radical zine from Sydney in the 1970s; or you have collected the writings of your comrades; or you have a directory of your own texts that are currently unpublished or otherwise inaccessible. With Dat Library you can share them easily with others.
           </p>
           <p>
-          Dat Library is a library of libraries. Every one of these libraries has their own public key. Using a libraries key, you can access that library. Sharing the key for your own libraries lets others access yours. What makes Dat Libraries special is that there is no central server hosting the files. The files are collectively hosted and distributed by the readers of those libraries. By downloading libraries and keeping the application running, you help provide mutual support in the form of disk space and bandwidth and redundancy for the libraries you have downloaded.
+          Dat Library is a library of libraries. What makes Dat Libraries special is that there is no central server hosting the files. The files are collectively hosted and distributed by the readers of those libraries. Every one of these libraries have their own public key. Using a library’s key, you can access that library’s content. Sharing the key for your own libraries lets others gain access to yours. By downloading libraries and keeping the application running, you help provide mutual support in the form of disk space and bandwidth and redundancy for the libraries you have downloaded.
           </p>
           <p>
-          <b>How do I use it?</b>
+          <strong>How do I use it?</strong>
           </p>
           <p>
           Get started by downloading the starter libraries. Make your own library, or import your personal calibre library. Then share your library’s key with others to start distributing and collectively archiving your collection.
           </p>
           <p>
-          Collections are private - you need to share your key with others to make your library accessible. If you would like to share your library on this page, and you hold the permissions to share, please get in touch and we will add your dats key to this page in future releases of the app.
+          Collections are private - you need to share your key with others to make your library accessible. If you would like to share your library from this section of the app, and you hold the permissions to share all the material in your library, please get in touch and we will add your library's key and description to this page in a future release.
           </p>
       </div>
       <div class="right">
         <h3>Get started</h3>
-        <p>You can start by trying these libraries:</p>
+        <p>You can start by trying these libraries. Click on their titles to open the import prompt.</p>
         <ul>
           <li>
             <el-button
