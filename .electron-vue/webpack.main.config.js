@@ -9,9 +9,9 @@ const webpack = require('webpack')
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
 
 const GLOBALS = {
-  'process.env': {
-    'package_version': JSON.stringify(version),
-  }
+  DAT_LIBRARY: {
+    package_version: JSON.stringify(version),
+  },
 };
 
 let mainConfig = {

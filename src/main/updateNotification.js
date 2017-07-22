@@ -10,7 +10,7 @@ export default function () {
   if (ignore) return;
   github.get('/repos/e-e-e/dat-library/releases/latest')
     .then((res) => {
-      if (semver.lt(process.env.package_version, res.data.tag_name)) {
+      if (semver.lt(DAT_LIBRARY.package_version, res.data.tag_name)) {
         dialog.showMessageBox({
           type: 'info',
           buttons: ['Not now', 'Update'],
@@ -18,7 +18,7 @@ export default function () {
           cancelId: 0,
           title: 'Update Nofification',
           message: 'There is a new version of Dat Library Available.',
-          detail: `You are running v${process.env.npm_package_version}.\nThe latest version is ${res.data.tag_name}.\n\nYou will need to download and install the latest version manually to update. Click update to view the latest version.`,
+          detail: `You are running v${DAT_LIBRARY.npm_package_version}.\nThe latest version is ${res.data.tag_name}.\n\nYou will need to download and install the latest version manually to update. Click update to view the latest version.`,
           checkboxLabel: 'Don’t tell me again.',
         }, (clickedId, checked) => {
           if (clickedId === 1) {
