@@ -31,6 +31,7 @@
   import path from 'path';
   import { shell } from 'electron';
   import { mapActions, mapGetters } from 'vuex';
+  import { formatPath } from 'dat-cardcat-formats';
 
   export default {
     name: 'datBook',
@@ -48,10 +49,15 @@
     computed: {
       ...mapGetters(['datWithKey']),
       filepath: function filepath() {
-        return this.book.files.map(file => path.join(this.datWithKey(file.dat).dir, this.book.author, this.book.title, file.file));
-      },
-      bookpath: function bookpath() {
-        return this.book.files.map(file => path.join(this.datWithKey(file.dat).dir, this.book.author, this.book.title));
+        return this.book.files.map(file => path.join(
+          this.datWithKey(file.dat).dir, 
+          formatPath({ 
+            author: this.book.author, 
+            title: this.book.title, 
+            file: file.file,
+            format: this.datWithKey(file.dat).format,
+          })
+        ));
       },
     },
     methods: {

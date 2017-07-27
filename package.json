@@ -61,6 +61,7 @@
     "axios": "^0.16.2",
     "babel-polyfill": "^6.23.0",
     "dat-cardcat": "^0.4.0",
+    "dat-cardcat-formats": "^0.0.1",
     "element-ui": "1.3.7",
     "lodash": "^4.17.4",
     "pretty-bytes": "^4.0.2",
