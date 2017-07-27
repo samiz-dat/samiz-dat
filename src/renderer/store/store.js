@@ -156,11 +156,7 @@ const store = new Vuex.Store({
         commit('setDownloadStat', data);
         dispatch('getDatStats');
         if (data.progress === 100) {
-          // @TODO: rather than crudely parsing file here -
-          // we should make dat-cardcat pass over format type,
-          // and make formatter into a seporate module
-          const x = _.split(data.file, '/');
-          commit('setDownloadedResult', { author: x[1], title: x[2], file: x[3], dat: data.key });
+          commit('setDownloadedResult', { ...data.parsed, dat: data.key });
         }
         // SD: possible to re-run current results query if desired
         // if (state.resultsQuery && state.resultsQuery.func) {
