@@ -9,7 +9,7 @@
         <el-badge :value="stats.peers.complete || '0'" class="item">Complete</el-badge>
       </el-col>
       <el-col :span="4">
-        &uarr; {{ stats.uploadSpeed || 0 }} &bull; &darr; {{ stats.downloadSpeed || 0 }}
+        &uarr; {{ upload || 0 }} &bull; &darr; {{ download || 0 }}
       </el-col>
       <el-col :span="12"/>
     </el-row>
@@ -83,6 +83,14 @@
       datSize() {
         const stats = this.stats;
         return prettyBytes(stats.size);
+      },
+      download() {
+        const stats = this.stats;
+        return prettyBytes(stats.downloadSpeed || 0);
+      },
+      upload() {
+        const stats = this.stats;
+        return prettyBytes(stats.uploadSpeed || 0);
       },
     },
     methods: {
