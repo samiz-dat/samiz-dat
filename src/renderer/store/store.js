@@ -122,6 +122,17 @@ const store = new Vuex.Store({
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
     writeableDats: state => state.dats.filter(d => d.writeable === true),
     datStats: state => key => (_.has(state.datStats, key)) ? state.datStats[key] : undefined,
+    appStats: (state) => {
+      const v = _.values(state.datStats);
+      return {
+        count: v.length,
+        peers: _.sumBy(v, 'peers.total'),
+        downloadSpeed: _.sumBy(v, 'downloadSpeed'),
+        uploadSpeed: _.sumBy(v, 'uploadSpeed'),
+        files: _.sumBy(v, 'filesCount.total'),
+        size: _.sumBy(v, 'size'),
+      };
+    },
     readingListsFilter: state => (state.selectedReadingLists.length === 0 ? undefined : state.selectedReadingLists),
     uniqueReadingLists: state => (filter) => {
       const unique = [];
@@ -170,7 +181,7 @@ const store = new Vuex.Store({
     },
     refreshLastSearch: ({ state, dispatch }) => {
       const query = state.resultsQuery;
-      return (query) ? dispatch(query.func, query.payload) : null;
+      return (query && query.func) ? dispatch(query.func, query.payload) : null;
     },
     // @TODO: this should be renamed to better describe its actual action. it also reloads searchs/authors
     getAuthorLetters: ({ commit, getters }) => {
