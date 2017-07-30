@@ -382,7 +382,10 @@ const store = new Vuex.Store({
       // need proper validation here
       if (!catalog.isReady || !payload.dat) return undefined;
       commit('setLoading', true);
-      return catalog.addFileToDat(payload.file, payload.dat, payload.author, payload.title) // need to throw errors in promise in dat-cardcat
+      const fn = f => catalog.addFileToDat(f, payload.dat, payload.author, payload.title);
+      const promises = payload.file.map(fn);
+      return Promise.all(promises)
+        // need to throw errors in promise in dat-cardcat
         .catch(e => commit('setError', e))
         .finally(() => commit('setLoading', false));
     },
