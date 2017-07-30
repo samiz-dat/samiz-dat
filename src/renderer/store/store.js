@@ -24,7 +24,7 @@ const INITIAL_STATE = {
   pagerOffset: 0,
   selectedLetter: null,
   authorLetters: [],
-  allLetters: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+  allLetters: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'etc.'],
   // authorList: [],
   searchQuery: null,
   results: [],
@@ -184,13 +184,11 @@ const store = new Vuex.Store({
       return (query && query.func) ? dispatch(query.func, query.payload) : null;
     },
     // @TODO: this should be renamed to better describe its actual action. it also reloads searchs/authors
-    getAuthorLetters: ({ commit, getters }) => {
+    getAuthorLetters: ({ state, commit, getters }) => {
+      if (!state.route.path.startsWith('/search')) return undefined;
       if (!catalog.isReady) return undefined;
       return catalog.getAuthorLetters({ collection: getters.readingListsFilter, dat: getters.searchDats })
-        .then((rows) => {
-          const letters = rows.map(v => v.letter);
-          commit('setAuthorLetters', letters);
-        })
+        .then(letters => commit('setAuthorLetters', letters))
         .catch(e => commit('setError', e));
     },
     getDats: ({ dispatch, commit }) => {
