@@ -9,6 +9,9 @@
         <!-- <el-menu-item index="/reading-lists">reading lists</el-menu-item> -->
       </el-menu>
     </div>
+    <div class="stats">
+      <app-stats />
+    </div>
     <div class="search">
       <search-nav />
     </div>
@@ -19,11 +22,13 @@
 
 <script>
   import searchNav from 'components/searchNav';
+  import appStats from 'components/appStats';
 
   export default {
     name: 'mainNav',
     components: {
       searchNav,
+      appStats,
     },
     data() {
       return {};

@@ -10,6 +10,7 @@ import home from 'containers/home';
 
 Vue.use(VueRouter);
 
+// @TODO: add routes as constants that can be referenced elsewhere
 const routes = [
   { path: '/', component: home },
   { path: '/libraries', component: libraries },

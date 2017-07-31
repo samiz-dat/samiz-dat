@@ -24,7 +24,7 @@ const INITIAL_STATE = {
   pagerOffset: 0,
   selectedLetter: null,
   authorLetters: [],
-  allLetters: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+  allLetters: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'etc.'],
   // authorList: [],
   searchQuery: null,
   results: [],
@@ -122,6 +122,17 @@ const store = new Vuex.Store({
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
     writeableDats: state => state.dats.filter(d => d.writeable === true),
     datStats: state => key => (_.has(state.datStats, key)) ? state.datStats[key] : undefined,
+    appStats: (state) => {
+      const v = _.values(state.datStats);
+      return {
+        count: v.length,
+        peers: _.sumBy(v, 'peers.total'),
+        downloadSpeed: _.sumBy(v, 'downloadSpeed'),
+        uploadSpeed: _.sumBy(v, 'uploadSpeed'),
+        files: _.sumBy(v, 'filesCount.total'),
+        size: _.sumBy(v, 'size'),
+      };
+    },
     readingListsFilter: state => (state.selectedReadingLists.length === 0 ? undefined : state.selectedReadingLists),
     uniqueReadingLists: state => (filter) => {
       const unique = [];
@@ -170,16 +181,14 @@ const store = new Vuex.Store({
     },
     refreshLastSearch: ({ state, dispatch }) => {
       const query = state.resultsQuery;
-      return (query) ? dispatch(query.func, query.payload) : null;
+      return (query && query.func) ? dispatch(query.func, query.payload) : null;
     },
     // @TODO: this should be renamed to better describe its actual action. it also reloads searchs/authors
-    getAuthorLetters: ({ commit, getters }) => {
+    getAuthorLetters: ({ state, commit, getters }) => {
+      if (!state.route.path.startsWith('/search')) return undefined;
       if (!catalog.isReady) return undefined;
       return catalog.getAuthorLetters({ collection: getters.readingListsFilter, dat: getters.searchDats })
-        .then((rows) => {
-          const letters = rows.map(v => v.letter);
-          commit('setAuthorLetters', letters);
-        })
+        .then(letters => commit('setAuthorLetters', letters))
         .catch(e => commit('setError', e));
     },
     getDats: ({ dispatch, commit }) => {
@@ -373,9 +382,12 @@ const store = new Vuex.Store({
       // need proper validation here
       if (!catalog.isReady || !payload.dat) return undefined;
       commit('setLoading', true);
-      return catalog.addFileToDat(payload.file, payload.dat, payload.author, payload.title) // need to throw errors in promise in dat-cardcat
-        .catch(e => commit('setError', e))
-        .finally(() => commit('setLoading', false));
+      const fn = f => catalog.addFileToDat(f, payload.dat, payload.author, payload.title);
+      const promises = payload.file.map(fn);
+      return Promise.all(promises)
+        .then(() => commit('setLoading', false))
+        // need to throw errors in promise in dat-cardcat
+        .catch(e => commit('setError', e));
     },
   },
 });

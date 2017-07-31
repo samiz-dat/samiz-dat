@@ -58,16 +58,17 @@
         .then(() => this.getDatStats())
         .then(() => this.$notify({
           title: 'File added!',
-          message: file,
-        }));
+          message: file.join('<br/>'),
+        }))
+        .catch(e => console.log(e));
       },
       findFileDialog() {
         remote.dialog.showOpenDialog({
           title: 'Find file',
-          properties: ['openFile'],
+          properties: ['openFile', 'multiSelections'],
         }, (file) => {
           if (Array.isArray(file)) {
-            this.file = file[0];
+            this.file = file;
           }
         });
       },

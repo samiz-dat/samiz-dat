@@ -20,8 +20,11 @@
         <!-- show spinner different icon when not downloaded? -->
       </el-col>
       <el-col :span="20">
-        <div>{{file.file}} <el-button v-if="file.downloaded" size="mini" icon="search" v-on:click="showItemInFolder(index)"></el-button></div>
-        <!-- display some progress bar here when file is downloading -->
+        <div>
+          {{file.file}} 
+          <el-button v-if="file.downloaded" size="mini" icon="search" v-on:click="showItemInFolder(index)"></el-button> 
+          <el-tag type="gray">{{ datWithKey(file.dat).name }}</el-tag>
+        </div>
       </el-col>
     </el-row>
   </div>
