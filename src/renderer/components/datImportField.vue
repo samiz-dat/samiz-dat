@@ -55,6 +55,9 @@
           title: 'Import',
           message: 'Starting to import library!',
         });
+        if (this.$route.path !== '/libraries') {
+          this.$router.push('/libraries');
+        }
       },
     },
 };

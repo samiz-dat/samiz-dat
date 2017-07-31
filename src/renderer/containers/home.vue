@@ -106,7 +106,7 @@
     },
     data() {
       return {
-        libraryInfo: { key:'', name:'' },
+        libraryInfo: { key: '', name: '' },
         addRemoteDialogIsVisible: false,
       };
     },

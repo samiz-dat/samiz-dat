@@ -17,10 +17,10 @@
       return {
         defaultStats: {
           peers: 0,
-	      downloadSpeed: 0,
-	      uploadSpeed: 0,
-	      files: 0,
-	      size: 0,
+        downloadSpeed: 0,
+        uploadSpeed: 0,
+        files: 0,
+        size: 0,
         },
       };
     },
