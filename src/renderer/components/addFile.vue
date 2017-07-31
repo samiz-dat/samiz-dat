@@ -59,7 +59,8 @@
         .then(() => this.$notify({
           title: 'File added!',
           message: file.join('<br/>'),
-        }));
+        }))
+        .catch(e => console.log(e));
       },
       findFileDialog() {
         remote.dialog.showOpenDialog({
