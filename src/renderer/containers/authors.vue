@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2>Authors starting with <span class="capitalised">{{$route.params.letter}}</span></h2>
+    <h3>{{subtitle}}</h3>
     <author-list :data="results" :action="showTextsBy" />
     <el-pagination
       v-show="results.length !== 0"
@@ -14,7 +15,7 @@
 </template>
 
 <script>
-  import { mapState, mapActions, mapMutations } from 'vuex';
+  import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
   import store from 'store/store';
 
   import authorList from 'components/authorList';
@@ -43,7 +44,16 @@
         'results',
         'totalResults',
         'fetching',
+        'selectedDats',
       ]),
+      ...mapGetters([
+        'datWithKey',
+      ]),
+      subtitle() {
+        if (this.selectedDats.length === 0) return 'From all libraries';
+        if (this.selectedDats.length === 1) return `From ${this.datWithKey(this.selectedDats[0]).name}`;
+        return `From ${this.selectedDats.length} selected libraries`;
+      },
     },
     methods: {
       ...mapMutations(['setPage']),
