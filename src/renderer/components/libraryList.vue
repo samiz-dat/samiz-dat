@@ -24,6 +24,14 @@
         <add-file :defaultDat="selectedDat" :onSubmit="() => addFileDialogIsVisible = false"></add-file>
       </el-dialog>
       <library-stats :dat="dat"/>
+      <p v-if="!stats(dat.dat) || stats(dat.dat).metadata === 0">
+        You'll be able to browse the texts in this library once metadata has started downloaded.
+      </p>
+      <p v-if="stats(dat.dat) && stats(dat.dat).metadata !== 100">
+        You can immediately start searching this library as its metadata is being loaded.
+        <br/>
+        However you will be limited to basic search, and will only see items for which the index has been downloaded.
+      </p>
     </el-collapse-item>
   </el-collapse>
 </template>
@@ -55,12 +63,12 @@
     computed: {
       ...mapState(['loading', 'error', 'route']),
       ...mapGetters(['datStats', 'datWithKey']),
-      stats() {
-        return this.datStats(this.dat.dat);
-      },
     },
     methods: {
       ...mapActions(['removeDat', 'download']),
+      stats(key) {
+        return this.datStats(key);
+      },
       confirmedRemove(dat) {
         this.removeDat(dat);
         this.confirmDeleteVisible = false;
