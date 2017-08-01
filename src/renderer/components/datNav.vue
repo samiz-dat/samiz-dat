@@ -2,7 +2,7 @@
   <div>
     <el-checkbox-button size="small" label="all" key="all" v-model="selectAll" checked>All</el-checkbox-button>
     <el-checkbox-group v-model="selected">
-      <el-checkbox v-for="(dat, index) in dats" :label="dat.dat" :key="dat.dat">{{dat.name}}</el-checkbox>
+      <el-checkbox v-for="(dat, index) in datsWithMetadata" :label="dat.dat" :key="dat.dat">{{dat.name}}</el-checkbox>
     </el-checkbox-group>
   </div>
 </template>
@@ -19,7 +19,13 @@
       return {};
     },
     computed: {
-      ...mapState(['dats']),
+      ...mapState(['dats', 'datStats']),
+      datsWithMetadata() {
+        return this.dats.filter((dat) => {
+          const stats = this.datStats[dat.dat];
+          return stats && stats.metadata > 0;
+        });
+      },
       selectAll: {
         get() {
           return (this.$store.state.selectedDats.length === 0) ? ['all'] : [];
