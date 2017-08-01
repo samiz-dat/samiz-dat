@@ -21,8 +21,8 @@
       </el-col>
       <el-col :span="20">
         <div>
-          {{file.file}} 
-          <el-button v-if="file.downloaded" size="mini" icon="search" v-on:click="showItemInFolder(index)"></el-button> 
+          {{file.file}}
+          <el-button v-if="file.downloaded" size="mini" icon="search" v-on:click="showItemInFolder(index)">Show</el-button>
           <el-tag type="gray">{{ datWithKey(file.dat).name }}</el-tag>
         </div>
       </el-col>
@@ -53,10 +53,10 @@
       ...mapGetters(['datWithKey']),
       filepath: function filepath() {
         return this.book.files.map(file => path.join(
-          this.datWithKey(file.dat).dir, 
-          formatPath({ 
-            author: this.book.author, 
-            title: this.book.title, 
+          this.datWithKey(file.dat).dir,
+          formatPath({
+            author: this.book.author,
+            title: this.book.title,
             file: file.file,
             format: this.datWithKey(file.dat).format,
           })
