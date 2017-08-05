@@ -1,3 +1,10 @@
+<p align="center">
+  <br>
+  <img width="256" src="https://github.com/e-e-e/dat-library/blob/master/static/icons/256x256.png?raw=true" alt="dat library">
+  <br>
+  <br>
+</p>
+
 # Dat Library
 
 > “THE LIBRARY IS A GROWING ORGANISM.”
