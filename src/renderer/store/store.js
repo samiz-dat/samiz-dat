@@ -154,9 +154,6 @@ const store = new Vuex.Store({
   actions: {
     loadCatalog: ({ dispatch, commit, state }) => {
       commit('setLoading', true);
-      catalog.on('imported', () => {
-        dispatch('getDatStats');
-      });
       catalog.on('import', (obj) => {
         if (!state.setLoading) {
           dispatch('getDats');
@@ -165,7 +162,6 @@ const store = new Vuex.Store({
       });
       catalog.on('download', (data) => {
         commit('setDownloadStat', data);
-        dispatch('getDatStats');
         if (data.progress === 100) {
           commit('setDownloadedResult', { ...data.parsed, dat: data.key });
         }
@@ -174,6 +170,8 @@ const store = new Vuex.Store({
         //  dispatch(state.resultsQuery.func, state.resultsQuery.params);
         // }
       });
+      // @TODO: Find the right place for this:
+      setInterval(() => dispatch('getDatStats'), 2000);
       return catalog.init()
         // .then(() => dispatch('getReadingLists'))
         .catch(e => commit('setError', e))
@@ -196,7 +194,6 @@ const store = new Vuex.Store({
       // async action to get dats
       return catalog.getDats()
         .then(dats => commit('setDats', dats))
-        .then(() => dispatch('getDatStats'))
         .catch(e => commit('setError', e));
     },
     getDatStats: ({ commit }) => {
