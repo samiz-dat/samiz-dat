@@ -25,7 +25,7 @@
       </el-dialog>
       <library-stats :dat="dat"/>
       <p v-if="!stats(dat.dat) || stats(dat.dat).metadata === 0">
-        You'll be able to browse the texts in this library once metadata has started downloaded.
+        You'll be able to browse the texts in this library once metadata has started downloading.
       </p>
       <p v-if="stats(dat.dat) && stats(dat.dat).metadata !== 100">
         You can immediately start searching this library as its metadata is being loaded.
