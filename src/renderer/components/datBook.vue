@@ -21,8 +21,8 @@
       </el-col>
       <el-col :span="20">
         <div>
-          {{file.file}}
-          <el-button v-if="file.downloaded" size="mini" icon="search" v-on:click="showItemInFolder(index)">Show</el-button>
+          {{ displayFile(file) }}
+          <el-button v-if="file.downloaded" size="mini" icon="search" v-on:click="showItemInFolder(file.path)">Show</el-button>
           <el-tag type="gray">{{ datWithKey(file.dat).name }}</el-tag>
         </div>
       </el-col>
@@ -34,8 +34,7 @@
   import path from 'path';
   import { shell } from 'electron';
   import { mapActions, mapGetters } from 'vuex';
-  import { formatPath } from 'dat-cardcat-formats';
-
+  
   export default {
     name: 'datBook',
     components: {},
@@ -51,23 +50,11 @@
     },
     computed: {
       ...mapGetters(['datWithKey']),
-      filepath: function filepath() {
-        return this.book.files.map(file => path.join(
-          this.datWithKey(file.dat).dir,
-          formatPath({
-            author: this.book.author,
-            title: this.book.title,
-            file: file.file,
-            format: this.datWithKey(file.dat).format,
-          })
-        ));
-      },
     },
     methods: {
       ...mapActions(['download']),
-      showItemInFolder: function showItemInFolder(index) {
-        console.log(this.filepath[index]);
-        const success = shell.showItemInFolder(this.filepath[index]);
+      showItemInFolder: function showItemInFolder(filepath) {
+        const success = shell.showItemInFolder(filepath);
       },
       downloadTitle: function downloadTitle() {
         this.downloading = true;
@@ -76,6 +63,9 @@
       downloadAuthor: function downloadAuthor() {
         this.downloading = true;
         this.download({ author: this.book.author });
+      },
+      displayFile: function displayFile(file) {
+        return path.basename(file.path);
       },
       fileIcon(file) {
         if (file.downloaded) return 'el-icon-check';

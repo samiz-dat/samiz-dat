@@ -47,15 +47,11 @@ Vue.use(Vuex);
 // unpack the files column...
 const unpackTitleFiles = results => _.map(results, (result) => {
   const files = result.files;
-  result.files = _.map(_.split(files, ';;'),
-    (file) => {
-      const fData = _.split(file, ':');
-      return {
-        file: fData[0],
-        dat: result.dat,
-        downloaded: fData[1] === '1',
-      };
-    });
+  result.files = _.map(files, fData => ({
+    path: fData[0],
+    dat: fData[2],
+    downloaded: fData[1] === '1',
+  }));
   result.downloaded = _.every(result.files, 'downloaded');
   return result;
 });
@@ -97,9 +93,9 @@ const store = new Vuex.Store({
     setDownloadedResult: (state, payload) => {
       const results = state.results;
       _.forEach(results, (r) => {
-        if (r.author === payload.author && r.title === payload.title) {
+        if (r.title === payload.title) {
           _.forEach(r.files, (f) => {
-            if (f.dat === payload.dat && f.file === payload.file) { f.downloaded = true; state.results = results; }
+            if (f.dat === payload.dat && f.path === payload.path) { f.downloaded = true; state.results = results; }
           });
         }
       });
