@@ -13,6 +13,7 @@
         <el-button type="primary" v-on:click="downloadDat(dat.dat)" v-if="!dat.writeable">Download entire library</el-button>
         <el-button type="primary" v-on:click="openLibrary(dat.dat)" icon="search"></i>Show</el-button>
         <el-button type="primary" v-on:click="openAddFileDialog(dat.dat)" v-if="dat.writeable">Add file</el-button>
+        <el-button type="primary" v-on:click="openAddURLDialog(dat.dat)" v-if="dat.writeable">Add webpage</el-button>
         <el-button type="warning" v-on:click="confirmDeleteVisible = true"><i class="el-icon-delete"></i></el-button>
       </el-button-group>
       <el-dialog title="Are you sure?" :visible.sync="confirmDeleteVisible">
@@ -22,6 +23,9 @@
       </el-dialog>
       <el-dialog title="Add a file?" :visible.sync="addFileDialogIsVisible">
         <add-file :defaultDat="selectedDat" :onSubmit="() => addFileDialogIsVisible = false"></add-file>
+      </el-dialog>
+      <el-dialog title="Add a webpage?" :visible.sync="addURLDialogIsVisible">
+        <add-url :defaultDat="selectedDat" :onSubmit="() => addURLDialogIsVisible = false"></add-url>
       </el-dialog>
       <library-stats :dat="dat"/>
       <p v-if="!stats(dat.dat) || stats(dat.dat).metadata === 0">
@@ -41,12 +45,14 @@
   import { shell } from 'electron';
   import libraryStats from 'components/libraryStats';
   import addFile from 'components/addFile';
+  import addUrl from 'components/addUrl';
 
   export default {
     name: 'libraryList',
     components: {
       libraryStats,
       addFile,
+      addUrl,
     },
     props: {
       dats: {
@@ -57,6 +63,7 @@
       return {
         selectedDat: '',
         addFileDialogIsVisible: false,
+        addURLDialogIsVisible: false,
         confirmDeleteVisible: false,
       };
     },
@@ -87,6 +94,10 @@
       openAddFileDialog(key) {
         this.selectedDat = key;
         this.addFileDialogIsVisible = true;
+      },
+      openAddURLDialog(key) {
+        this.selectedDat = key;
+        this.addURLDialogIsVisible = true;
       }
     },
 };
