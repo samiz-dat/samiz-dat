@@ -20,8 +20,11 @@
 
 <script>
   import { mapActions, mapState, mapGetters } from 'vuex';
+  import resolver from 'url';
   import request from 'request';
   import extractor from 'unfluff';
+  import read from 'node-readability';
+  import toMarkdown from 'to-markdown';
 
   export default {
     name: 'AddUrl',
@@ -42,6 +45,7 @@
         url: '',
         validUrl: false,
         message: '',
+        content: '',
       };
     },
     computed: {
@@ -49,16 +53,17 @@
       ...mapGetters(['writeableDats']),
     },
     methods: {
-      ...mapActions(['addFileToDat', 'getDatStats']),
+      ...mapActions(['writeStringToDat', 'getDatStats']),
       submit(event) {
         if (event) event.preventDefault();
         if (this.onSubmit) this.onSubmit();
-        const { author, title, dat, url, defaultDat } = this;
-        this.addFileToDat({
+        const { author, title, dat, url, content, defaultDat } = this;
+        this.writeStringToDat({
           author,
           title,
           dat: defaultDat || dat,
-          url,
+          ext: '.md',
+          content,
         })
         .then(() => this.getDatStats())
         .then(() => this.$notify({
@@ -70,18 +75,35 @@
       checkUrl(event) {
         if (event) event.preventDefault();
         const { url } = this;
-        console.log(url);
+        const converters = [{
+          filter: 'img',
+          replacement: (content, node) => {
+            const alt = node.alt || '';
+            const src1 = node.getAttribute('src') || '';
+            const src = src1 ? resolver.resolve(url, src1) : '';
+            const title = node.title || '';
+            const titlePart = title ? ` "${title}"` : '';
+            return src ? `![${alt}](${src}${titlePart})` : '';
+          },
+        }];
         request.get(url, (err, res, body) => {
           if (err) { this.message = 'There was a problem with that url'; }
           if (res.statusCode !== 200) {
             this.message = 'There was a problem loading that url';
           } else {
-            this.validUrl = true;
-            const data = extractor.lazy(body);
-            this.message = 'Please check the author and title below';
-            this.title = data.title();
-            this.author = data.author().join('; ');
-            console.log(data.text());
+            read(body, (err, article) => {
+              if (article.content) {
+                const data = extractor.lazy(article.html);
+                this.message = 'Please check the author and title below';
+                this.title = data.title();
+                this.author = data.author().join('; ');
+                this.content = toMarkdown(article.content, { converters });
+                this.validUrl = true;
+              } else {
+                this.message = 'No content could be extracted from that url';
+              }
+              article.close();
+            });
           }
         });
       },
