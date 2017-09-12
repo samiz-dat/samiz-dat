@@ -22,7 +22,7 @@
       <el-col :span="20">
         <div>
           {{ displayFile(file) }}
-          <el-button v-if="file.downloaded" size="mini" icon="search" v-on:click="showItemInFolder(file.path)">Show</el-button>
+          <el-button v-if="file.downloaded" size="mini" icon="search" v-on:click="showItemInFolder(datWithKey(file.dat).dir, file.path)">Show</el-button>
           <el-tag type="gray">{{ datWithKey(file.dat).name }}</el-tag>
         </div>
       </el-col>
@@ -53,8 +53,8 @@
     },
     methods: {
       ...mapActions(['download']),
-      showItemInFolder: function showItemInFolder(filepath) {
-        const success = shell.showItemInFolder(filepath);
+      showItemInFolder: function showItemInFolder(datpath, filepath) {
+        const success = shell.showItemInFolder(path.join(datpath, filepath));
       },
       downloadTitle: function downloadTitle() {
         this.downloading = true;
