@@ -65,6 +65,15 @@
             </el-button><br/>
              A selection of texts shared through a.library (an offline digital library) at <el-button type="text" @click="open('https://www.frontyardprojects.org')">frontyard projects</el-button>.
           </li>
+          <li>
+            <el-button
+              type="text"
+              @click="openImportDialog('c6ea9ce5627140020b15de05ecb054e8d1a354559e4a0b9b2295d22d87de632b', 'Black Panther Party')"
+            >
+              Black Panther Party newspaper archive
+            </el-button><br/>
+             20 volumes of <em>The Black Panther</em> "Black Community News Service", then "Intercommunal News Service", running from 1967-1980. Several hundred issues in PDF format.</el-button>.
+          </li>
         </ul>
         <p>Or these made by our friends at <el-button type="text" @click="open('https://www.memoryoftheworld.org/')">Memory of the World</el-button>:</p>
         <ul>
