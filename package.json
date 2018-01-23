@@ -1,6 +1,6 @@
 {
   "name": "dat-library",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "e-e-e <e-e-e@users.noreply.github.com>",
   "description": "A tool for searching, building and sharing distributed p2p libraries.",
   "license": "ISC",
