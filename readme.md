@@ -30,7 +30,7 @@ This is very much alpha software and in need of your support. We are actively de
 To install modules for electron:
 ```
 # Electron's version.
-export npm_config_target=1.6.11
+export npm_config_target=1.8.4
 # The architecture of Electron, can be ia32 or x64.
 export npm_config_arch=x64
 export npm_config_target_arch=x64
