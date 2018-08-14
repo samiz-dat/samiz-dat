@@ -7,8 +7,12 @@ import { Catalog } from 'dat-cardcat';
 import _ from 'lodash';
 
 const dataDir = path.join(os.homedir(), 'samiz-dats');
-const catalog = new Catalog(dataDir);
-
+let catalog = null;
+try {
+  catalog = new Catalog(dataDir);
+} catch (e) {
+  console.error(e);
+}
 // THIS IS JUST TEMPORARILY HERE TO HELP DEBUG ELECTRON ERRORS
 // DELAYING ERRORS UNTIL CONSOLE IS ACTIVE SO WE CAN READ THEM
 // let catalog;
