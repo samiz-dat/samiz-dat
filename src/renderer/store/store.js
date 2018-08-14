@@ -6,9 +6,13 @@ import { remote } from 'electron';
 import { Catalog } from 'dat-cardcat';
 import _ from 'lodash';
 
-const dataDir = path.join(os.homedir(), 'dat-librarys');
-const catalog = new Catalog(dataDir);
-
+const dataDir = path.join(os.homedir(), 'samiz-dats');
+let catalog = null;
+try {
+  catalog = new Catalog(dataDir);
+} catch (e) {
+  console.error(e);
+}
 // THIS IS JUST TEMPORARILY HERE TO HELP DEBUG ELECTRON ERRORS
 // DELAYING ERRORS UNTIL CONSOLE IS ACTIVE SO WE CAN READ THEM
 // let catalog;
@@ -47,15 +51,11 @@ Vue.use(Vuex);
 // unpack the files column...
 const unpackTitleFiles = results => _.map(results, (result) => {
   const files = result.files;
-  result.files = _.map(_.split(files, ';;'),
-    (file) => {
-      const fData = _.split(file, ':');
-      return {
-        file: fData[0],
-        dat: result.dat,
-        downloaded: fData[1] === '1',
-      };
-    });
+  result.files = _.map(files, fData => ({
+    path: fData[0],
+    dat: fData[2],
+    downloaded: fData[1] === '1',
+  }));
   result.downloaded = _.every(result.files, 'downloaded');
   return result;
 });
@@ -97,9 +97,9 @@ const store = new Vuex.Store({
     setDownloadedResult: (state, payload) => {
       const results = state.results;
       _.forEach(results, (r) => {
-        if (r.author === payload.author && r.title === payload.title) {
+        if (r.title === payload.title) {
           _.forEach(r.files, (f) => {
-            if (f.dat === payload.dat && f.file === payload.file) { f.downloaded = true; state.results = results; }
+            if (f.dat === payload.dat && f.path === payload.path) { f.downloaded = true; state.results = results; }
           });
         }
       });
@@ -121,7 +121,7 @@ const store = new Vuex.Store({
     datWithKey: state => key => state.dats.find(d => d.dat === key),
     searchDats: state => (state.selectedDats.length === 0 ? undefined : state.selectedDats),
     writeableDats: state => state.dats.filter(d => d.writeable === true),
-    datStats: state => key => (_.has(state.datStats, key)) ? state.datStats[key] : undefined,
+    datStats: state => key => (_.has(state.datStats, key) ? state.datStats[key] : undefined),
     appStats: (state) => {
       const v = _.values(state.datStats);
       return {
@@ -154,9 +154,6 @@ const store = new Vuex.Store({
   actions: {
     loadCatalog: ({ dispatch, commit, state }) => {
       commit('setLoading', true);
-      catalog.on('imported', () => {
-        dispatch('getDatStats');
-      });
       catalog.on('import', (obj) => {
         if (!state.setLoading) {
           dispatch('getDats');
@@ -165,7 +162,6 @@ const store = new Vuex.Store({
       });
       catalog.on('download', (data) => {
         commit('setDownloadStat', data);
-        dispatch('getDatStats');
         if (data.progress === 100) {
           commit('setDownloadedResult', { ...data.parsed, dat: data.key });
         }
@@ -174,6 +170,8 @@ const store = new Vuex.Store({
         //  dispatch(state.resultsQuery.func, state.resultsQuery.params);
         // }
       });
+      // @TODO: Find the right place for this:
+      setInterval(() => dispatch('getDatStats'), 2000);
       return catalog.init()
         // .then(() => dispatch('getReadingLists'))
         .catch(e => commit('setError', e))
@@ -196,7 +194,6 @@ const store = new Vuex.Store({
       // async action to get dats
       return catalog.getDats()
         .then(dats => commit('setDats', dats))
-        .then(() => dispatch('getDatStats'))
         .catch(e => commit('setError', e));
     },
     getDatStats: ({ commit }) => {
@@ -382,9 +379,18 @@ const store = new Vuex.Store({
       // need proper validation here
       if (!catalog.isReady || !payload.dat) return undefined;
       commit('setLoading', true);
-      const fn = f => catalog.addFileToDat(f, payload.dat, payload.author, payload.title);
+      const fn = f => catalog.addFileToDat(f, payload.dat, payload.author.split(','), payload.title);
       const promises = payload.file.map(fn);
       return Promise.all(promises)
+        .then(() => commit('setLoading', false))
+        // need to throw errors in promise in dat-cardcat
+        .catch(e => commit('setError', e));
+    },
+    writeStringToDat: ({ commit }, payload) => {
+      // need proper validation here
+      if (!catalog.isReady || !payload.dat) return undefined;
+      commit('setLoading', true);
+      return catalog.writeStringToDat(payload.content, payload.ext, payload.dat, payload.author.split(','), payload.title)
         .then(() => commit('setLoading', false))
         // need to throw errors in promise in dat-cardcat
         .catch(e => commit('setError', e));

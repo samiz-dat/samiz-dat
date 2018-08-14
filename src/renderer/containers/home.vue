@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <h2>About Dat Library</h2>
+    <h2>About Samiz-Dat</h2>
     <div class="content">
       <div class="left">
           <p>
@@ -11,7 +11,7 @@
           <p><b>TLDR;</b></p>
 
           <p>
-          <span>Dat Library is</span>
+          <span>Samiz-Dat is</span>
           <ul>
           <li>a library of libraries</li>
           <li>an approach to archiving</li>
@@ -37,10 +37,10 @@
           <p><strong>OR:</strong></p>
 
           <p>
-          Let’s say you have a collection of an out-of-print, obscure, radical zine from Sydney in the 1970s; or you have collected the writings of your comrades; or you have a directory of your own texts that are currently unpublished or otherwise inaccessible. With Dat Library you can share them easily with others.
+          Let’s say you have a collection of an out-of-print, obscure, radical zine from Sydney in the 1970s; or you have collected the writings of your comrades; or you have a directory of your own texts that are currently unpublished or otherwise inaccessible. With Samiz-Dat you can share them easily with others.
           </p>
           <p>
-          Dat Library is a library of libraries. What makes Dat Libraries special is that there is no central server hosting the files. The files are collectively hosted and distributed by the readers of those libraries. Every one of these libraries have their own public key. Using a library’s key, you can access that library’s content. Sharing the key for your own libraries lets others gain access to yours. By downloading libraries and keeping the application running, you help provide mutual support in the form of disk space and bandwidth and redundancy for the libraries you have downloaded.
+          Samiz-Dat is a library of libraries. What makes Samiz-Dat libraries special is that there is no central server hosting the files. The files are collectively hosted and distributed by the readers of those libraries. Every one of these libraries have their own public key. Using a library’s key, you can access that library’s content. Sharing the key for your own libraries lets others gain access to yours. By downloading libraries and keeping the application running, you help provide mutual support in the form of disk space and bandwidth and redundancy for the libraries you have downloaded.
           </p>
           <p>
           <strong>How do I use it?</strong>
@@ -64,6 +64,15 @@
               Frontyard’s Offline Digital Library
             </el-button><br/>
              A selection of texts shared through a.library (an offline digital library) at <el-button type="text" @click="open('https://www.frontyardprojects.org')">frontyard projects</el-button>.
+          </li>
+          <li>
+            <el-button
+              type="text"
+              @click="openImportDialog('c6ea9ce5627140020b15de05ecb054e8d1a354559e4a0b9b2295d22d87de632b', 'Black Panther Party')"
+            >
+              Black Panther Party newspaper archive
+            </el-button><br/>
+             20 volumes of <em>The Black Panther</em> "Black Community News Service", then "Intercommunal News Service", running from 1967-1980. Several hundred issues in PDF format.</el-button>.
           </li>
         </ul>
         <p>Or these made by our friends at <el-button type="text" @click="open('https://www.memoryoftheworld.org/')">Memory of the World</el-button>:</p>

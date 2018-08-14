@@ -62,7 +62,7 @@ function createWindow() {
 // let tray;
 // function createTray() {
 //   tray = new Tray());
-//   tray.setToolTip('Dat Library');
+//   tray.setToolTip('Samiz-Dat');
 // }
 
 app.on('ready', () => {

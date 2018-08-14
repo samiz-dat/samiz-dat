@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Everything</h2>
+    <h2>{{title}}</h2>
     <textList :data="results"/>
     <!-- refactor this so its part of list and configurable via props -->
     <el-pagination
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import { mapState, mapMutations, mapActions } from 'vuex';
+  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
   import store from 'store/store';
   import textList from 'components/textList';
 
@@ -37,7 +37,16 @@
         'totalResults',
         'page',
         'pagerLimit',
+        'selectedDats',
       ]),
+      ...mapGetters([
+        'datWithKey',
+      ]),
+      title() {
+        if (this.selectedDats.length === 0) return 'Everything';
+        if (this.selectedDats.length === 1) return `Everything from ${this.datWithKey(this.selectedDats[0]).name}`;
+        return `Everything from ${this.selectedDats.length} libraries`;
+      },
     },
     methods: {
       ...mapMutations(['setPage']),

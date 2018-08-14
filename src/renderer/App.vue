@@ -66,6 +66,10 @@
 <style src="assets/fonts/fonts.scss"></style>
 <style src="assets/main.scss" lang="scss"></style>
 <style lang="scss" scoped>
+  #dat-library {
+    margin-bottom: 3rem;
+  }
+
   .bottom-bar {
     position: fixed;
     right: 0;

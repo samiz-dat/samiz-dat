@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2>{{title}}<span v-show="query">{{query}}</span></h2>
+    <h3>{{subtitle}}</h3>
     <textList :data="results"/>
     <!-- refactor this so its part of list and configurable via props -->
     <el-pagination
@@ -15,7 +16,7 @@
 </template>
 
 <script>
-  import { mapState, mapMutations, mapActions } from 'vuex';
+  import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
   import store from 'store/store';
   import textList from 'components/textList';
 
@@ -64,7 +65,16 @@
         'searchQuery',
         'page',
         'pagerLimit',
+        'selectedDats',
       ]),
+      ...mapGetters([
+        'datWithKey',
+      ]),
+      subtitle() {
+        if (this.selectedDats.length === 0) return 'From all libraries';
+        if (this.selectedDats.length === 1) return `From ${this.datWithKey(this.selectedDats[0]).name}`;
+        return `From ${this.selectedDats.length} selected libraries`;
+      },
       title() {
         switch (this.display) {
           case 'SEARCH':
