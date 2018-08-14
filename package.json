@@ -1,12 +1,12 @@
 {
-  "name": "dat-library",
+  "name": "samiz-dat",
   "version": "0.1.5",
   "author": "e-e-e <e-e-e@users.noreply.github.com>",
   "description": "A tool for searching, building and sharing distributed p2p libraries.",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/e-e-e/dat-library"
+    "url": "https://github.com/samiz-dat/samiz-dat"
   },
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -24,8 +24,8 @@
     "unit": "karma start test/unit/karma.conf.js"
   },
   "build": {
-    "productName": "dat-library",
-    "appId": "dat.library.app",
+    "productName": "samiz-dat",
+    "appId": "samiz.dat.app",
     "directories": {
       "output": "build"
     },

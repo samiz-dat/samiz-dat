@@ -6,7 +6,7 @@ import { remote } from 'electron';
 import { Catalog } from 'dat-cardcat';
 import _ from 'lodash';
 
-const dataDir = path.join(os.homedir(), 'dat-librarys');
+const dataDir = path.join(os.homedir(), 'samiz-dats');
 const catalog = new Catalog(dataDir);
 
 // THIS IS JUST TEMPORARILY HERE TO HELP DEBUG ELECTRON ERRORS
