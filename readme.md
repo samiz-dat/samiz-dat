@@ -5,14 +5,14 @@
   <br>
 </p>
 
-# Samiz-Dat (Formally Dat Library)
+# Samiz-Dat (formerly, Dat Library)
 
 > “THE LIBRARY IS A GROWING ORGANISM.”
 > — S.R Ranganathan
 
 Let’s say you have a collection of an out-of-print, obscure, radical zine from Sydney in the 1970s; or you have collected the writings of your comrades; or you have a directory of your own texts that are currently unpublished or otherwise inaccessible. With Samiz-Dat you can share them easily with others.
 
- Samiz-Dat (Formally Dat Library) is a library of libraries. What makes  Samiz-Dat special is that there is no central server hosting the files. The files are collectively hosted and distributed by the readers of those libraries. Every one of these libraries have their own public key. Using a library’s key, you can access that library’s content. Sharing the key for your own libraries lets others gain access to yours. By downloading libraries and keeping the application running, you help provide mutual support in the form of disk space and bandwidth and redundancy for the libraries you have downloaded.
+ Samiz-Dat (formerly, Dat Library) is a library of libraries. What makes  Samiz-Dat special is that there is no central server hosting the files. The files are collectively hosted and distributed by the readers of those libraries. Every one of these libraries have their own public key. Using a library’s key, you can access that library’s content. Sharing the key for your own libraries lets others gain access to yours. By downloading libraries and keeping the application running, you help provide mutual support in the form of disk space and bandwidth and redundancy for the libraries you have downloaded.
 
 We have a [road map](https://github.com/samiz-dat/samiz-dat/wiki/Roadmap) of sorts.
 

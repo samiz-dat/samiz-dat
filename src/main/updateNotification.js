@@ -17,7 +17,7 @@ export default function () {
           defaultId: 1,
           cancelId: 0,
           title: 'Update Nofification',
-          message: 'There is a new version of Samiz-Dat (Formally Dat Library) Available.',
+          message: 'There is a new version of Samiz-Dat (formerly, Dat Library) Available.',
           detail: `You are running v${DAT_LIBRARY.npm_package_version}.\nThe latest version is ${res.data.tag_name}.\n\nYou will need to download and install the latest version manually to update. Click update to view the latest version.`,
           checkboxLabel: 'Don’t tell me again.',
         }, (clickedId, checked) => {
