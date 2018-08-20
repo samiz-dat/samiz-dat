@@ -14,6 +14,8 @@ Let’s say you have a collection of an out-of-print, obscure, radical zine from
 
  Samiz-Dat (formerly, Dat Library) is a library of libraries. What makes  Samiz-Dat special is that there is no central server hosting the files. The files are collectively hosted and distributed by the readers of those libraries. Every one of these libraries have their own public key. Using a library’s key, you can access that library’s content. Sharing the key for your own libraries lets others gain access to yours. By downloading libraries and keeping the application running, you help provide mutual support in the form of disk space and bandwidth and redundancy for the libraries you have downloaded.
 
+For a longer read about Samiz-Dat - have a read of [README.md](https://samiz-dat.github.io/hyperreadings/) published in [Distributed](http://www.openeditions.com/index.php/distributed.html) edited by David Blamey & Brad Haylock.
+
 We have a [road map](https://github.com/samiz-dat/samiz-dat/wiki/Roadmap) of sorts.
 
 ## How to Install?
