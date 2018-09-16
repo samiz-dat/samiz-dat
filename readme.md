@@ -7,6 +7,8 @@
 
 # Samiz-Dat (formerly, Dat Library)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/samiz-dat/samiz-dat.svg)](https://greenkeeper.io/)
+
 > “THE LIBRARY IS A GROWING ORGANISM.”
 > — S.R Ranganathan
 
